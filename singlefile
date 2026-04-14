@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loading...</title>
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: #0b1020;
+      color: white;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+    .loader {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 14px;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 4px solid rgba(255,255,255,0.15);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    .msg {
+      font-size: 16px;
+      opacity: 0.9;
+      max-width: 700px;
+      line-height: 1.4;
+    }
+    .error {
+      color: #ff8a8a;
+      white-space: pre-wrap;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="loader" id="loader">
+    <div class="spinner"></div>
+    <div class="msg">Loading website...</div>
+  </div>
+
+  <script>
+    (async () => {
+      const RAW_URL = "https://raw.githubusercontent.com/bluedogssyt-code/unblocl/refs/heads/main/singlefile.html?t=" + Date.now();
+
+      try {
+        const response = await fetch(RAW_URL, {
+          cache: "no-store"
+        });
+
+        if (!response.ok) {
+          throw new Error("HTTP " + response.status + " " + response.statusText);
+        }
+
+        const html = await response.text();
+
+        document.open();
+        document.write(html);
+        document.close();
+      } catch (err) {
+        const loader = document.getElementById("loader");
+        loader.innerHTML = `
+          <div class="msg error">
+Failed to load the remote HTML.
+
+Error:
+${String(err)}
+
+If this is opened in a strict HTML viewer or from file://, fetch may be blocked.
+Use a normal browser tab or a local web server.
+          </div>
+        `;
+      }
+    })();
+  </script>
+</body>
+</html>
