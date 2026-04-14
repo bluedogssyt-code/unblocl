@@ -605,44 +605,19 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
  
 <!-- ══════════ AI TAB ══════════ -->
 <div class="tab-panel" id="tab-ai">
-  <div class="page-title">🤖 AI Assistant</div>
-  <div class="page-sub">Powered by Claude — ask anything, get game help, write code</div>
+  <div class="page-title">🤖 AI</div>
+  <div class="page-sub">Chat Bot AI</div>
   <div class="panel" style="max-width:980px;margin:0 auto;">
-    <div class="panel-title">Chat</div>
+    <div class="panel-title">AI Chatbot</div>
     <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;">
-      <span style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;">MODE:</span>
-      <select class="fselect" id="ai-mode" style="font-size:11px;padding:5px 10px;">
-        <option value="general">General Assistant</option>
-        <option value="games">Game Helper (hints, cheats)</option>
-        <option value="code">Code Assistant (HTML/JS)</option>
-        <option value="b64">Base64 Decoder Helper</option>
-        <option value="proxy">Proxy Troubleshooter</option>
-      </select>
-      <button class="fbtn red" onclick="clearAI()" style="font-size:11px;padding:5px 10px;">Clear Chat</button>
+      <button class="fbtn" onclick="reloadAIFrame()">↺ Reload</button>
+      <button class="fbtn" onclick="openAIInNewTab()">⬡ New Tab</button>
+      <button class="fbtn green" onclick="fullscreenEl('ai-frame')">⛶ Fullscreen</button>
     </div>
-    <div id="ai-log"></div>
-    <div class="ai-input-row">
-      <input class="finput" type="text" id="ai-input" placeholder="Ask anything... (Enter to send)" onkeydown="if(event.key==='Enter')sendAI()" style="flex:1;">
-      <button class="fbtn accent" onclick="sendAI()">Send</button>
-    </div>
-  </div>
-  <!-- Suggested prompts -->
-  <div class="panel" style="margin-top:12px;">
-    <div class="panel-title">💡 Suggested Prompts</div>
-    <div style="display:flex;flex-wrap:wrap;gap:6px;">
-      <button class="gtile" onclick="askAI('What are the best unblocked games?')">Best unblocked games?</button>
-      <button class="gtile" onclick="askAI('Give me Slope game tips and tricks')">Slope tips</button>
-      <button class="gtile" onclick="askAI('What is Base64 encoding and how do I decode a game?')">Decode B64 game?</button>
-      <button class="gtile" onclick="askAI('How do I get past school filters?')">Bypass filters?</button>
-      <button class="gtile" onclick="askAI('Write me a simple browser game in HTML')">Make a game</button>
-      <button class="gtile" onclick="askAI('How does a proxy work?')">How proxy works?</button>
-      <button class="gtile" onclick="askAI('Give me the cheat codes for classic DOS games')">DOS cheats</button>
-      <button class="gtile" onclick="askAI('What are fun 2-player browser games?')">2-player games?</button>
-    </div>
+    <iframe id="ai-frame" src="Chat Bot AI (A.I GPT) (1).html" allow="fullscreen" style="width:100%;height:calc(100vh - 260px);min-height:560px;border:none;border-radius:12px;background:#fff;"></iframe>
   </div>
 </div>
- 
- 
+
 <!-- GN MATH TAB -->
 <div class="tab-panel" id="tab-gnmath">
   <div class="page-title">📐 GN Math</div>
@@ -1312,6 +1287,16 @@ function decodeB64(){
   catch(e){ alert('Invalid Base64: '+e.message); }
 }
  
+function reloadAIFrame(){
+  const frame=document.getElementById('ai-frame');
+  if(!frame) return;
+  const base='Chat Bot AI (A.I GPT) (1).html';
+  frame.src=base+(base.includes('?')?'&':'?')+'t='+Date.now();
+}
+function openAIInNewTab(){
+  window.open('Chat Bot AI (A.I GPT) (1).html','_blank');
+}
+
 // ════════════════════════════════════════════════════════
 // AI ASSISTANT
 // ════════════════════════════════════════════════════════
@@ -1412,6 +1397,9 @@ async function checkForUpdates(){
   btn.disabled=true; btn.textContent='⏳ Fetching latest…';
   status.textContent=''; status.style.color='var(--muted)';
   const RAW_URL='https://raw.githubusercontent.com/bluedogssyt-code/unblocl/refs/heads/main/index.html';
+  try{
+    sessionStorage.setItem('ugs_forced_tab','tools');
+  }catch(e){}
   try{
     const res=await fetch(RAW_URL+'?t='+Date.now(),{cache:'no-store'});
     if(!res.ok) throw new Error('HTTP '+res.status);
@@ -2213,8 +2201,20 @@ document.head.appendChild(animStyle);
 // INIT
 // ════════════════════════════════════════════════════════
 loadS();
-let startTab=S.defaultTab||'games';
-if(S.rememberTab&&S.lastTab) startTab=S.lastTab;
+let startTab='games';
+try{
+  const forcedTab=sessionStorage.getItem('ugs_forced_tab');
+  if(forcedTab){
+    startTab=forcedTab;
+    sessionStorage.removeItem('ugs_forced_tab');
+  }else{
+    startTab=S.defaultTab||'games';
+    if(S.rememberTab&&S.lastTab) startTab=S.lastTab;
+  }
+}catch(e){
+  startTab=S.defaultTab||'games';
+  if(S.rememberTab&&S.lastTab) startTab=S.lastTab;
+}
 ST(startTab);
 updateOvProxyBtn();
 setBrowserMode('both');
