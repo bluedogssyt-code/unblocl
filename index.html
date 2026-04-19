@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ultimate Games</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L7856P3VNT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-L7856P3VNT');
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
@@ -283,16 +290,108 @@ body::before{
 }
 .dl-tile:hover{background:rgba(0,255,65,0.14);}
  
-/* ─── AI CHAT ─── */
-.ai-msg{padding:12px 16px;border-radius:10px;margin-bottom:10px;font-size:13px;line-height:1.6;max-width:85%;}
-.ai-msg.user{background:rgba(92,124,250,0.15);border:1px solid rgba(92,124,250,0.2);margin-left:auto;text-align:right;}
-.ai-msg.bot{background:var(--bg3);border:1px solid var(--border);}
-.ai-msg.bot.thinking{opacity:0.6;font-style:italic;}
-#ai-log{min-height:300px;max-height:420px;overflow-y:auto;margin-bottom:12px;padding:4px;}
-#ai-log::-webkit-scrollbar{width:4px;}
-#ai-log::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-.ai-input-row{display:flex;gap:8px;}
-.ai-input-row input{flex:1;}
+/* ─── AI CHAT (inline) ─── */
+#ai-chat-wrap{
+  max-width:700px;margin:0 auto;
+  display:flex;flex-direction:column;
+  height:calc(100vh - 220px);min-height:480px;
+}
+#ai-notice{
+  background:rgba(251,191,36,0.08);
+  color:#fbbf24;
+  border:1px solid rgba(251,191,36,0.2);
+  padding:10px 16px;
+  border-radius:10px;
+  margin-bottom:14px;
+  font-size:0.9em;
+}
+#ai-notice a{color:var(--accent);}
+#ai-status{
+  text-align:center;
+  padding:5px;
+  font-size:11px;
+  font-family:'JetBrains Mono',monospace;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+#ai-status.connected{color:var(--green);}
+#ai-status.error{color:var(--red);}
+#ai-messages{
+  flex:1;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding:4px 2px;
+  margin-bottom:12px;
+}
+#ai-messages::-webkit-scrollbar{width:4px;}
+#ai-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.ai-bubble{
+  padding:12px 16px;
+  border-radius:16px;
+  max-width:82%;
+  word-wrap:break-word;
+  font-size:13px;
+  line-height:1.6;
+  animation:fadeIn 0.25s ease;
+}
+.ai-bubble.user{
+  align-self:flex-end;
+  background:rgba(92,124,250,0.18);
+  border:1px solid rgba(92,124,250,0.25);
+  color:var(--text);
+  text-align:right;
+}
+.ai-bubble.bot{
+  align-self:flex-start;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  color:var(--text);
+}
+.ai-bubble.bot pre{
+  background:rgba(0,0,0,0.5);
+  color:#7eff9c;
+  padding:10px;
+  border-radius:8px;
+  overflow-x:auto;
+  font-family:'JetBrains Mono',monospace;
+  margin-top:8px;
+  font-size:11px;
+}
+.ai-bubble.bot code{white-space:pre-wrap;}
+#ai-input-row{
+  display:flex;
+  gap:8px;
+}
+#ai-text-input{
+  flex:1;
+  background:var(--bg3);
+  border:1.5px solid var(--border);
+  border-radius:10px;
+  color:var(--text);
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;
+  padding:10px 14px;
+  outline:none;
+  transition:border-color 0.2s;
+}
+#ai-text-input:focus{border-color:var(--accent);}
+#ai-text-input::placeholder{color:var(--muted);}
+#ai-send-btn{
+  background:var(--accent);
+  border:none;
+  border-radius:10px;
+  color:white;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  font-weight:700;
+  padding:10px 20px;
+  cursor:pointer;
+  transition:all 0.15s;
+}
+#ai-send-btn:hover{opacity:0.85;}
+#ai-send-btn:disabled{background:var(--card);color:var(--muted);cursor:not-allowed;}
  
 /* ─── B64 VIEWER ─── */
 #b64-frame{width:100%;height:500px;border:none;border-radius:10px;background:#fff;display:none;}
@@ -400,7 +499,6 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
       <button class="obtn" onclick="retryDirect()">Direct</button>
     </div>
   </div>
-  <!-- Shadow DOM host for proxied content -->
   <div id="proxy-content-host" style="flex:1;background:#fff;overflow:auto;display:none;"></div>
   <iframe id="game-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-top-navigation-by-user-activation" allowfullscreen src="about:blank"></iframe>
 </div>
@@ -497,7 +595,6 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
       <button class="fbtn" onclick="browserNewTab()" style="font-size:11px;">⬡ Tab</button>
       <button class="fbtn red" onclick="closeBrowser()" style="font-size:11px;">✕</button>
     </div>
-    <!-- Quick links row -->
     <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
       <span style="font-size:10px;color:var(--muted);align-self:center;font-family:'JetBrains Mono',monospace;">QUICK:</span>
       <button class="gtile" onclick="browserQuick('https://www.google.com')">Google</button>
@@ -513,7 +610,6 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
       <button class="gtile" onclick="browserQuick('https://www.coolmathgames.com')">Coolmath</button>
       <button class="gtile" onclick="browserQuick('https://poki.com')">Poki</button>
     </div>
-    <!-- Proxy engine selector -->
     <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;">
       <span style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;">ENGINE:</span>
       <button class="fbtn" id="pe-both" onclick="setBrowserMode('both')" style="font-size:10px;padding:5px 10px;">Both (auto)</button>
@@ -617,18 +713,20 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
   </div>
 </div>
  
-<!-- ══════════ AI TAB ══════════ -->
+<!-- ══════════ AI TAB (BROKEN FOR NOW) ══════════ -->
 <div class="tab-panel" id="tab-ai">
-  <div class="page-title">🤖 AI</div>
-  <div class="page-sub">Chat Bot AI</div>
-  <div class="panel" style="max-width:980px;margin:0 auto;">
-    <div class="panel-title">AI Chatbot</div>
-    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center;">
-      <button class="fbtn" onclick="reloadAIFrame()">↺ Reload</button>
-      <button class="fbtn" onclick="openAIInNewTab()">⬡ New Tab</button>
-      <button class="fbtn green" onclick="fullscreenEl('ai-frame')">⛶ Fullscreen</button>
+  <div class="page-title">🤖 AI Chat</div>
+  <div class="page-sub">Powered by WebSocket AI — no key needed (BROKEN RIGHT NOW, WILL FIX SOON)</div>
+  <div id="ai-chat-wrap">
+    <div id="ai-notice">
+      Don't abuse AI please. Issues? Join <a href="https://discord.gg/gn-math" target="_blank">our discord</a>.
     </div>
-    <iframe id="ai-frame" src="Chat Bot AI (A.I GPT) (2).html" allow="fullscreen" style="width:100%;height:calc(100vh - 260px);min-height:560px;border:none;border-radius:12px;background:#fff;"></iframe>
+    <div id="ai-status">Connecting...</div>
+    <div id="ai-messages"></div>
+    <div id="ai-input-row">
+      <input type="text" id="ai-text-input" placeholder="Ask something..." autocomplete="off" disabled />
+      <button id="ai-send-btn" disabled>Send</button>
+    </div>
   </div>
 </div>
 
@@ -917,9 +1015,132 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
  
 <script src="https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/searchbut.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/game.js"></script>
+
+<!-- ══════════ INLINE AI WEBSOCKET CHAT ══════════ -->
+<script>
+(function(){
+  // Use same WS_URL pattern from the original AI file
+  // The obfuscated code resolves to a WebSocket endpoint — we replicate the connection
+  const WS_PARTS = ['wss://gn', '-math-ws.', 'glitch.me'];
+  const WS_URL = WS_PARTS.join('');
+
+  const chatEl     = document.getElementById('ai-messages');
+  const statusEl   = document.getElementById('ai-status');
+  const inputEl    = document.getElementById('ai-text-input');
+  const sendBtn    = document.getElementById('ai-send-btn');
+
+  let ws = null, botBubble = null, botText = '', streaming = false, wsHistory = [];
+
+  function connect() {
+    statusEl.textContent = 'Connecting...';
+    statusEl.className = '';
+    ws = new WebSocket(WS_URL);
+
+    ws.onopen = () => {
+      statusEl.textContent = 'Connected ✓';
+      statusEl.className = 'connected';
+      inputEl.disabled = false;
+      sendBtn.disabled = false;
+      inputEl.focus();
+    };
+
+    ws.onmessage = (event) => {
+      let data;
+      try { data = JSON.parse(event.data); } catch { return; }
+      switch (data.type) {
+        case 'start':
+          botText = '';
+          botBubble = addBubble('', 'bot');
+          streaming = true;
+          break;
+        case 'chunk':
+          if (botBubble && data.text) {
+            renderMarkdown(botBubble, botText += data.text);
+            scrollDown();
+          }
+          break;
+        case 'end':
+          if (botBubble) renderMarkdown(botBubble, data.text || botText);
+          wsHistory.push({ role: 'assistant', content: data.text || botText });
+          botBubble = null;
+          streaming = false;
+          inputEl.disabled = false;
+          sendBtn.disabled = false;
+          inputEl.focus();
+          scrollDown();
+          break;
+        case 'error':
+          addBubble('⚠ ' + (data.message || 'Error'), 'bot');
+          streaming = false;
+          inputEl.disabled = false;
+          sendBtn.disabled = false;
+          break;
+      }
+    };
+
+    ws.onclose = () => {
+      statusEl.textContent = 'Disconnected — reconnecting...';
+      statusEl.className = 'error';
+      inputEl.disabled = true;
+      sendBtn.disabled = true;
+      setTimeout(connect, 3000);
+    };
+
+    ws.onerror = () => {
+      statusEl.textContent = 'Connection error';
+      statusEl.className = 'error';
+    };
+  }
+
+  function send() {
+    const q = inputEl.value.trim();
+    if (!q || !ws || ws.readyState !== WebSocket.OPEN || streaming) return;
+    addBubble(q, 'user');
+    wsHistory.push({ role: 'user', content: q });
+    ws.send(JSON.stringify({ question: q, history: wsHistory.slice(-10) }));
+    inputEl.value = '';
+    inputEl.disabled = true;
+    sendBtn.disabled = true;
+  }
+
+  function addBubble(text, role) {
+    const div = document.createElement('div');
+    div.className = 'ai-bubble ' + role;
+    if (text) div.textContent = text;
+    chatEl.appendChild(div);
+    scrollDown();
+    return div;
+  }
+
+  function scrollDown() {
+    chatEl.scrollTop = chatEl.scrollHeight;
+  }
+
+  function renderMarkdown(el, text) {
+    let html = text
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => '<pre><code>' + code + '</code></pre>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/\n/g, '<br>');
+    el.innerHTML = html;
+  }
+
+  sendBtn.addEventListener('click', send);
+  inputEl.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' || e.shiftKey) return;
+    e.preventDefault();
+    send();
+  });
+
+  connect();
+})();
+</script>
+
 <script>
 // ════════════════════════════════════════════════════════
-// PROXY ENGINE (Helios-style waterfall)
+// PROXY ENGINE
 // ════════════════════════════════════════════════════════
 const PROXIES = [
   u => `https://api.cors.lol/?url=${encodeURIComponent(u)}`,
@@ -978,7 +1199,6 @@ async function loadShadowDom(targetUrl, hostEl){
     const base = new URL(targetUrl);
     const parser = new DOMParser();
     const doc = parser.parseFromString(result.html,'text/html');
-    // Rewrite links to intercept navigation
     doc.querySelectorAll('a[href]').forEach(a=>{
       try{ a.setAttribute('href', new URL(a.getAttribute('href'),base).href); }catch(e){}
       a.setAttribute('target','_parent');
@@ -1096,7 +1316,6 @@ function browserQuick(url){ document.getElementById('browser-addr').value=url; b
 async function browserGo(){
   let raw=document.getElementById('browser-addr').value.trim();
   if(!raw) return;
-  // Detect if it's a search query
   if(!raw.includes('.') || raw.includes(' ')){
     raw='https://www.google.com/search?q='+encodeURIComponent(raw);
   }
@@ -1114,11 +1333,8 @@ async function browserNavigate(url){
   const shadowHost=document.getElementById('proxy-content-inner');
   const iframeEl=document.getElementById('proxy-iframe');
   const msg=document.getElementById('proxy-msg');
- 
-  // Add to history
   if(browserHistIdx<browserHistory.length-1) browserHistory=browserHistory.slice(0,browserHistIdx+1);
   browserHistory.push(url); browserHistIdx=browserHistory.length-1;
- 
   if(browserMode==='shadow'||browserMode==='both'){
     statusTxt.textContent='⏳ Fetching via proxy…'; statusTxt.style.color='var(--yellow)';
     shadowHost.style.display='block'; iframeEl.style.display='none';
@@ -1133,12 +1349,8 @@ async function browserNavigate(url){
   msg.textContent='';
 }
  
-function browserBack(){
-  if(browserHistIdx>0){ browserHistIdx--; browserNavigate(browserHistory[browserHistIdx]); }
-}
-function browserFwd(){
-  if(browserHistIdx<browserHistory.length-1){ browserHistIdx++; browserNavigate(browserHistory[browserHistIdx]); }
-}
+function browserBack(){ if(browserHistIdx>0){ browserHistIdx--; browserNavigate(browserHistory[browserHistIdx]); } }
+function browserFwd(){ if(browserHistIdx<browserHistory.length-1){ browserHistIdx++; browserNavigate(browserHistory[browserHistIdx]); } }
 function browserReload(){ if(browserCurrentUrl) browserNavigate(browserCurrentUrl); }
 function browserNewTab(){ if(browserCurrentUrl) window.open(browserCurrentUrl,'_blank'); }
 function closeBrowser(){
@@ -1196,7 +1408,7 @@ function initDos(){
   DOS_DL.forEach(d=>{
     const a=document.createElement('a');
     a.className='dl-tile';
-    a.href=buildProxy(d.url); // proxy the download
+    a.href=buildProxy(d.url);
     a.target='_blank';
     a.innerHTML=`<span style="color:#00ff41;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;">⬇ ${d.n}</span><span style="color:var(--muted);font-size:10px;margin-top:2px;">${d.d}</span>`;
     dl.appendChild(a);
@@ -1214,7 +1426,6 @@ function launchDos(g){
   const wrap=document.getElementById('dos-player-wrap');
   wrap.style.display='block';
   document.getElementById('dos-now').textContent='▶ '+g.n;
-  // Use proxied archive.org embed
   const archiveUrl='https://archive.org/embed/'+g.id+'?ui=full';
   document.getElementById('dos-frame').src=buildProxy(archiveUrl);
   wrap.scrollIntoView({behavior:'smooth'});
@@ -1250,11 +1461,10 @@ function viewB64Blank(){
 function autoDetectB64(){
   const raw=document.getElementById('b64-input').value.trim();
   if(!raw) return;
-  // Try decoding — if it contains HTML tags, assume it's a game
   try{
     const decoded=decodeURIComponent(escape(atob(raw)));
     if(decoded.includes('<html')||decoded.includes('<script')||decoded.includes('<!DOCTYPE')){
-      document.getElementById('b64-input').value=raw; // keep b64
+      document.getElementById('b64-input').value=raw;
       viewB64();
       document.getElementById('b64-status').textContent='✓ Auto-detected as HTML game — loaded!';
     } else {
@@ -1280,131 +1490,21 @@ function decodeB64(){
   try{ document.getElementById('b64-input').value=decodeURIComponent(escape(atob(v))); }
   catch(e){ alert('Invalid Base64: '+e.message); }
 }
- 
-function reloadAIFrame(){
-  const frame=document.getElementById('ai-frame');
-  if(!frame) return;
-  const base='Chat Bot AI (A.I GPT) (2).html';
-  frame.src=base+(base.includes('?')?'&':'?')+'t='+Date.now();
-}
-function openAIInNewTab(){
-  window.open('Chat Bot AI (A.I GPT) (2).html','_blank');
-}
 
-// ════════════════════════════════════════════════════════
-// AI ASSISTANT
-// ════════════════════════════════════════════════════════
-let aiHistory=[];
-function appendMsg(role,text){
-  const log=document.getElementById('ai-log');
-  const div=document.createElement('div');
-  div.className='ai-msg '+(role==='user'?'user':'bot');
-  div.textContent=text;
-  log.appendChild(div);
-  log.scrollTop=log.scrollHeight;
-  return div;
-}
-function clearAI(){ aiHistory=[]; document.getElementById('ai-log').innerHTML=''; }
-function askAI(q){ document.getElementById('ai-input').value=q; sendAI(); }
- 
-async function sendAI(){
-  const input=document.getElementById('ai-input');
-  const q=input.value.trim(); if(!q) return;
-  input.value='';
-  const mode=document.getElementById('ai-mode').value;
-  const sysMap={
-    general:'You are a helpful assistant in UGS Hub, an unblocked games site. Be concise.',
-    games:'You are a gaming expert. Give specific tips, cheats, strategies for browser and unblocked games.',
-    code:'You are a code assistant. Help write HTML/JavaScript games and tools. Give working code examples.',
-    b64:'You are a Base64 HTML expert. Help users decode, encode, and troubleshoot Base64 HTML game files.',
-    proxy:'You are a proxy/network expert. Help with CORS, proxy servers, and bypassing content filters.',
-  };
-  const sysprompt=sysMap[mode]||sysMap.general;
-  appendMsg('user',q);
-  const thinking=appendMsg('bot','⏳ Connecting…');thinking.classList.add('thinking');
-  const msgs=[...aiHistory,{role:'user',content:q}];
- 
-  // Check optional Groq key
-  const groqKey=(document.getElementById('ai-custom-key')||{value:''}).value.trim();
-  const groqModel=(document.getElementById('ai-model-select')||{value:'llama-3.3-70b-versatile'}).value||'llama-3.3-70b-versatile';
- 
-  // ── Try Groq if key provided (fastest, browser CORS supported) ──
-  if(groqKey){
-    try{
-      thinking.textContent='⏳ Trying Groq…';
-      const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
-        method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+groqKey},
-        body:JSON.stringify({model:groqModel,max_tokens:1000,messages:[{role:'system',content:sysprompt},...msgs]})
-      });
-      if(r.ok){
-        const d=await r.json();const reply=d.choices?.[0]?.message?.content||'';
-        if(reply.length>1){
-          finish(thinking,reply,'Groq · '+groqModel);
-          return;
-        }
-      }
-    }catch(e){console.warn('Groq:',e.message);}
-  }
- 
-  // ── Pollinations AI — free, no key, explicit browser CORS support ──
-  for(const mdl of['openai','mistral','llama','deepseek']){
-    try{
-      thinking.textContent='⏳ Trying Pollinations ('+mdl+')…';
-      const r=await fetch('https://text.pollinations.ai/',{
-        method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({model:mdl,messages:[{role:'system',content:sysprompt},{role:'user',content:q}],seed:Math.floor(Math.random()*9999)})
-      });
-      if(!r.ok)throw new Error('HTTP '+r.status);
-      const d=await r.json();const reply=d.choices?.[0]?.message?.content||'';
-      if(reply.length>1){finish(thinking,reply,'Pollinations · '+mdl+' (free)');return;}
-    }catch(e){console.warn('Pollinations',mdl,e.message);}
-  }
- 
-  // ── Pollinations GET fallback ──
-  try{
-    thinking.textContent='⏳ Last fallback…';
-    const ctx=msgs.slice(-4).map(m=>(m.role==='user'?'User: ':'AI: ')+m.content).join('\n');
-    const r=await fetch('https://text.pollinations.ai/'+encodeURIComponent(ctx+'\nUser: '+q)+'?model=openai&seed='+Math.floor(Math.random()*9999));
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    const reply=(await r.text()).trim();
-    if(reply.length>1){finish(thinking,reply,'Pollinations GET (free)');return;}
-  }catch(e){console.warn('Pollinations GET:',e.message);}
- 
-  thinking.textContent='✗ All AI engines failed. Paste a free Groq key (groq.com) in the field above to enable AI.';
-  thinking.classList.remove('thinking');
-}
- 
-function finish(el,reply,engine){
-  el.textContent=reply;el.classList.remove('thinking');
-  const b=document.createElement('div');
-  b.style.cssText='font-size:9px;opacity:0.4;margin-top:4px;font-family:monospace;';
-  b.textContent='via '+engine;el.appendChild(b);
-  const q=el.previousSibling?.textContent||'';
-  aiHistory.push({role:'user',content:q},{role:'assistant',content:reply});
-  if(aiHistory.length>20)aiHistory=aiHistory.slice(-20);
-}
- 
- 
 async function checkForUpdates(){
   const btn=document.getElementById('update-btn');
   const status=document.getElementById('update-status');
   btn.disabled=true; btn.textContent='⏳ Fetching latest…';
   status.textContent=''; status.style.color='var(--muted)';
   const RAW_URL='https://raw.githubusercontent.com/bluedogssyt-code/unblocl/refs/heads/main/index.html';
-  try{
-    sessionStorage.setItem('ugs_forced_tab','tools');
-  }catch(e){}
+  try{ sessionStorage.setItem('ugs_forced_tab','tools'); }catch(e){}
   try{
     const res=await fetch(RAW_URL+'?t='+Date.now(),{cache:'no-store'});
     if(!res.ok) throw new Error('HTTP '+res.status);
     const html=await res.text();
     status.style.color='var(--green)';
     status.textContent='✓ Got latest version — reloading now…';
-    setTimeout(()=>{
-      document.open();
-      document.write(html);
-      document.close();
-    },600);
+    setTimeout(()=>{ document.open(); document.write(html); document.close(); },600);
   }catch(e){
     btn.disabled=false; btn.textContent='🔄 Refresh / Check for Updates';
     status.style.color='var(--red)';
@@ -1419,14 +1519,8 @@ async function fetchUrl(){
   const r=await fetchWaterfall(normalizeUrl(u));
   ed.value=r.html||(r.errors||[]).join('\n');
 }
-function htmlToB64(){
-  const ed=document.getElementById('main-editor');
-  try{ ed.value=btoa(unescape(encodeURIComponent(ed.value))); }catch(e){ alert('Encoding failed'); }
-}
-function b64ToHtml(){
-  const ed=document.getElementById('main-editor');
-  try{ ed.value=decodeURIComponent(escape(atob(ed.value))); }catch(e){ alert('Invalid Base64'); }
-}
+function htmlToB64(){ const ed=document.getElementById('main-editor'); try{ ed.value=btoa(unescape(encodeURIComponent(ed.value))); }catch(e){ alert('Encoding failed'); } }
+function b64ToHtml(){ const ed=document.getElementById('main-editor'); try{ ed.value=decodeURIComponent(escape(atob(ed.value))); }catch(e){ alert('Invalid Base64'); } }
 function viewInBlank(){
   let c=document.getElementById('main-editor').value.trim(); if(!c) return;
   if(!c.includes('<')&&!c.includes(' ')){ try{ c=decodeURIComponent(escape(atob(c))); }catch(e){} }
@@ -1434,20 +1528,7 @@ function viewInBlank(){
 }
  
 // ════════════════════════════════════════════════════════
-// PROXY TEST
-// ════════════════════════════════════════════════════════
-async function testProxy(){
-  const el=document.getElementById('proxy-test-result');
-  el.style.display='block'; el.textContent='⏳ Testing…'; el.style.color='var(--yellow)';
-  try{
-    const t=Date.now(); const r=await fetchWaterfall('https://example.com'); const ms=Date.now()-t;
-    if(r.html){ el.style.color='var(--green)'; el.textContent=`✓ Proxy working! (${ms}ms)`; }
-    else throw new Error('all proxies failed');
-  }catch(e){ el.style.color='var(--red)'; el.textContent='✗ Failed: '+e.message; }
-}
- 
-// ════════════════════════════════════════════════════════
-// GAME DATA — PIZZA EDITION (100+)
+// GAME DATA
 // ════════════════════════════════════════════════════════
 const PIZZA=[
   {n:'Slice Master',u:'https://www.coolmathgames.com/0-slice-master'},
@@ -1522,10 +1603,6 @@ const PIZZA=[
   {n:'Soccer Random',u:'https://poki.com/en/g/soccer-random'},
   {n:'Ragdoll Hit',u:'https://poki.com/en/g/ragdoll-hit'},
 ];
- 
-// ════════════════════════════════════════════════════════
-// PIZZARDITION DATA (80+)
-// ════════════════════════════════════════════════════════
 const PZRD=[
   {n:'Slope',u:'https://slope-game.github.io/'},{n:'Run 3',u:'https://www.coolmathgames.com/0-run-3'},
   {n:'Krunker.io',u:'https://krunker.io'},{n:'Shell Shockers',u:'https://shellshock.io'},
@@ -1565,10 +1642,6 @@ const PZRD=[
   {n:'itch.io free',u:'https://itch.io/games/free'},{n:'Google Earth',u:'https://earth.google.com/web/'},
   {n:'Desmos Art',u:'https://www.desmos.com/art'},{n:'Slice Master',u:'https://www.coolmathgames.com/0-slice-master'},
 ];
- 
-// ════════════════════════════════════════════════════════
-// COOLMATH (150+ games)
-// ════════════════════════════════════════════════════════
 const COOL=[
   {n:'Slice Master',u:'https://www.coolmathgames.com/0-slice-master'},
   {n:"Papa's Pizzeria",u:'https://www.coolmathgames.com/0-papas-pizzeria'},
@@ -1621,26 +1694,6 @@ const COOL=[
   {n:'Moto X3M Spooky',u:'https://www.coolmathgames.com/0-moto-x3m-spooky-land'},
   {n:'Moto X3M Winter',u:'https://www.coolmathgames.com/0-moto-x3m-winter'},
   {n:'Moto X3M Pool Party',u:'https://www.coolmathgames.com/0-moto-x3m-pool-party'},
-  {n:'Wheely',u:'https://www.coolmathgames.com/0-wheely'},
-  {n:'Wheely 2',u:'https://www.coolmathgames.com/0-wheely-2'},
-  {n:'Wheely 3',u:'https://www.coolmathgames.com/0-wheely-3'},
-  {n:'Wheely 4',u:'https://www.coolmathgames.com/0-wheely-4'},
-  {n:'Wheely 5',u:'https://www.coolmathgames.com/0-wheely-5'},
-  {n:'Wheely 6',u:'https://www.coolmathgames.com/0-wheely-6'},
-  {n:'Wheely 7',u:'https://www.coolmathgames.com/0-wheely-7'},
-  {n:'Wheely 8',u:'https://www.coolmathgames.com/0-wheely-8'},
-  {n:'Parking Fury',u:'https://www.coolmathgames.com/0-parking-fury'},
-  {n:'Parking Fury 2',u:'https://www.coolmathgames.com/0-parking-fury-2'},
-  {n:'Parking Fury 3',u:'https://www.coolmathgames.com/0-parking-fury-3'},
-  {n:'Stickman Boost',u:'https://www.coolmathgames.com/0-stickman-boost'},
-  {n:'Stickman Boost 2',u:'https://www.coolmathgames.com/0-stickman-boost-2'},
-  {n:'Ninja Painter',u:'https://www.coolmathgames.com/0-ninja-painter'},
-  {n:'Ninja Painter 2',u:'https://www.coolmathgames.com/0-ninja-painter-2'},
-  {n:'Sugar Sugar',u:'https://www.coolmathgames.com/0-sugar-sugar'},
-  {n:'Sugar Sugar 2',u:'https://www.coolmathgames.com/0-sugar-sugar-2'},
-  {n:'Red Ball 4',u:'https://www.coolmathgames.com/0-red-ball-4'},
-  {n:'Red Ball 4 Vol 2',u:'https://www.coolmathgames.com/0-red-ball-4-vol-2'},
-  {n:'Red Ball 4 Vol 3',u:'https://www.coolmathgames.com/0-red-ball-4-vol-3'},
   {n:'Bloxorz',u:'https://www.coolmathgames.com/0-bloxorz'},
   {n:'Jacksmith',u:'https://www.coolmathgames.com/0-jacksmith'},
   {n:'Snake',u:'https://www.coolmathgames.com/0-snake'},
@@ -1649,40 +1702,18 @@ const COOL=[
   {n:'Idle Dice',u:'https://www.coolmathgames.com/0-idle-dice'},
   {n:'Chess',u:'https://www.coolmathgames.com/0-chess'},
   {n:'Checkers',u:'https://www.coolmathgames.com/0-checkers'},
-  {n:'Backgammon',u:'https://www.coolmathgames.com/0-backgammon'},
-  {n:'Solitaire',u:'https://www.coolmathgames.com/0-classic-solitaire'},
-  {n:'FreeCell',u:'https://www.coolmathgames.com/0-freecell'},
   {n:'Sudoku',u:'https://www.coolmathgames.com/0-sudoku'},
   {n:'Liquid Sort',u:'https://www.coolmathgames.com/0-liquid-sort'},
-  {n:'Tug the Table',u:'https://www.coolmathgames.com/0-tug-the-table'},
-  {n:'Crossy Road',u:'https://www.coolmathgames.com/0-crossy-road'},
-  {n:'Copter Royale',u:'https://www.coolmathgames.com/0-copter-royale'},
-  {n:'IQ Ball',u:'https://www.coolmathgames.com/0-iq-ball'},
-  {n:'Plumber',u:'https://www.coolmathgames.com/0-plumber'},
-  {n:'Plumber 2',u:'https://www.coolmathgames.com/0-plumber-2'},
-  {n:'12 MiniBattles',u:'https://www.coolmathgames.com/0-12-minibattles'},
-  {n:'Monkey Go Happy',u:'https://www.coolmathgames.com/0-monkey-go-happy'},
-  {n:'Monkey Go Happy 2',u:'https://www.coolmathgames.com/0-monkey-go-happy-2'},
   {n:'Wordle',u:'https://www.coolmathgames.com/0-wordle'},
-  {n:'Hangman',u:'https://www.coolmathgames.com/0-hangman'},
-  {n:'Oh My Word',u:'https://www.coolmathgames.com/0-oh-my-word'},
-  {n:'Ducky Life',u:'https://www.coolmathgames.com/0-ducky-life'},
-  {n:'Ducky Life 2',u:'https://www.coolmathgames.com/0-ducky-life-2'},
-  {n:'Gravitile',u:'https://www.coolmathgames.com/0-gravitile'},
-  {n:'Pixel Painter',u:'https://www.coolmathgames.com/0-pixel-painter'},
+  {n:'Red Ball 4',u:'https://www.coolmathgames.com/0-red-ball-4'},
+  {n:'IQ Ball',u:'https://www.coolmathgames.com/0-iq-ball'},
   {n:'0h h1',u:'https://0hh1.com/'},{n:'0h n0',u:'https://0hn0.com/'},
 ];
- 
-// ════════════════════════════════════════════════════════
-// POKI & CRAZYGAMES (200+)
-// ════════════════════════════════════════════════════════
 const POKI=[
   {n:'Subway Surfers',u:'https://poki.com/en/g/subway-surfers'},
   {n:'Moto X3M',u:'https://poki.com/en/g/moto-x3m'},
   {n:'Stickman Hook',u:'https://poki.com/en/g/stickman-hook'},
   {n:'Fireboy Watergirl Forest',u:'https://poki.com/en/g/fireboy-and-watergirl-in-the-forest-temple'},
-  {n:'Fireboy Watergirl Light',u:'https://poki.com/en/g/fireboy-and-watergirl-2-light-temple'},
-  {n:'Fireboy Watergirl Ice',u:'https://poki.com/en/g/fireboy-and-watergirl-3-the-ice-temple'},
   {n:'Bike Ride 3D',u:'https://poki.com/en/g/bike-ride-3d'},
   {n:'Basket Random',u:'https://poki.com/en/g/basket-random'},
   {n:'Soccer Random',u:'https://poki.com/en/g/soccer-random'},
@@ -1693,7 +1724,6 @@ const POKI=[
   {n:'Getaway Shootout',u:'https://poki.com/en/g/getaway-shootout'},
   {n:'Rooftop Snipers',u:'https://poki.com/en/g/rooftop-snipers'},
   {n:'Basketball Stars',u:'https://poki.com/en/g/basketball-stars'},
-  {n:'Penalty Shooters 2',u:'https://poki.com/en/g/penalty-shooters-2'},
   {n:'Adam and Eve',u:'https://poki.com/en/g/adam-and-eve'},
   {n:'Narrow One',u:'https://poki.com/en/g/narrow-one'},
   {n:'Hole.io',u:'https://poki.com/en/g/hole-io'},
@@ -1701,68 +1731,22 @@ const POKI=[
   {n:'Tiny Fishing',u:'https://poki.com/en/g/tiny-fishing'},
   {n:'Crossy Road',u:'https://poki.com/en/g/crossy-road'},
   {n:'Flip Diving',u:'https://poki.com/en/g/flip-diving'},
-  {n:'Crazy Bikes',u:'https://poki.com/en/g/crazy-bikes'},
-  // CrazyGames
   {n:'Raft Wars',u:'https://www.crazygames.com/game/raft-wars'},
-  {n:'Raft Wars 2',u:'https://www.crazygames.com/game/raft-wars-2'},
-  {n:'Vex 3',u:'https://www.crazygames.com/game/vex-3'},
-  {n:'Vex 4',u:'https://www.crazygames.com/game/vex-4'},
   {n:'Vex 5',u:'https://www.crazygames.com/game/vex-5'},
-  {n:'Vex 6',u:'https://www.crazygames.com/game/vex-6'},
-  {n:'Vex 7',u:'https://www.crazygames.com/game/vex-7'},
   {n:'Shell Shockers',u:'https://www.crazygames.com/game/shell-shockers'},
   {n:'Bullet Force',u:'https://www.crazygames.com/game/bullet-force-multiplayer'},
-  {n:'Combat Reloaded',u:'https://www.crazygames.com/game/combat-reloaded'},
-  {n:'Combat Reloaded 2',u:'https://www.crazygames.com/game/combat-reloaded-2'},
-  {n:'Build Royale',u:'https://www.crazygames.com/game/build-royale'},
-  {n:'GoreBox',u:'https://www.crazygames.com/game/gorebox'},
   {n:'Basketball Legends',u:'https://www.crazygames.com/game/basketball-legends'},
-  {n:'Football Legends',u:'https://www.crazygames.com/game/football-legends'},
-  {n:'Head Ball',u:'https://www.crazygames.com/game/head-ball'},
   {n:'Tank Stars',u:'https://www.crazygames.com/game/tank-stars'},
-  {n:'Rocket Soccer Derby',u:'https://www.crazygames.com/game/rocket-soccer-derby'},
-  {n:'Superfighters Deluxe',u:'https://www.crazygames.com/game/superfighters-deluxe'},
   {n:'Aquapark.io',u:'https://www.crazygames.com/game/aquaparkio'},
-  {n:'Snowball.io',u:'https://www.crazygames.com/game/snowballio'},
   {n:'Defly.io',u:'https://www.crazygames.com/game/deflyio'},
-  {n:'Wings.io',u:'https://www.crazygames.com/game/wingsio'},
-  {n:'Splix.io',u:'https://www.crazygames.com/game/splixio'},
-  {n:'Ninja.io',u:'https://www.crazygames.com/game/ninjaio'},
-  {n:'Lordz.io',u:'https://www.crazygames.com/game/lordzio'},
-  {n:'Draw Climber',u:'https://www.crazygames.com/game/draw-climber'},
-  {n:'Dino Run DX',u:'https://www.crazygames.com/game/dino-run-dx'},
-  {n:'Pacman',u:'https://www.crazygames.com/game/pacman'},
-  {n:'Galaga',u:'https://www.crazygames.com/game/galaga'},
-  {n:'Donkey Kong',u:'https://www.crazygames.com/game/donkey-kong'},
-  {n:'Tetris Classic',u:'https://www.crazygames.com/game/tetris-classic'},
-  {n:'Bubble Shooter',u:'https://www.crazygames.com/game/bubble-shooter'},
-  {n:'Color Road',u:'https://www.crazygames.com/game/color-road'},
-  {n:'Temple Run 2',u:'https://www.crazygames.com/game/temple-run-2'},
   {n:'Slope',u:'https://www.crazygames.com/game/slope'},
   {n:'Run 3',u:'https://www.crazygames.com/game/run-3'},
-  {n:'Stickman Fighter 3D',u:'https://www.crazygames.com/game/stickman-fighter-3d'},
-  {n:'Dragon Simulator',u:'https://www.crazygames.com/game/dragon-simulator'},
-  {n:'Wolf Simulator',u:'https://www.crazygames.com/game/wolf-simulator-wild-animals-3d'},
-  {n:'Curve Fever Pro',u:'https://www.crazygames.com/game/curve-fever-pro'},
-  {n:'Piano Tiles Online',u:'https://www.crazygames.com/game/piano-tiles-online'},
-  {n:'Geometry Jump',u:'https://www.crazygames.com/game/geometry-jump'},
-  {n:'Golf Orbit',u:'https://www.crazygames.com/game/golf-orbit'},
-  {n:'Mini Golf Master',u:'https://www.crazygames.com/game/mini-golf-master'},
-  {n:'Bowman',u:'https://www.crazygames.com/game/bowman'},
-  {n:'Bowman 2',u:'https://www.crazygames.com/game/bowman-2'},
-  {n:'Angry Birds Online',u:'https://www.crazygames.com/game/angry-birds-online'},
-  {n:'Cut the Rope Remastered',u:'https://www.crazygames.com/game/cut-the-rope-remastered'},
-  {n:'Plants vs Zombies',u:'https://www.crazygames.com/game/plants-vs-zombies-online'},
-  {n:'Connections',u:'https://www.crazygames.com/game/connections'},
+  {n:'Temple Run 2',u:'https://www.crazygames.com/game/temple-run-2'},
+  {n:'Pacman',u:'https://www.crazygames.com/game/pacman'},
+  {n:'Tetris Classic',u:'https://www.crazygames.com/game/tetris-classic'},
   {n:'Wordle',u:'https://www.crazygames.com/game/wordle'},
-  {n:'Absurdle',u:'https://qntm.org/absurdle'},
-  {n:'Monster Truck',u:'https://www.crazygames.com/game/monster-truck'},
-  {n:'Drive Mad 2',u:'https://www.crazygames.com/game/drive-mad-2'},
+  {n:'Connections',u:'https://www.crazygames.com/game/connections'},
 ];
- 
-// ════════════════════════════════════════════════════════
-// EXTRA GAMES (120+)
-// ════════════════════════════════════════════════════════
 const EXTRA=[
   {n:'Slice Master',u:'https://www.coolmathgames.com/0-slice-master'},
   {n:'2048',u:'https://play2048.co/'},{n:'Slither.io',u:'https://slither.io'},
@@ -1772,63 +1756,35 @@ const EXTRA=[
   {n:'Zombs Royale',u:'https://zombsroyale.io'},{n:'Skribbl.io',u:'https://skribbl.io'},
   {n:'Gartic Phone',u:'https://garticphone.com'},{n:'GeoGuessr',u:'https://www.geoguessr.com'},
   {n:'WorldGuessr',u:'https://worldguessr.com'},{n:'Globle',u:'https://globle-game.com'},
-  {n:'Worldle',u:'https://worldle.teuteuf.fr'},{n:'Flagle',u:'https://www.flagle.io'},
-  {n:'Nerdle',u:'https://nerdlegame.com'},{n:'Contexto',u:'https://contexto.me'},
-  {n:'Quordle',u:'https://quordle.cc'},{n:'Semantle',u:'https://semantle.com'},
-  {n:'Framed',u:'https://framed.wtf'},{n:'Poeltl',u:'https://poeltl.dunk.town'},
-  {n:'Immaculate Grid',u:'https://www.immaculategrid.com'},
-  {n:'WikiTrivia',u:'https://wikitrivia.tomjwatson.com/'},
-  {n:'The Wiki Game',u:'https://www.thewikigame.com/'},
-  {n:'Sporcle',u:'https://www.sporcle.com/'},{n:'JetPunk',u:'https://www.jetpunk.com/quizzes'},
+  {n:'Flagle',u:'https://www.flagle.io'},{n:'Nerdle',u:'https://nerdlegame.com'},
+  {n:'Wordle (NYT)',u:'https://www.nytimes.com/games/wordle/index.html'},
   {n:'Smash Karts',u:'https://smashkarts.io/'},{n:'Voxiom.io',u:'https://voxiom.io/'},
-  {n:'Evades.io',u:'https://evades.io/'},{n:'Warbrokers',u:'https://warbrokers.io/'},
   {n:'Colonist.io',u:'https://colonist.io/'},{n:'Codenames',u:'https://codenames.game/'},
   {n:'Dino Game',u:'https://chromedino.com/'},{n:'Flappy Bird',u:'https://flappybird.io/'},
   {n:'Slope',u:'https://slope-game.github.io/'},{n:'Minesweeper',u:'https://minesweeper.online/'},
-  {n:'Solitaire',u:'https://www.solitaire.org/'},{n:'FreeCell',u:'https://freecell.org/'},
-  {n:'Battleship',u:'https://battleship-game.org/'},{n:'Chess (Lichess)',u:'https://lichess.org/'},
-  {n:'Chess vs Computer',u:'https://www.chess.com/play/computer'},
-  {n:'Checkers',u:'https://www.247checkers.com/'},{n:'Backgammon',u:'https://www.247backgammon.com/'},
-  {n:'Mahjong',u:'https://www.mahjong.org/'},{n:'Yahtzee',u:'https://www.247yahtzee.com/'},
+  {n:'Solitaire',u:'https://www.solitaire.org/'},{n:'Chess (Lichess)',u:'https://lichess.org/'},
   {n:'MonkeyType',u:'https://monkeytype.com/'},{n:'TypeRacer',u:'https://play.typeracer.com/'},
-  {n:'10FastFingers',u:'https://10fastfingers.com/typing-test/english'},
-  {n:'Keybr',u:'https://www.keybr.com/'},{n:'Quick Draw',u:'https://quickdraw.withgoogle.com/'},
-  {n:'AutoDraw',u:'https://www.autodraw.com/'},{n:'Chrome Music Lab',u:'https://musiclab.chromeexperiments.com/'},
+  {n:'Quick Draw',u:'https://quickdraw.withgoogle.com/'},
   {n:'Neal.fun',u:'https://neal.fun/'},{n:'Infinite Craft',u:'https://neal.fun/infinite-craft/'},
-  {n:'Password Game',u:'https://neal.fun/password-game/'},{n:'Spend Bill Gates $',u:'https://neal.fun/spend/'},
-  {n:'Google Earth',u:'https://earth.google.com/web/'},
+  {n:'Password Game',u:'https://neal.fun/password-game/'},
   {n:'Kahoot',u:'https://kahoot.it/'},{n:'Blooket',u:'https://dashboard.blooket.com/'},
-  {n:'Gimkit',u:'https://www.gimkit.com/join'},{n:'Retro Bowl',u:'https://www.retrobowl.co.uk/'},
-  {n:'Drift Boss',u:'https://driftboss.io/'},{n:'Drift Hunters',u:'https://drift-hunters.io/'},
+  {n:'Retro Bowl',u:'https://www.retrobowl.co.uk/'},
   {n:'Geometry Dash',u:'https://geometrydashgame.org/'},
   {n:'Friday Night Funkin',u:'https://fridaynightfunkin.net/friday-night-funkin-online/'},
   {n:'Minecraft Classic',u:'https://classic.minecraft.net/'},
-  {n:'Bonk.io',u:'https://bonk.io/'},{n:'Starblast.io',u:'https://starblast.io/'},
-  {n:'Yohoho.io',u:'https://yohoho.io/'},{n:'Ev.io',u:'https://ev.io/'},
-  {n:'Surviv.io',u:'https://surviv.io/'},{n:'Tank Trouble',u:'https://tanktrouble.com/'},
-  {n:'Cut the Rope',u:'https://www.cuttherope.net/'},{n:'Tetris',u:'https://tetris.com/play-tetris'},
-  {n:'Wordle (NYT)',u:'https://www.nytimes.com/games/wordle/index.html'},
-  {n:'Absurdle',u:'https://qntm.org/absurdle'},{n:'Scratch',u:'https://scratch.mit.edu/'},
+  {n:'Bonk.io',u:'https://bonk.io/'},{n:'Ev.io',u:'https://ev.io/'},
+  {n:'Scratch',u:'https://scratch.mit.edu/'},
   {n:'Poki Games',u:'https://poki.com/'},{n:'Crazy Games',u:'https://www.crazygames.com/'},
   {n:'itch.io free',u:'https://itch.io/games/free'},{n:'Newgrounds',u:'https://www.newgrounds.com'},
   {n:'Armor Games',u:'https://armorgames.com'},{n:'Jackbox TV',u:'https://jackbox.tv'},
-  {n:'Dominion Online',u:'https://dominion.games/'},
   {n:'Super Smash Flash 2',u:'https://www.mcleodgaming.com/games/super-smash-flash-2'},
   {n:'Strike Force Heroes',u:'https://strikeforceheroes.io/'},
-  {n:'Redactle',u:'https://redactle.net/'},{n:'Desmos Art',u:'https://www.desmos.com/art'},
-  {n:'Spore',u:'https://www.spore.com/web/sporepedia'},
-  {n:'Heardle 60s',u:'https://heardle60s.com/'},{n:'Moviedle',u:'https://moviedle.app'},
   {n:'Narrow One',u:'https://poki.com/en/g/narrow-one'},
   {n:'Rooftop Snipers',u:'https://poki.com/en/g/rooftop-snipers'},
-  {n:'Basketball Legends',u:'https://www.crazygames.com/game/basketball-legends'},
-  {n:'Raft Wars',u:'https://www.crazygames.com/game/raft-wars'},
-  {n:'Vex 5',u:'https://www.crazygames.com/game/vex-5'},
-  {n:'Aquapark.io',u:'https://www.crazygames.com/game/aquaparkio'},
   {n:'Stickman Hook',u:'https://poki.com/en/g/stickman-hook'},
   {n:'Tiny Fishing',u:'https://poki.com/en/g/tiny-fishing'},
-  {n:'Flip Diving',u:'https://poki.com/en/g/flip-diving'},
 ];
- 
+
 // ════════════════════════════════════════════════════════
 // WEBSITES / SITES
 // ════════════════════════════════════════════════════════
@@ -1947,7 +1903,7 @@ function doSearch(){
   else if(scope==='extra') pool=EXTRA;
   else if(scope==='dos') pool=DOS_GAMES.map(g=>({n:g.n,u:'#dos:'+g.id}));
   else if(scope==='sites') pool=SITES.flatMap(s=>s.sites.map(x=>({n:x.n,u:x.u})));
-  else if(scope==='games') pool=[];  // UGS games — search handled by game.js
+  else if(scope==='games') pool=[];
   else pool=ALL_GAMES_COMBINED;
   const filtered=pool.filter(g=>(g.n||g.name).toLowerCase().includes(q.toLowerCase()));
   document.getElementById('search-count').textContent=filtered.length+' found';
@@ -1968,7 +1924,6 @@ function doSearch(){
 function doSearchEnter(){
   const q=document.getElementById('global-search-input').value.trim();
   if(!q) return;
-  // Navigate browser to Google search
   ST('browser'); browserQuick('https://www.google.com/search?q='+encodeURIComponent(q));
   clearSearch();
 }
@@ -1982,17 +1937,12 @@ function clearSearch(){
 // ════════════════════════════════════════════════════════
 // TAB SWITCHING
 // ════════════════════════════════════════════════════════
-const ALL_TABS=['games','pizza','pzrd','cool','poki','extra','browser','dos','gnmath','tools','b64','ai','sites','settings'];
- 
- 
-// ════ GN MATH ════
 let gnmathLoaded=false;
 function initGnMath(){
   if(gnmathLoaded)return; gnmathLoaded=true;
   const frame=document.getElementById('gnmath-frame');
   const PRIMARY='https://cdn.jsdelivr.net/gh/freebuisness/freebuisness.github.io@main/singlefile.html';
   const BACKUP='https://raw.githubusercontent.com/freebuisness/freebuisness.github.io/refs/heads/main/singlefile.html';
- 
   function loadGnMath(url){
     fetch(url+'?t='+Date.now())
       .then(r=>{ if(!r.ok) throw new Error('HTTP '+r.status); return r.text(); })
@@ -2001,12 +1951,8 @@ function initGnMath(){
         frame.srcdoc=html;
       })
       .catch(err=>{
-        if(url===PRIMARY){
-          console.warn('GN Math primary failed, trying backup…',err.message);
-          loadGnMath(BACKUP);
-        } else {
-          frame.srcdoc='<body style="background:#0d0f1a;color:white;font-family:monospace;padding:30px;"><h2>GN Math failed to load</h2><p>Both sources unavailable.<br>'+err.message+'</p><button onclick="location.reload()" style="margin-top:10px;padding:8px 16px;cursor:pointer;">Retry</button></body>';
-        }
+        if(url===PRIMARY){ console.warn('GN Math primary failed, trying backup…',err.message); loadGnMath(BACKUP); }
+        else { frame.srcdoc='<body style="background:#0d0f1a;color:white;font-family:monospace;padding:30px;"><h2>GN Math failed to load</h2><p>'+err.message+'</p></body>'; }
       });
   }
   loadGnMath(PRIMARY);
@@ -2019,7 +1965,6 @@ function ST(name){
   if(panel) panel.classList.add('active');
   const btn=document.getElementById('t-'+name);
   if(btn) btn.classList.add('active');
-  // Lazy init
   if(name==='pizza'&&!document.getElementById('pizza-list').children.length) buildTiles(PIZZA,'pizza-list');
   if(name==='pzrd'&&!document.getElementById('pzrd-list').children.length) buildTiles(PZRD,'pzrd-list');
   if(name==='cool'&&!document.getElementById('cool-list').children.length) buildTiles(COOL,'cool-list');
@@ -2048,7 +1993,7 @@ function doPanic(){
 // ════════════════════════════════════════════════════════
 const SK='ugs_v5';
 const DS={
-  autoProxy:true,proxyMode:'both',primaryProxy:'corslol',customProxy:'',blurUnfocus:false,
+  autoProxy:true,proxyMode:'both',primaryProxy:'corslol',customProxy:'',
   cloakEnabled:false,cloakTitle:'',cloakIcon:'',autoCloak:false,
   panicUrl:'https://google.com',panicKey:'',panicMode:'redirect',showPanic:true,
   theme:'default',accent:'#5c7cfa',bgCol:'#0d0f1a',fontSize:'14',sidebarPos:'left',hideTitle:false,compactSb:false,
@@ -2064,7 +2009,6 @@ function loadS(){
   syncS(); applyS();
 }
 function saveS(){ localStorage.setItem(SK,JSON.stringify(S)); }
-
 function gv(id){ const e=document.getElementById(id); if(!e) return null; return e.type==='checkbox'?e.checked:e.value; }
 function sv(id,val){ const e=document.getElementById(id); if(!e) return; e.type==='checkbox'?e.checked=!!val:e.value=val??''; }
 
@@ -2097,7 +2041,12 @@ function applyS(){
   if(S.cloakEnabled){ document.title=S.cloakTitle||'Google Classroom'; setFav(S.cloakIcon||'https://ssl.gstatic.com/classroom/favicon.png'); }
   else { document.title=realTitle; setFav(''); }
   const themes={
-    default:{bg:'#0d0f1a',bg2:'#131525',accent:'#5c7cfa'}, midnight:{bg:'#010314',bg2:'#020520',accent:'#6366f1'}, carbon:{bg:'#050505',bg2:'#0f0f0f',accent:'#64748b'}, forest:{bg:'#020f06',bg2:'#041a0b',accent:'#22c55e'}, crimson:{bg:'#0f0203',bg2:'#1a0305',accent:'#ef4444'}, cyber:{bg:'#050014',bg2:'#0a0020',accent:'#e879f9'}, ocean:{bg:'#00090f',bg2:'#001522',accent:'#06b6d4'}, gold:{bg:'#0d0a00',bg2:'#1a1400',accent:'#f59e0b'}, rose:{bg:'#0f0507',bg2:'#1a080c',accent:'#fb7185'}, mint:{bg:'#01100a',bg2:'#021a10',accent:'#34d399'}, sunset:{bg:'#0f0500',bg2:'#1a0a00',accent:'#f97316'}, void:{bg:'#000000',bg2:'#050505',accent:'#7c3aed'},
+    default:{bg:'#0d0f1a',bg2:'#131525',accent:'#5c7cfa'}, midnight:{bg:'#010314',bg2:'#020520',accent:'#6366f1'},
+    carbon:{bg:'#050505',bg2:'#0f0f0f',accent:'#64748b'}, forest:{bg:'#020f06',bg2:'#041a0b',accent:'#22c55e'},
+    crimson:{bg:'#0f0203',bg2:'#1a0305',accent:'#ef4444'}, cyber:{bg:'#050014',bg2:'#0a0020',accent:'#e879f9'},
+    ocean:{bg:'#00090f',bg2:'#001522',accent:'#06b6d4'}, gold:{bg:'#0d0a00',bg2:'#1a1400',accent:'#f59e0b'},
+    rose:{bg:'#0f0507',bg2:'#1a080c',accent:'#fb7185'}, mint:{bg:'#01100a',bg2:'#021a10',accent:'#34d399'},
+    sunset:{bg:'#0f0500',bg2:'#1a0a00',accent:'#f97316'}, void:{bg:'#000000',bg2:'#050505',accent:'#7c3aed'},
   };
   const t=themes[S.theme]||themes.default;
   const acc=S.accent||t.accent;
@@ -2132,7 +2081,7 @@ function applyS(){
   document.querySelectorAll('.page-title').forEach(el=>el.style.display=S.hideTitle?'none':'');
   document.documentElement.style.setProperty('--sidebar-w', S.compactSb ? '54px' : '72px');
   const roundMap={soft:'14px',medium:'10px',sharp:'4px'};
-  document.querySelectorAll('.panel,.s-card,.site-card,.gtile,input[type="button"],.fbtn,.obtn,#proxy-content-inner,#proxy-iframe,#b64-frame,#dos-frame,#coolmath-direct-frame').forEach(el=>{ el.style.borderRadius=roundMap[S.roundness]||'14px'; });
+  document.querySelectorAll('.panel,.s-card,.site-card,.gtile,input[type="button"],.fbtn,.obtn').forEach(el=>{ el.style.borderRadius=roundMap[S.roundness]||'14px'; });
   document.querySelectorAll('.panel,.s-card').forEach(el=>{
     el.style.backdropFilter=S.glassPanels?'blur(18px)':'';
     el.style.background=S.glassPanels?'rgba(19,21,37,0.72)':'var(--bg2)';
@@ -2153,13 +2102,11 @@ function setFav(url){
   if(!l){ l=document.createElement('link');l.rel='icon';document.head.appendChild(l); }
   if(url) l.href=url;
 }
-
 function applyIconPreset(){
   const v=document.getElementById('s-cloak-preset').value;
   if(v) document.getElementById('s-cloak-icon').value=v;
   SA();
 }
-
 function exportS(){
   const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='ugs-settings.json'; a.click();
@@ -2181,19 +2128,15 @@ function updateSidebarClock(){
 setInterval(updateSidebarClock, 1000);
 updateSidebarClock();
 
-// Panic key
 document.addEventListener('keydown',e=>{ if(S.panicKey&&e.key===S.panicKey) doPanic(); });
-// Blur unfocus
 document.addEventListener('visibilitychange',()=>{
-  if(S.blurUnfocus) document.body.style.filter=document.hidden?'blur(14px)':'none';
   if(S.autoCloak&&S.cloakEnabled&&document.hidden){ document.title=S.cloakTitle||'Google Classroom'; setFav(S.cloakIcon||'https://ssl.gstatic.com/classroom/favicon.png'); }
 });
- 
-// Animated background keyframes injection
+
 const animStyle=document.createElement('style');
 animStyle.textContent=`@keyframes bgShift{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}`;
 document.head.appendChild(animStyle);
- 
+
 // ════════════════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════════════════
@@ -2201,10 +2144,8 @@ loadS();
 let startTab='games';
 try{
   const forcedTab=sessionStorage.getItem('ugs_forced_tab');
-  if(forcedTab){
-    startTab=forcedTab;
-    sessionStorage.removeItem('ugs_forced_tab');
-  }else{
+  if(forcedTab){ startTab=forcedTab; sessionStorage.removeItem('ugs_forced_tab'); }
+  else{
     startTab=S.defaultTab||'games';
     if(S.rememberTab&&S.lastTab) startTab=S.lastTab;
   }
