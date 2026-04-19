@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UGS Hub</title>
+<title>Ultimate Games</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
@@ -356,7 +356,8 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
  
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
-  <div class="sb-logo">UGS</div>
+  <div class="sb-logo">Ultimate</div>
+  <div id="sb-clock" style="display:none;text-align:center;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);padding:0 0 8px;">00:00</div>
   <button class="sb-btn" onclick="ST('games')" id="t-games"><span class="icon">🎮</span>Games</button>
   <button class="sb-btn" onclick="ST('pizza')" id="t-pizza"><span class="icon">🍕</span>Pizza</button>
   <button class="sb-btn" onclick="ST('pzrd')" id="t-pzrd"><span class="icon">🔥</span>Pzrd</button>
@@ -409,7 +410,7 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
  
 <!-- ══════════ GAMES TAB ══════════ -->
 <div class="tab-panel" id="tab-games">
-  <div class="page-title">UGS Files</div>
+  <div class="page-title">Ultimate Games</div>
   <div class="page-sub">Ultimate Game Stash — All Games</div>
   <div style="display:flex;justify-content:center;gap:8px;margin-bottom:18px;">
     <input class="finput" type="text" id="searchInput" placeholder="Search UGS games..." style="max-width:380px;">
@@ -441,8 +442,21 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
 <!-- ══════════ COOLMATH TAB ══════════ -->
 <div class="tab-panel" id="tab-cool">
   <div class="page-title">🧮 Coolmath Games</div>
-  <div class="page-sub">Full Coolmath collection</div>
+  <div class="page-sub">Full Coolmath collection + direct game iframe</div>
   <div class="panel">
+    <div class="panel-title">🎮 Direct Coolmath Game</div>
+    <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;">
+      <div style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;">Loads this exact page directly, not through the proxy.</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <button class="fbtn" onclick="document.getElementById('coolmath-direct-frame').src='https://www.coolmathgames.com/sites/default/files/public_games/50333/'">↺ Reload</button>
+        <button class="fbtn" onclick="window.open('https://www.coolmathgames.com/sites/default/files/public_games/50333/','_blank')">⬡ Open Tab</button>
+        <button class="fbtn green" onclick="fullscreenEl('coolmath-direct-frame')">⛶ Full</button>
+      </div>
+    </div>
+    <iframe id="coolmath-direct-frame" src="https://www.coolmathgames.com/sites/default/files/public_games/50333/" style="width:100%;height:620px;border:none;border-radius:12px;background:#000;"></iframe>
+  </div>
+  <div class="panel">
+    <div class="panel-title">📚 Coolmath Library</div>
     <input class="finput" type="text" id="cool-search" placeholder="Search coolmath..." style="width:100%;max-width:320px;margin-bottom:12px;" oninput="filterG(COOL,'cool-list',this.value)">
     <div class="game-grid" id="cool-list"></div>
   </div>
@@ -614,7 +628,7 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
       <button class="fbtn" onclick="openAIInNewTab()">⬡ New Tab</button>
       <button class="fbtn green" onclick="fullscreenEl('ai-frame')">⛶ Fullscreen</button>
     </div>
-    <iframe id="ai-frame" src="Chat Bot AI (A.I GPT) (1).html" allow="fullscreen" style="width:100%;height:calc(100vh - 260px);min-height:560px;border:none;border-radius:12px;background:#fff;"></iframe>
+    <iframe id="ai-frame" src="Chat Bot AI (A.I GPT) (2).html" allow="fullscreen" style="width:100%;height:calc(100vh - 260px);min-height:560px;border:none;border-radius:12px;background:#fff;"></iframe>
   </div>
 </div>
 
@@ -637,55 +651,18 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
 <!-- ══════════ SETTINGS TAB ══════════ -->
 <div class="tab-panel" id="tab-settings">
   <div class="page-title">⚙️ Settings</div>
-  <div class="page-sub">Customize everything</div>
-  <div style="max-width:860px;margin:0 auto;">
- 
-    <!-- PROXY -->
-    <div class="s-card" style="border-color:rgba(34,211,165,0.25);">
-      <div class="s-card-title" style="color:var(--green);">🌐 Proxy Engine</div>
-      <div class="s-row">
-        <div><div class="s-label">Auto-Proxy All Games</div><div class="s-desc">Route all iframes through proxy waterfall</div></div>
-        <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-auto-proxy" onchange="SA()" checked><span class="toggle-sl"></span></label></div>
-      </div>
-      <div class="s-row">
-        <div><div class="s-label">Load Mode</div><div class="s-desc">Shadow DOM (better) → iFrame fallback, or direct</div></div>
-        <div class="s-ctl"><select class="fselect" id="s-proxy-mode" onchange="SA()">
-          <option value="both">Both (auto fallback)</option>
-          <option value="shadow">Shadow DOM only</option>
-          <option value="iframe">iFrame only</option>
-        </select></div>
-      </div>
-      <div class="s-row">
-        <div><div class="s-label">Primary Engine</div></div>
-        <div class="s-ctl"><select class="fselect" id="s-primary-proxy" onchange="SA()">
-          <option value="corslol">cors.lol (fastest)</option>
-          <option value="codetabs">codetabs.com</option>
-          <option value="allorigins">allorigins.win</option>
-          <option value="corsproxy">corsproxy.io</option>
-          <option value="custom">Custom…</option>
-        </select></div>
-      </div>
-      <div class="s-row" id="custom-proxy-row" style="display:none;">
-        <div><div class="s-label">Custom Proxy URL</div><div class="s-desc">Use {URL} as placeholder</div></div>
-        <div class="s-ctl"><input class="finput" type="text" id="s-custom-proxy" placeholder="https://myproxy.com/?url={URL}" oninput="SA()" style="width:260px;"></div>
-      </div>
-      <div class="s-row">
-        <div><div class="s-label">Test Proxy</div></div>
-        <div class="s-ctl"><button class="fbtn green" onclick="testProxy()">▶ Test</button></div>
-      </div>
-      <div id="proxy-test-result" style="display:none;margin-top:8px;padding:8px 12px;border-radius:8px;font-size:11px;font-family:'JetBrains Mono',monospace;"></div>
-    </div>
- 
-    <!-- TAB CLOAK -->
+  <div class="page-sub">More controls, less clutter</div>
+  <div style="max-width:900px;margin:0 auto;">
+
     <div class="s-card">
       <div class="s-card-title">🎭 Tab Cloak</div>
       <div class="s-row">
-        <div><div class="s-label">Enable Cloak</div><div class="s-desc">Disguise tab title and icon</div></div>
+        <div><div class="s-label">Enable Cloak</div><div class="s-desc">Disguise the tab title and favicon.</div></div>
         <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-cloak" onchange="SA()"><span class="toggle-sl"></span></label></div>
       </div>
       <div class="s-row">
         <div><div class="s-label">Fake Title</div></div>
-        <div class="s-ctl"><input class="finput" type="text" id="s-cloak-title" placeholder="Google Classroom" oninput="SA()" style="width:200px;"></div>
+        <div class="s-ctl"><input class="finput" type="text" id="s-cloak-title" placeholder="Google Classroom" oninput="SA()" style="width:220px;"></div>
       </div>
       <div class="s-row">
         <div><div class="s-label">Fake Icon Preset</div></div>
@@ -699,21 +676,20 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
             <option value="https://www.desmos.com/favicon.ico">Desmos</option>
             <option value="https://drive.google.com/favicon.ico">Drive</option>
           </select>
-          <input class="finput" type="text" id="s-cloak-icon" placeholder="https://...ico" oninput="SA()" style="width:160px;">
+          <input class="finput" type="text" id="s-cloak-icon" placeholder="https://...ico" oninput="SA()" style="width:170px;">
         </div>
       </div>
       <div class="s-row">
-        <div><div class="s-label">Auto-Cloak on Tab Switch</div><div class="s-desc">Instantly cloak when you switch tabs</div></div>
+        <div><div class="s-label">Auto-Cloak on Tab Switch</div><div class="s-desc">Re-apply cloak when the page becomes hidden.</div></div>
         <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-auto-cloak" onchange="SA()"><span class="toggle-sl"></span></label></div>
       </div>
     </div>
- 
-    <!-- PANIC -->
+
     <div class="s-card">
-      <div class="s-card-title">🚨 Panic Settings</div>
+      <div class="s-card-title">🚨 Panic</div>
       <div class="s-row">
-        <div><div class="s-label">Panic URL</div><div class="s-desc">Where PANIC button redirects</div></div>
-        <div class="s-ctl"><input class="finput" type="text" id="s-panic-url" placeholder="https://google.com" oninput="SA()" style="width:220px;"></div>
+        <div><div class="s-label">Panic URL</div><div class="s-desc">Where the panic button or hotkey sends you.</div></div>
+        <div class="s-ctl"><input class="finput" type="text" id="s-panic-url" placeholder="https://google.com" oninput="SA()" style="width:240px;"></div>
       </div>
       <div class="s-row">
         <div><div class="s-label">Panic Key</div></div>
@@ -731,8 +707,8 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
       <div class="s-row">
         <div><div class="s-label">Panic Mode</div></div>
         <div class="s-ctl"><select class="fselect" id="s-panic-mode" onchange="SA()">
-          <option value="redirect">Redirect (normal)</option>
-          <option value="replace">Replace (no back button)</option>
+          <option value="redirect">Redirect</option>
+          <option value="replace">Replace</option>
           <option value="newtab">New tab</option>
         </select></div>
       </div>
@@ -741,14 +717,13 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
         <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-show-panic" onchange="SA()" checked><span class="toggle-sl"></span></label></div>
       </div>
     </div>
- 
-    <!-- APPEARANCE -->
+
     <div class="s-card">
       <div class="s-card-title">🎨 Appearance</div>
       <div class="s-row">
         <div><div class="s-label">Theme</div></div>
         <div class="s-ctl"><select class="fselect" id="s-theme" onchange="SA()">
-          <option value="default">Default (Dark Blue)</option>
+          <option value="default">Default</option>
           <option value="midnight">Midnight</option>
           <option value="carbon">Carbon Black</option>
           <option value="forest">Forest Green</option>
@@ -763,7 +738,7 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
         </select></div>
       </div>
       <div class="s-row">
-        <div><div class="s-label">Custom Accent Color</div></div>
+        <div><div class="s-label">Accent Color</div></div>
         <div class="s-ctl" style="display:flex;gap:8px;align-items:center;">
           <input type="color" id="s-accent" oninput="SA()" value="#5c7cfa" style="width:40px;height:32px;border:1px solid var(--border);border-radius:6px;cursor:pointer;background:none;padding:2px;">
           <button class="fbtn" onclick="document.getElementById('s-accent').value='#5c7cfa';SA()" style="font-size:10px;padding:5px 10px;">Reset</button>
@@ -777,24 +752,13 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
         </div>
       </div>
       <div class="s-row">
-        <div><div class="s-label">Background Image URL</div><div class="s-desc">Direct image URL</div></div>
-        <div class="s-ctl" style="display:flex;gap:6px;">
-          <input class="finput" type="text" id="s-bg-img" placeholder="https://...jpg" oninput="SA()" style="width:200px;">
-          <button class="fbtn red" onclick="document.getElementById('s-bg-img').value='';SA()" style="font-size:10px;padding:5px 8px;">✕</button>
-        </div>
-      </div>
-      <div class="s-row">
-        <div><div class="s-label">Overlay Opacity</div><div class="s-desc">Darkness over background image</div></div>
-        <div class="s-ctl"><input type="range" id="s-overlay" min="0" max="95" value="60" oninput="SA()" style="width:120px;"></div>
-      </div>
-      <div class="s-row">
         <div><div class="s-label">Font Size</div></div>
         <div class="s-ctl"><select class="fselect" id="s-fontsize" onchange="SA()">
-          <option value="12">Small (12px)</option>
-          <option value="13">Medium-Small (13px)</option>
-          <option value="14" selected>Default (14px)</option>
-          <option value="16">Large (16px)</option>
-          <option value="18">X-Large (18px)</option>
+          <option value="12">Small</option>
+          <option value="13">Medium-Small</option>
+          <option value="14">Default</option>
+          <option value="16">Large</option>
+          <option value="18">X-Large</option>
         </select></div>
       </div>
       <div class="s-row">
@@ -805,7 +769,7 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
         </select></div>
       </div>
       <div class="s-row">
-        <div><div class="s-label">Hide Page Title</div></div>
+        <div><div class="s-label">Hide Page Titles</div></div>
         <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-hide-title" onchange="SA()"><span class="toggle-sl"></span></label></div>
       </div>
       <div class="s-row">
@@ -813,22 +777,41 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
         <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-compact-sb" onchange="SA()"><span class="toggle-sl"></span></label></div>
       </div>
       <div class="s-row">
-        <div><div class="s-label">Animated Background</div><div class="s-desc">Subtle moving gradient</div></div>
-        <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-anim-bg" onchange="SA()"><span class="toggle-sl"></span></label></div>
+        <div><div class="s-label">Dense Layout</div><div class="s-desc">Tighter spacing across panels and controls.</div></div>
+        <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-dense-ui" onchange="SA()"><span class="toggle-sl"></span></label></div>
+      </div>
+      <div class="s-row">
+        <div><div class="s-label">Rounded Corners</div></div>
+        <div class="s-ctl"><select class="fselect" id="s-roundness" onchange="SA()">
+          <option value="soft">Soft</option>
+          <option value="medium">Medium</option>
+          <option value="sharp">Sharp</option>
+        </select></div>
+      </div>
+      <div class="s-row">
+        <div><div class="s-label">Glass Panels</div><div class="s-desc">Extra blur and transparency on cards.</div></div>
+        <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-glass-panels" onchange="SA()"><span class="toggle-sl"></span></label></div>
+      </div>
+      <div class="s-row">
+        <div><div class="s-label">Show Grain Overlay</div></div>
+        <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-show-grain" onchange="SA()" checked><span class="toggle-sl"></span></label></div>
+      </div>
+      <div class="s-row">
+        <div><div class="s-label">Reduce Motion</div><div class="s-desc">Cuts down animations and transitions.</div></div>
+        <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-reduce-motion" onchange="SA()"><span class="toggle-sl"></span></label></div>
+      </div>
+      <div class="s-row">
+        <div><div class="s-label">High Contrast</div></div>
+        <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-high-contrast" onchange="SA()"><span class="toggle-sl"></span></label></div>
       </div>
     </div>
- 
-    <!-- BEHAVIOR -->
+
     <div class="s-card">
-      <div class="s-card-title">⚡ Behavior</div>
-      <div class="s-row">
-        <div><div class="s-label">Open Games in New Tab</div></div>
-        <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-newtab" onchange="SA()"><span class="toggle-sl"></span></label></div>
-      </div>
+      <div class="s-card-title">🧩 Interface</div>
       <div class="s-row">
         <div><div class="s-label">Default Tab on Load</div></div>
         <div class="s-ctl"><select class="fselect" id="s-default-tab" onchange="SA()">
-          <option value="games">UGS Games</option>
+          <option value="games">Ultimate Games</option>
           <option value="pizza">Pizza Edition</option>
           <option value="pzrd">Pizzardition</option>
           <option value="cool">Coolmath</option>
@@ -841,6 +824,7 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
           <option value="b64">B64 Viewer</option>
           <option value="ai">AI Chat</option>
           <option value="sites">Sites</option>
+          <option value="settings">Settings</option>
         </select></div>
       </div>
       <div class="s-row">
@@ -848,25 +832,35 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
         <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-remember-tab" onchange="SA()"><span class="toggle-sl"></span></label></div>
       </div>
       <div class="s-row">
-        <div><div class="s-label">Blur on Tab Switch</div><div class="s-desc">Blur page when you switch away</div></div>
-        <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-blur-unfocus" onchange="SA()"><span class="toggle-sl"></span></label></div>
+        <div><div class="s-label">Open Games in New Tab</div></div>
+        <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-newtab" onchange="SA()"><span class="toggle-sl"></span></label></div>
+      </div>
+      <div class="s-row">
+        <div><div class="s-label">Show Bottom Search Bar</div></div>
+        <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-show-searchbar" onchange="SA()" checked><span class="toggle-sl"></span></label></div>
+      </div>
+      <div class="s-row">
+        <div><div class="s-label">Show Doc Shortcut</div></div>
+        <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-show-doclink" onchange="SA()" checked><span class="toggle-sl"></span></label></div>
+      </div>
+      <div class="s-row">
+        <div><div class="s-label">Show Sidebar Clock</div></div>
+        <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-show-clock" onchange="SA()"><span class="toggle-sl"></span></label></div>
+      </div>
+      <div class="s-row">
+        <div><div class="s-label">Center Content Width</div><div class="s-desc">Keeps panels tighter on wide screens.</div></div>
+        <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-center-panels" onchange="SA()" checked><span class="toggle-sl"></span></label></div>
+      </div>
+      <div class="s-row">
+        <div><div class="s-label">Bigger Buttons</div></div>
+        <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-big-buttons" onchange="SA()"><span class="toggle-sl"></span></label></div>
+      </div>
+      <div class="s-row">
+        <div><div class="s-label">Monospace UI Mode</div></div>
+        <div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-mono-ui" onchange="SA()"><span class="toggle-sl"></span></label></div>
       </div>
     </div>
- 
-    <!-- CUSTOM CSS -->
-    <div class="s-card" style="border-color:rgba(127,255,0,0.2);">
-      <div class="s-card-title" style="color:#7fff00;">💉 Custom CSS</div>
-      <div class="s-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
-        <div><div class="s-label">Inject CSS</div><div class="s-desc">Globally applied. Use CSS variables like var(--accent).</div></div>
-        <textarea class="css-ed" id="s-custom-css" placeholder="/* e.g. body { cursor: crosshair; } */" oninput="SA()" rows="5"></textarea>
-        <div style="display:flex;gap:8px;">
-          <button class="fbtn green" onclick="SA()">▶ Apply</button>
-          <button class="fbtn red" onclick="document.getElementById('s-custom-css').value='';SA()">✕ Clear</button>
-        </div>
-      </div>
-    </div>
- 
-    <!-- DATA -->
+
     <div class="s-card">
       <div class="s-card-title">💾 Data</div>
       <div class="s-row">
@@ -1290,11 +1284,11 @@ function decodeB64(){
 function reloadAIFrame(){
   const frame=document.getElementById('ai-frame');
   if(!frame) return;
-  const base='Chat Bot AI (A.I GPT) (1).html';
+  const base='Chat Bot AI (A.I GPT) (2).html';
   frame.src=base+(base.includes('?')?'&':'?')+'t='+Date.now();
 }
 function openAIInNewTab(){
-  window.open('Chat Bot AI (A.I GPT) (1).html','_blank');
+  window.open('Chat Bot AI (A.I GPT) (2).html','_blank');
 }
 
 // ════════════════════════════════════════════════════════
@@ -1988,7 +1982,7 @@ function clearSearch(){
 // ════════════════════════════════════════════════════════
 // TAB SWITCHING
 // ════════════════════════════════════════════════════════
-const ALL_TABS=['games','pizza','pzrd','cool','poki','extra','browser','dos','tools','b64','ai','sites','settings'];
+const ALL_TABS=['games','pizza','pzrd','cool','poki','extra','browser','dos','gnmath','tools','b64','ai','sites','settings'];
  
  
 // ════ GN MATH ════
@@ -1996,8 +1990,8 @@ let gnmathLoaded=false;
 function initGnMath(){
   if(gnmathLoaded)return; gnmathLoaded=true;
   const frame=document.getElementById('gnmath-frame');
-  const PRIMARY='https://raw.githubusercontent.com/gn-math/gn-math-DONTDMCA/refs/heads/main/singlefile.html';
-  const BACKUP='https://cdn.jsdelivr.net/gh/gn-math/gn-math-DONTDMCA@main/singlefile.html';
+  const PRIMARY='https://cdn.jsdelivr.net/gh/freebuisness/freebuisness.github.io@main/singlefile.html';
+  const BACKUP='https://raw.githubusercontent.com/freebuisness/freebuisness.github.io/refs/heads/main/singlefile.html';
  
   function loadGnMath(url){
     fetch(url+'?t='+Date.now())
@@ -2052,126 +2046,120 @@ function doPanic(){
 // ════════════════════════════════════════════════════════
 // SETTINGS ENGINE
 // ════════════════════════════════════════════════════════
-const SK='ugs_v4';
+const SK='ugs_v5';
 const DS={
-  autoProxy:true,proxyMode:'both',primaryProxy:'corslol',customProxy:'',
+  autoProxy:true,proxyMode:'both',primaryProxy:'corslol',customProxy:'',blurUnfocus:false,
   cloakEnabled:false,cloakTitle:'',cloakIcon:'',autoCloak:false,
   panicUrl:'https://google.com',panicKey:'',panicMode:'redirect',showPanic:true,
-  theme:'default',accent:'#5c7cfa',bgCol:'#0d0f1a',bgImg:'',overlay:60,
-  fontSize:'14',sidebarPos:'left',hideTitle:false,compactSb:false,animBg:false,
-  newTab:false,defaultTab:'games',rememberTab:false,blurUnfocus:false,
-  customCss:'',lastTab:'games',
+  theme:'default',accent:'#5c7cfa',bgCol:'#0d0f1a',fontSize:'14',sidebarPos:'left',hideTitle:false,compactSb:false,
+  denseUi:false,roundness:'soft',glassPanels:false,showGrain:true,reduceMotion:false,highContrast:false,
+  newTab:false,defaultTab:'games',rememberTab:false,lastTab:'games',showSearchbar:true,showDoclink:true,showClock:false,
+  centerPanels:true,bigButtons:false,monoUi:false,
 };
 let S=Object.assign({},DS);
 const realTitle=document.title;
- 
+
 function loadS(){
   try{ const d=JSON.parse(localStorage.getItem(SK)); if(d) S=Object.assign({},DS,d); }catch(e){}
   syncS(); applyS();
 }
 function saveS(){ localStorage.setItem(SK,JSON.stringify(S)); }
- 
+
 function gv(id){ const e=document.getElementById(id); if(!e) return null; return e.type==='checkbox'?e.checked:e.value; }
 function sv(id,val){ const e=document.getElementById(id); if(!e) return; e.type==='checkbox'?e.checked=!!val:e.value=val??''; }
- 
+
 function syncS(){
-  sv('s-auto-proxy',S.autoProxy!==false); sv('s-proxy-mode',S.proxyMode||'both');
-  sv('s-primary-proxy',S.primaryProxy||'corslol'); sv('s-custom-proxy',S.customProxy||'');
-  sv('s-cloak',S.cloakEnabled); sv('s-cloak-title',S.cloakTitle); sv('s-cloak-icon',S.cloakIcon);
-  sv('s-auto-cloak',S.autoCloak);
-  sv('s-panic-url',S.panicUrl||'https://google.com'); sv('s-panic-key',S.panicKey||'');
-  sv('s-panic-mode',S.panicMode||'redirect'); sv('s-show-panic',S.showPanic!==false);
-  sv('s-theme',S.theme||'default'); sv('s-accent',S.accent||'#5c7cfa');
-  sv('s-bg-col',S.bgCol||'#0d0f1a'); sv('s-bg-img',S.bgImg||''); sv('s-overlay',S.overlay??60);
-  sv('s-fontsize',S.fontSize||'14'); sv('s-sidebar-pos',S.sidebarPos||'left');
-  sv('s-hide-title',S.hideTitle); sv('s-compact-sb',S.compactSb); sv('s-anim-bg',S.animBg);
-  sv('s-newtab',S.newTab); sv('s-default-tab',S.defaultTab||'games');
-  sv('s-remember-tab',S.rememberTab); sv('s-blur-unfocus',S.blurUnfocus);
-  sv('s-custom-css',S.customCss||'');
-  const cr=document.getElementById('custom-proxy-row');
-  if(cr) cr.style.display=(S.primaryProxy==='custom')?'':'none';
+  sv('s-cloak',S.cloakEnabled); sv('s-cloak-title',S.cloakTitle); sv('s-cloak-icon',S.cloakIcon); sv('s-auto-cloak',S.autoCloak);
+  sv('s-panic-url',S.panicUrl||'https://google.com'); sv('s-panic-key',S.panicKey||''); sv('s-panic-mode',S.panicMode||'redirect'); sv('s-show-panic',S.showPanic!==false);
+  sv('s-theme',S.theme||'default'); sv('s-accent',S.accent||'#5c7cfa'); sv('s-bg-col',S.bgCol||'#0d0f1a'); sv('s-fontsize',S.fontSize||'14');
+  sv('s-sidebar-pos',S.sidebarPos||'left'); sv('s-hide-title',S.hideTitle); sv('s-compact-sb',S.compactSb);
+  sv('s-dense-ui',S.denseUi); sv('s-roundness',S.roundness||'soft'); sv('s-glass-panels',S.glassPanels); sv('s-show-grain',S.showGrain!==false);
+  sv('s-reduce-motion',S.reduceMotion); sv('s-high-contrast',S.highContrast);
+  sv('s-default-tab',S.defaultTab||'games'); sv('s-remember-tab',S.rememberTab); sv('s-newtab',S.newTab);
+  sv('s-show-searchbar',S.showSearchbar!==false); sv('s-show-doclink',S.showDoclink!==false); sv('s-show-clock',S.showClock);
+  sv('s-center-panels',S.centerPanels!==false); sv('s-big-buttons',S.bigButtons); sv('s-mono-ui',S.monoUi);
 }
- 
+
 function SA(){
-  S.autoProxy=gv('s-auto-proxy'); S.proxyMode=gv('s-proxy-mode');
-  S.primaryProxy=gv('s-primary-proxy'); S.customProxy=gv('s-custom-proxy')||'';
-  S.cloakEnabled=gv('s-cloak'); S.cloakTitle=gv('s-cloak-title'); S.cloakIcon=gv('s-cloak-icon');
-  S.autoCloak=gv('s-auto-cloak');
-  S.panicUrl=gv('s-panic-url')||'https://google.com'; S.panicKey=gv('s-panic-key')||'';
-  S.panicMode=gv('s-panic-mode')||'redirect'; S.showPanic=gv('s-show-panic');
-  S.theme=gv('s-theme'); S.accent=gv('s-accent'); S.bgCol=gv('s-bg-col');
-  S.bgImg=gv('s-bg-img')||''; S.overlay=parseInt(gv('s-overlay'))||60;
-  S.fontSize=gv('s-fontsize')||'14'; S.sidebarPos=gv('s-sidebar-pos')||'left';
-  S.hideTitle=gv('s-hide-title'); S.compactSb=gv('s-compact-sb'); S.animBg=gv('s-anim-bg');
-  S.newTab=gv('s-newtab'); S.defaultTab=gv('s-default-tab')||'games';
-  S.rememberTab=gv('s-remember-tab'); S.blurUnfocus=gv('s-blur-unfocus');
-  S.customCss=gv('s-custom-css')||'';
-  const cr=document.getElementById('custom-proxy-row');
-  if(cr) cr.style.display=(S.primaryProxy==='custom')?'':'none';
+  S.cloakEnabled=gv('s-cloak'); S.cloakTitle=gv('s-cloak-title'); S.cloakIcon=gv('s-cloak-icon'); S.autoCloak=gv('s-auto-cloak');
+  S.panicUrl=gv('s-panic-url')||'https://google.com'; S.panicKey=gv('s-panic-key')||''; S.panicMode=gv('s-panic-mode')||'redirect'; S.showPanic=gv('s-show-panic');
+  S.theme=gv('s-theme')||'default'; S.accent=gv('s-accent')||'#5c7cfa'; S.bgCol=gv('s-bg-col')||'#0d0f1a'; S.fontSize=gv('s-fontsize')||'14';
+  S.sidebarPos=gv('s-sidebar-pos')||'left'; S.hideTitle=gv('s-hide-title'); S.compactSb=gv('s-compact-sb');
+  S.denseUi=gv('s-dense-ui'); S.roundness=gv('s-roundness')||'soft'; S.glassPanels=gv('s-glass-panels'); S.showGrain=gv('s-show-grain');
+  S.reduceMotion=gv('s-reduce-motion'); S.highContrast=gv('s-high-contrast');
+  S.defaultTab=gv('s-default-tab')||'games'; S.rememberTab=gv('s-remember-tab'); S.newTab=gv('s-newtab');
+  S.showSearchbar=gv('s-show-searchbar'); S.showDoclink=gv('s-show-doclink'); S.showClock=gv('s-show-clock');
+  S.centerPanels=gv('s-center-panels'); S.bigButtons=gv('s-big-buttons'); S.monoUi=gv('s-mono-ui');
   saveS(); applyS();
 }
- 
+
 function applyS(){
-  // Cloak
   if(S.cloakEnabled){ document.title=S.cloakTitle||'Google Classroom'; setFav(S.cloakIcon||'https://ssl.gstatic.com/classroom/favicon.png'); }
   else { document.title=realTitle; setFav(''); }
-  // Theme
   const themes={
-    default:{bg:'#0d0f1a',bg2:'#131525',accent:'#5c7cfa'},
-    midnight:{bg:'#010314',bg2:'#020520',accent:'#6366f1'},
-    carbon:{bg:'#050505',bg2:'#0f0f0f',accent:'#64748b'},
-    forest:{bg:'#020f06',bg2:'#041a0b',accent:'#22c55e'},
-    crimson:{bg:'#0f0203',bg2:'#1a0305',accent:'#ef4444'},
-    cyber:{bg:'#050014',bg2:'#0a0020',accent:'#e879f9'},
-    ocean:{bg:'#00090f',bg2:'#001522',accent:'#06b6d4'},
-    gold:{bg:'#0d0a00',bg2:'#1a1400',accent:'#f59e0b'},
-    rose:{bg:'#0f0507',bg2:'#1a080c',accent:'#fb7185'},
-    mint:{bg:'#01100a',bg2:'#021a10',accent:'#34d399'},
-    sunset:{bg:'#0f0500',bg2:'#1a0a00',accent:'#f97316'},
-    void:{bg:'#000000',bg2:'#050505',accent:'#7c3aed'},
+    default:{bg:'#0d0f1a',bg2:'#131525',accent:'#5c7cfa'}, midnight:{bg:'#010314',bg2:'#020520',accent:'#6366f1'}, carbon:{bg:'#050505',bg2:'#0f0f0f',accent:'#64748b'}, forest:{bg:'#020f06',bg2:'#041a0b',accent:'#22c55e'}, crimson:{bg:'#0f0203',bg2:'#1a0305',accent:'#ef4444'}, cyber:{bg:'#050014',bg2:'#0a0020',accent:'#e879f9'}, ocean:{bg:'#00090f',bg2:'#001522',accent:'#06b6d4'}, gold:{bg:'#0d0a00',bg2:'#1a1400',accent:'#f59e0b'}, rose:{bg:'#0f0507',bg2:'#1a080c',accent:'#fb7185'}, mint:{bg:'#01100a',bg2:'#021a10',accent:'#34d399'}, sunset:{bg:'#0f0500',bg2:'#1a0a00',accent:'#f97316'}, void:{bg:'#000000',bg2:'#050505',accent:'#7c3aed'},
   };
   const t=themes[S.theme]||themes.default;
-  document.documentElement.style.setProperty('--bg',t.bg);
-  document.documentElement.style.setProperty('--bg2',t.bg2);
   const acc=S.accent||t.accent;
+  document.documentElement.style.setProperty('--bg',S.bgCol||t.bg);
+  document.documentElement.style.setProperty('--bg2',t.bg2);
+  document.documentElement.style.setProperty('--bg3',t.bg2);
   document.documentElement.style.setProperty('--accent',acc);
   document.documentElement.style.setProperty('--accent2',acc);
-  // BG
-  if(S.bgImg){
-    const op=(S.overlay||60)/100;
-    document.body.style.background=`linear-gradient(rgba(0,0,0,${op}),rgba(0,0,0,${op})),url(${S.bgImg}) center/cover fixed`;
+  if(S.highContrast){
+    document.documentElement.style.setProperty('--text','#ffffff');
+    document.documentElement.style.setProperty('--muted','rgba(255,255,255,0.8)');
+    document.documentElement.style.setProperty('--border','rgba(255,255,255,0.22)');
+    document.documentElement.style.setProperty('--card','rgba(255,255,255,0.08)');
+    document.documentElement.style.setProperty('--card-hover','rgba(255,255,255,0.14)');
   } else {
-    document.body.style.background=`linear-gradient(140deg,${S.bgCol||t.bg} 0%,${t.bg2} 100%)`;
+    document.documentElement.style.setProperty('--text','#e2e8f0');
+    document.documentElement.style.setProperty('--muted','rgba(226,232,240,0.5)');
+    document.documentElement.style.setProperty('--border','rgba(255,255,255,0.08)');
+    document.documentElement.style.setProperty('--card','rgba(255,255,255,0.04)');
+    document.documentElement.style.setProperty('--card-hover','rgba(255,255,255,0.08)');
   }
+  document.body.style.background=`linear-gradient(140deg,${S.bgCol||t.bg} 0%,${t.bg2} 100%)`;
   document.body.style.fontSize=(S.fontSize||14)+'px';
-  // Sidebar
+  document.body.style.fontFamily=S.monoUi?"'JetBrains Mono', monospace":"'Syne', sans-serif";
   const sb=document.getElementById('sidebar');
   const mn=document.getElementById('main-content');
   if(S.sidebarPos==='right'){ sb.style.left='auto';sb.style.right='0';mn.style.marginLeft='0';mn.style.marginRight='var(--sidebar-w)'; }
   else { sb.style.left='0';sb.style.right='auto';mn.style.marginLeft='var(--sidebar-w)';mn.style.marginRight='0'; }
-  document.getElementById('global-search-bar').style.left=S.sidebarPos==='right'?'0':'var(--sidebar-w)';
+  const gsb=document.getElementById('global-search-bar'); if(gsb){ gsb.style.left=S.sidebarPos==='right'?'0':'var(--sidebar-w)'; gsb.style.display=S.showSearchbar!==false?'flex':'none'; }
+  const srp=document.getElementById('search-results-panel'); if(srp){ srp.style.left=S.sidebarPos==='right'?'0':'var(--sidebar-w)'; }
   const pb=document.getElementById('panic-btn'); if(pb) pb.style.display=S.showPanic!==false?'':'none';
-  const pt=document.querySelector('.page-title'); if(pt) pt.style.display=S.hideTitle?'none':'';
-  // Anim BG
-  if(S.animBg){ document.body.style.animation='bgShift 10s ease infinite'; }
-  else { document.body.style.animation=''; }
-  // Custom CSS
-  const cssEl=document.getElementById('user-css'); if(cssEl) cssEl.textContent=S.customCss||'';
-  // GN Math alpha sidebar uses game.js - keep it
+  document.querySelectorAll('.page-title').forEach(el=>el.style.display=S.hideTitle?'none':'');
+  document.documentElement.style.setProperty('--sidebar-w', S.compactSb ? '54px' : '72px');
+  const roundMap={soft:'14px',medium:'10px',sharp:'4px'};
+  document.querySelectorAll('.panel,.s-card,.site-card,.gtile,input[type="button"],.fbtn,.obtn,#proxy-content-inner,#proxy-iframe,#b64-frame,#dos-frame,#coolmath-direct-frame').forEach(el=>{ el.style.borderRadius=roundMap[S.roundness]||'14px'; });
+  document.querySelectorAll('.panel,.s-card').forEach(el=>{
+    el.style.backdropFilter=S.glassPanels?'blur(18px)':'';
+    el.style.background=S.glassPanels?'rgba(19,21,37,0.72)':'var(--bg2)';
+    el.style.padding=S.denseUi?'12px 14px':'16px 20px';
+    if(S.centerPanels===false) el.style.maxWidth='';
+  });
+  document.querySelectorAll('.s-row').forEach(el=>{ el.style.padding=S.denseUi?'6px 0':'9px 0'; });
+  document.querySelectorAll('.fbtn,.obtn,.gtile,input[type="button"]').forEach(el=>{ if(S.bigButtons){ el.style.padding='12px 16px'; el.style.fontSize='13px'; } else { el.style.padding=''; el.style.fontSize=''; } });
+  const grainOn=S.showGrain!==false;
+  if(!document.getElementById('style-dynamic-settings')){ const st=document.createElement('style'); st.id='style-dynamic-settings'; document.head.appendChild(st); }
+  document.getElementById('style-dynamic-settings').textContent=`body::before{display:${grainOn?'block':'none'} !important;} ${S.reduceMotion?'*,*::before,*::after{animation:none !important;transition:none !important;scroll-behavior:auto !important;}':''}`;
+  const docLink=document.querySelector('.corner-link'); if(docLink) docLink.style.display=S.showDoclink!==false?'':'none';
+  const clock=document.getElementById('sb-clock'); if(clock) clock.style.display=S.showClock?'block':'none';
 }
- 
+
 function setFav(url){
   let l=document.querySelector("link[rel~='icon']");
   if(!l){ l=document.createElement('link');l.rel='icon';document.head.appendChild(l); }
   if(url) l.href=url;
 }
- 
+
 function applyIconPreset(){
   const v=document.getElementById('s-cloak-preset').value;
   if(v) document.getElementById('s-cloak-icon').value=v;
   SA();
 }
- 
+
 function exportS(){
   const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='ugs-settings.json'; a.click();
@@ -2183,7 +2171,16 @@ function importS(e){
   r.readAsText(f);
 }
 function resetS(){ if(!confirm('Reset all settings?')) return; S=Object.assign({},DS); syncS();applyS();saveS(); }
- 
+
+function updateSidebarClock(){
+  const el=document.getElementById('sb-clock');
+  if(!el) return;
+  const d=new Date();
+  el.textContent=d.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+}
+setInterval(updateSidebarClock, 1000);
+updateSidebarClock();
+
 // Panic key
 document.addEventListener('keydown',e=>{ if(S.panicKey&&e.key===S.panicKey) doPanic(); });
 // Blur unfocus
