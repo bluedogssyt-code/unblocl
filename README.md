@@ -51,7 +51,6 @@ function go() {
   window.location.replace(URL);
 }
 
-// auto open
 window.onload = go;
 </script>
 
