@@ -283,6 +283,7 @@ body.sidebar-expanded #sb-alpha .sb-btn{font-size:10px;}
   <button class="sb-btn" onclick="ST('dos')" id="t-dos"><span class="icon">💾</span>DOS</button>
   <button class="sb-btn" onclick="ST('windos')" id="t-windos"><span class="icon">🖥️</span>WinDOS</button>
   <button class="sb-btn" onclick="ST('gnmath')" id="t-gnmath"><span class="icon">📐</span>GN Math</button>
+  <button class="sb-btn" onclick="ST('nebula')" id="t-nebula"><span class="icon">🌌</span>Nebula</button>
   <button class="sb-btn" onclick="ST('tools')" id="t-tools"><span class="icon">⚙</span>Tools</button>
   <button class="sb-btn" onclick="ST('b64')" id="t-b64"><span class="icon">📦</span>B64</button>
   <button class="sb-btn" onclick="ST('ai')" id="t-ai"><span class="icon">🤖</span>AI</button>
@@ -620,6 +621,32 @@ body.sidebar-expanded #sb-alpha .sb-btn{font-size:10px;}
   <div class="page-sub">GN Math — click inside to interact · <button class="fbtn" onclick="fullscreenEl('gnmath-frame')" style="font-size:11px;padding:4px 12px;display:inline-block;">⛶ Fullscreen</button></div>
   <div style="max-width:980px;margin:0 auto;">
     <iframe id="gnmath-frame" style="width:100%;height:calc(100vh - 180px);border:none;border-radius:12px;background:#fff;" allow="fullscreen" src="about:blank"></iframe>
+  </div>
+</div>
+
+
+<!-- NEBULA TAB -->
+<div class="tab-panel" id="tab-nebula">
+  <div class="page-title">🌌 Nebula</div>
+  <div class="page-sub">
+    Nebula proxy — click inside to interact ·
+    <button class="fbtn" onclick="fullscreenEl('nebula-frame')" style="font-size:11px;padding:4px 12px;display:inline-block;">⛶ Fullscreen</button>
+  </div>
+  <div style="max-width:980px;margin:0 auto;">
+    <div class="panel" style="margin-bottom:12px;">
+      <div class="panel-title">🌌 Nebula Controls</div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <input class="finput" id="nebula-url-input" type="text" value="https://nebulaproxy.io/" placeholder="https://your-nebula-link.com/" style="flex:1;min-width:240px;">
+        <button class="fbtn accent" onclick="setNebulaUrl()">Load Nebula</button>
+        <button class="fbtn" onclick="reloadNebula()">↺ Reload</button>
+        <button class="fbtn green" onclick="fullscreenEl('nebula-frame')">⛶ Full</button>
+        <button class="fbtn" onclick="window.open(getNebulaUrl(),'_blank')">⬡ Tab</button>
+      </div>
+      <div style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:8px;">
+        Note: the ZIP version of Nebula is a server app, so it cannot run directly inside one HTML file. This tab loads a deployed Nebula URL in an iframe.
+      </div>
+    </div>
+    <iframe id="nebula-frame" style="width:100%;height:calc(100vh - 260px);min-height:560px;border:none;border-radius:12px;background:#05070d;" allow="fullscreen; clipboard-read; clipboard-write; gamepad; microphone; camera; autoplay" referrerpolicy="no-referrer" src="about:blank"></iframe>
   </div>
 </div>
 
@@ -2579,6 +2606,40 @@ function initGnMath(){
   function loadGnMath(url){fetch(url+'?t='+Date.now()).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.text();}).then(html=>{html=html.replace('new URL(url, location.origin).hostname','""');frame.srcdoc=html;}).catch(err=>{if(url===PRIMARY){loadGnMath(BACKUP);}else{frame.srcdoc='<body style="background:#0d0f1a;color:white;font-family:monospace;padding:30px;"><h2>GN Math failed to load</h2><p>'+err.message+'</p></body>';}});}
   loadGnMath(PRIMARY);
 }
+
+let nebulaLoaded=false;
+const DEFAULT_NEBULA_URL='https://nebulaproxy.io/';
+function normalizeNebulaUrl(url){
+  url=(url||DEFAULT_NEBULA_URL).trim();
+  if(!/^https?:\/\//i.test(url))url='https://'+url;
+  if(!url.endsWith('/'))url+='/';
+  return url;
+}
+function getNebulaUrl(){
+  const input=document.getElementById('nebula-url-input');
+  return normalizeNebulaUrl(input&&input.value?input.value:DEFAULT_NEBULA_URL);
+}
+function initNebula(){
+  const frame=document.getElementById('nebula-frame');
+  if(!frame)return;
+  if(nebulaLoaded&&frame.src&&frame.src!=='about:blank')return;
+  nebulaLoaded=true;
+  frame.src=getNebulaUrl();
+}
+function setNebulaUrl(){
+  const frame=document.getElementById('nebula-frame');
+  if(!frame)return;
+  frame.src=getNebulaUrl();
+  nebulaLoaded=true;
+}
+function reloadNebula(){
+  const frame=document.getElementById('nebula-frame');
+  if(!frame)return;
+  const url=getNebulaUrl();
+  frame.src='about:blank';
+  setTimeout(()=>{frame.src=url;},80);
+}
+
 function applyTabSwitch(name){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('active'));
@@ -2594,7 +2655,7 @@ function afterTabSwitch(name){
   if(name==='fighting'&&!document.getElementById('fighting-list').children.length)buildTiles(FIGHTING,'fighting-list');
   if(name==='racing'&&!document.getElementById('racing-list').children.length)buildTiles(RACING,'racing-list');
   if(name==='puzzle'&&!document.getElementById('puzzle-list').children.length)buildTiles(PUZZLE,'puzzle-list');
-  if(name==='dos')initDos();if(name==='windos')initWinDOS();if(name==='gnmath')initGnMath();if(name==='sites')buildSites();
+  if(name==='dos')initDos();if(name==='windos')initWinDOS();if(name==='gnmath')initGnMath();if(name==='nebula')initNebula();if(name==='sites')buildSites();
   if(name==='browser')setBrowserMode('both');
   try{if(window.S&&S.rememberTab){S.lastTab=name;saveS();}}catch(e){}
 }
