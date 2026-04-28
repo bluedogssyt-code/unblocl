@@ -300,7 +300,7 @@ body.sidebar-expanded #sb-alpha .sb-btn{font-size:10px;}
     <div class="overlay-controls">
       <button class="obtn" onclick="ovNewTab()">⬡ Tab</button>
       <button class="obtn" onclick="ovReload()">↺</button>
-      <button class="obtn" id="ov-proxy-btn" onclick="toggleOvProxy()">🌐 Proxy: ON</button>
+      <button class="obtn" id="ov-proxy-btn" onclick="ovReload()">⚡ Direct+Proxy</button>
       <button class="obtn" onclick="ovFullscreen()">⛶</button>
       <button class="obtn close" onclick="closeOv()">✕ Close</button>
     </div>
@@ -593,16 +593,19 @@ body.sidebar-expanded #sb-alpha .sb-btn{font-size:10px;}
 <!-- WINDOS TAB -->
 <div class="tab-panel" id="tab-windos">
   <div class="page-title">🖥️ WinDOS</div>
-  <div class="page-sub">v86 emulator presets — FreeDOS · Windows 95 · KolibriOS</div>
+  <div class="page-sub">v86 browser emulator — run real operating systems in your tab</div>
   <div class="panel">
     <div class="panel-title">🖥️ v86 Emulator</div>
+    <div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--yellow);">
+      ⚠ Disk images stream from <strong>copy.sh</strong>. FreeDOS &amp; KolibriOS load in seconds. Windows 95 is ~200 MB — expect 1–5 min on first load.
+    </div>
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;">
-      <button class="fbtn green" onclick="launchWinDOS('freedos')">▶ FreeDOS</button>
-      <button class="fbtn green" onclick="launchWinDOS('win95')">▶ Windows 95</button>
-      <button class="fbtn green" onclick="launchWinDOS('kolibri')">▶ Linux (Kolibri)</button>
+      <button class="fbtn green" onclick="launchWinDOS('freedos')">▶ FreeDOS <span style="font-size:9px;opacity:.7;">(~1.5 MB)</span></button>
+      <button class="fbtn green" onclick="launchWinDOS('win95')">▶ Windows 95 <span style="font-size:9px;opacity:.7;">(~200 MB)</span></button>
+      <button class="fbtn green" onclick="launchWinDOS('kolibri')">▶ KolibriOS <span style="font-size:9px;opacity:.7;">(~4 MB)</span></button>
       <button class="fbtn" onclick="windosFullscreen()">⛶ Fullscreen</button>
       <button class="fbtn" onclick="windosReset()">↺ Reset</button>
-      <span id="windos-status" style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted);">Idle</span>
+      <span id="windos-status" style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted);">Idle — pick an OS above</span>
     </div>
     <div id="windos-error" style="display:none;margin-bottom:10px;padding:10px 12px;border-radius:8px;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.3);color:var(--red);font-family:'JetBrains Mono',monospace;font-size:11px;"></div>
     <div id="v86-holder" style="width:800px;height:600px;max-width:100%;margin:0 auto;background:#000;border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;align-items:stretch;justify-content:stretch;">
@@ -854,87 +857,194 @@ body.sidebar-expanded #sb-alpha .sb-btn{font-size:10px;}
 </script>
 
 <script>
-// ══ PROXY ENGINE ══
+// ══ URL UTILS ══
+function normalizeUrl(u){u=u.trim();if(!u)return '';if(!u.startsWith('http'))u='https://'+u;return u;}
+
+// ══ DIRECT EMBED RESOLVER ══
+// Converts known game-site landing URLs → real embeddable game CDN URLs.
+// Returns null if no direct embed is known for this domain.
+function resolveDirectEmbed(rawUrl){
+  try{
+    const u=normalizeUrl(rawUrl);
+    const parsed=new URL(u);
+    const host=parsed.hostname.replace(/^www\./,'');
+
+    // ── CrazyGames ──
+    // Landing: https://www.crazygames.com/game/SLUG
+    // Embed:   https://games.crazygames.com/en_US/SLUG/index.html
+    // (games.crazygames.com does NOT set X-Frame-Options on most titles)
+    if(host==='crazygames.com'){
+      const m=parsed.pathname.match(/^\/game\/([^/?#]+)/);
+      if(m)return `https://games.crazygames.com/en_US/${m[1]}/index.html`;
+    }
+
+    // ── Poki ──
+    // Landing: https://poki.com/en/g/SLUG
+    // Embed:   https://poki.com/en/embed/SLUG
+    if(host==='poki.com'){
+      const m=parsed.pathname.match(/^\/en\/g\/([^/?#]+)/);
+      if(m)return `https://poki.com/en/embed/${m[1]}`;
+    }
+
+    // ── Coolmath Games ──
+    // Landing: https://www.coolmathgames.com/0-SLUG
+    // Direct game files live at /sites/default/files/public_games/NNNNN/
+    // We can't derive the numeric ID from the slug, so return null and fall back.
+    // (The coolmath-direct-frame already handles one known game ID directly.)
+
+    // ── itch.io ──
+    // Landing: https://AUTHOR.itch.io/GAME
+    // Embed:   https://itch.io/embed-upload/GAMEID  (needs numeric ID we don't have)
+    // However many itch.io games have a direct play URL via html-classic CDN.
+    // Can't auto-resolve without the game ID, so fall through.
+
+    // ── HTML5 Game Station / Famobi / GameDistribution ──
+    // These are already direct CDN URLs, pass them through as-is.
+    if(host.includes('gamedistribution.com')||
+       host.includes('famobi.com')||
+       host.includes('html5games.com')||
+       host.includes('html-classic.itch.zone')||
+       host.includes('v6p9d9t4.ssl.hwcdn.net')||
+       host.includes('cdn.htmlgames.com')||
+       host.includes('arcade.ly')){
+      return u; // already a direct game CDN, no conversion needed
+    }
+
+    return null; // unknown domain, will fall back to proxy
+  }catch(e){return null;}
+}
+
+// ══ PROXY FALLBACK ENGINE ══
 const PROXIES=[
   u=>`https://api.cors.lol/?url=${encodeURIComponent(u)}`,
-  u=>`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
-  u=>`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
   u=>`https://corsproxy.io/?${encodeURIComponent(u)}`,
-  u=>`https://api.codetabs.com/v1/tmp/?quest=${encodeURIComponent(u)}`,
+  u=>`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+  u=>`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
 ];
-function normalizeUrl(u){u=u.trim();if(!u)return '';if(!u.startsWith('http'))u='https://'+u;return u;}
 function buildProxy(url,engine){
   url=normalizeUrl(url);
-  const e=engine||(S.primaryProxy||'corslol');
+  const e=engine||(S&&S.primaryProxy)||'corslol';
   if(e==='corslol')return `https://api.cors.lol/?url=${encodeURIComponent(url)}`;
   if(e==='codetabs')return `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`;
   if(e==='allorigins')return `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
   if(e==='corsproxy')return `https://corsproxy.io/?${encodeURIComponent(url)}`;
-  if(e==='custom'){const t=S.customProxy||'https://corsproxy.io/?{URL}';return t.replace('{URL}',encodeURIComponent(url));}
+  if(e==='custom'){const t=(S&&S.customProxy)||'https://corsproxy.io/?{URL}';return t.replace('{URL}',encodeURIComponent(url));}
   return url;
 }
-async function fetchWaterfall(targetUrl,timeout=9000){
-  const url=normalizeUrl(targetUrl); const errs=[];
-  for(const pFn of PROXIES){
-    const pu=pFn(url);
-    try{const ctrl=new AbortController();const tid=setTimeout(()=>ctrl.abort(),timeout);const res=await fetch(pu,{signal:ctrl.signal});clearTimeout(tid);if(!res.ok)throw new Error('HTTP '+res.status);const text=await res.text();return{html:text,proxyUrl:pu};}
-    catch(e){errs.push(e.message);}
-  }
-  return{html:null,errors:errs};
-}
-async function loadShadowDom(targetUrl,hostEl){
-  const result=await fetchWaterfall(targetUrl);if(!result.html)return false;
-  hostEl.innerHTML='';let sh=hostEl.shadowRoot||hostEl.attachShadow({mode:'open'});sh.innerHTML='';
-  try{
-    const base=new URL(targetUrl);const parser=new DOMParser();const doc=parser.parseFromString(result.html,'text/html');
-    doc.querySelectorAll('a[href]').forEach(a=>{try{a.setAttribute('href',new URL(a.getAttribute('href'),base).href);}catch(e){}a.setAttribute('target','_parent');a.addEventListener('click',ev=>{ev.preventDefault();browserNavigate(a.href);});});
-    doc.querySelectorAll('[src]').forEach(el=>{try{el.src=buildProxy(new URL(el.getAttribute('src'),base).href);}catch(e){}});
-    doc.querySelectorAll('link[href]').forEach(el=>{try{el.href=new URL(el.getAttribute('href'),base).href;}catch(e){}});
-    sh.innerHTML=doc.documentElement.outerHTML;
-  }catch(e){sh.innerHTML=result.html;}
-  return true;
+
+// Test if a URL is directly iframeable by loading it in a hidden iframe and
+// checking for a load event within a timeout. Returns a promise<boolean>.
+function testDirectEmbed(embedUrl){
+  return new Promise(resolve=>{
+    const probe=document.createElement('iframe');
+    probe.style.cssText='position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;';
+    probe.setAttribute('sandbox','allow-scripts allow-same-origin');
+    let done=false;
+    const finish=ok=>{if(done)return;done=true;clearTimeout(tid);try{document.body.removeChild(probe);}catch(e){}resolve(ok);};
+    const tid=setTimeout(()=>finish(false),4500);
+    probe.onload=()=>finish(true);
+    probe.onerror=()=>finish(false);
+    probe.src=embedUrl;
+    document.body.appendChild(probe);
+  });
 }
 
 // ══ GAME OVERLAY ══
-let currentGameUrl='',ovProxyOn=true;
-function setOvStatus(state,msg){const bar=document.getElementById('ov-status');bar.style.display='block';bar.className='proxy-status '+state;bar.textContent=msg;}
-async function loadInOverlay(url){
-  const frame=document.getElementById('game-frame');const shadowHost=document.getElementById('proxy-content-host');
-  document.getElementById('cant-load').style.display='none';
-  const autoP=S.autoProxy!==false;const mode=S.proxyMode||'both';
-  if(autoP&&ovProxyOn&&(mode==='shadow'||mode==='both')){
-    setOvStatus('trying','Trying proxy waterfall (Shadow DOM)…');shadowHost.style.display='block';frame.style.display='none';
-    const ok=await loadShadowDom(url,shadowHost);if(ok){setOvStatus('ok','✓ Loaded via Shadow DOM — '+url);return;}
-    setOvStatus('trying','Shadow DOM failed, trying iFrame…');
+let currentGameUrl='', currentEmbedUrl='', ovProxyOn=true;
+
+function setOvStatus(state,msg){
+  const bar=document.getElementById('ov-status');
+  bar.style.display='block';bar.className='proxy-status '+state;bar.textContent=msg;
+}
+
+async function loadInOverlay(landingUrl){
+  const frame=document.getElementById('game-frame');
+  const shadowHost=document.getElementById('proxy-content-host');
+  const cantLoad=document.getElementById('cant-load');
+  cantLoad.style.display='none';
+  shadowHost.style.display='none';
+  frame.style.display='none';
+  frame.src='about:blank';
+
+  // Step 1: try to resolve a direct embeddable URL
+  const directUrl=resolveDirectEmbed(landingUrl);
+
+  if(directUrl&&!ovProxyOn===false){
+    setOvStatus('trying','⚡ Trying direct embed…');
+    frame.style.display='block';
+    frame.src=directUrl;
+    currentEmbedUrl=directUrl;
+
+    // Give the frame a moment to load, then check if it worked
+    await new Promise(r=>setTimeout(r,2800));
+    // If the frame's contentDocument is accessible and not blocked, we're good.
+    // We check by seeing if the frame loaded something (src won't be reset by browser on success).
+    let blocked=false;
+    try{
+      // If X-Frame-Options blocked it, the frame will be empty/about:blank effectively
+      const cd=frame.contentDocument;
+      if(!cd||cd.location.href==='about:blank'||cd.body===null)blocked=true;
+    }catch(e){
+      // Cross-origin access denied = loaded successfully in its own origin
+      blocked=false;
+    }
+
+    if(!blocked){
+      setOvStatus('ok','⚡ Direct embed — full game, no proxy');
+      return;
+    }
+    // Blocked — fall through to proxy
+    setOvStatus('trying','Direct embed blocked by site, falling back to proxy…');
+    frame.src='about:blank';
   }
-  shadowHost.style.display='none';frame.style.display='block';
-  if(autoP&&ovProxyOn){frame.src=buildProxy(url);setOvStatus('ok','▶ iFrame via proxy — '+url);}
-  else{frame.src=url;document.getElementById('ov-status').style.display='none';}
+
+  // Step 2: proxy fallback (iframe mode only — Shadow DOM doesn't help games)
+  frame.style.display='block';
+  const proxyUrl=buildProxy(landingUrl);
+  frame.src=proxyUrl;
+  currentEmbedUrl=proxyUrl;
+  setOvStatus('ok','🌐 Proxy iframe — '+new URL(normalizeUrl(landingUrl)).hostname);
+  updateOvProxyBtn();
 }
+
 function launchGame(name,url){
-  showToast('Launching '+name);
-  currentGameUrl=url;if(S.newTab){window.open(url,'_blank');return;}
-  ovProxyOn=S.autoProxy!==false;updateOvProxyBtn();
+  showToast('🎮 '+name);
+  currentGameUrl=url;
+  if(S&&S.newTab){window.open(url,'_blank');return;}
+  ovProxyOn=true;
+  updateOvProxyBtn();
   document.getElementById('ov-title').textContent='▶ '+name;
-  document.getElementById('game-overlay').classList.add('open');loadInOverlay(url);
+  document.getElementById('game-overlay').classList.add('open');
+  loadInOverlay(url);
 }
-function updateOvProxyBtn(){const b=document.getElementById('ov-proxy-btn');if(!b)return;if(ovProxyOn){b.textContent='🌐 Proxy: ON';b.style.color='var(--green)';}else{b.textContent='🚫 Proxy: OFF';b.style.color='var(--red)';}}
-function toggleOvProxy(){ovProxyOn=!ovProxyOn;updateOvProxyBtn();if(currentGameUrl)loadInOverlay(currentGameUrl);}
+
+function updateOvProxyBtn(){
+  const b=document.getElementById('ov-proxy-btn');
+  if(!b)return;
+  const directUrl=resolveDirectEmbed(currentGameUrl||'');
+  if(directUrl){b.textContent='⚡ Direct+Proxy';b.style.color='var(--green)';}
+  else{b.textContent='🌐 Proxy only';b.style.color='var(--yellow)';}
+}
+
+function toggleOvProxy(){
+  // Reload with the current URL — this just re-triggers the logic
+  if(currentGameUrl)loadInOverlay(currentGameUrl);
+}
+
 function ovNewTab(){if(currentGameUrl)window.open(currentGameUrl,'_blank');}
 function ovReload(){if(currentGameUrl)loadInOverlay(currentGameUrl);}
 function ovFullscreen(){const ov=document.getElementById('game-overlay');if(!document.fullscreenElement)ov.requestFullscreen().catch(()=>{});else document.exitFullscreen();}
 function closeOv(){
   document.getElementById('game-overlay').classList.remove('open');
-  document.getElementById('game-frame').src='about:blank';
-  document.getElementById('proxy-content-host').innerHTML='';
-  document.getElementById('proxy-content-host').style.display='none';
-  document.getElementById('game-frame').style.display='none';
-  document.getElementById('ov-status').style.display='none';currentGameUrl='';
+  const f=document.getElementById('game-frame');f.src='about:blank';f.style.display='none';
+  const sh=document.getElementById('proxy-content-host');sh.innerHTML='';sh.style.display='none';
+  document.getElementById('ov-status').style.display='none';
+  currentGameUrl='';currentEmbedUrl='';
 }
-function retryCors(){tryFrameProxy('corslol');}
-function retryAllOrigins(){tryFrameProxy('allorigins');}
-function retryDirect(){document.getElementById('proxy-content-host').style.display='none';const f=document.getElementById('game-frame');f.style.display='block';f.src=currentGameUrl;document.getElementById('ov-status').style.display='none';document.getElementById('cant-load').style.display='none';}
-function tryFrameProxy(engine){document.getElementById('proxy-content-host').style.display='none';const f=document.getElementById('game-frame');f.style.display='block';f.src=buildProxy(currentGameUrl,engine);setOvStatus('ok','▶ Retrying via '+engine);document.getElementById('cant-load').style.display='none';}
+function retryCors(){const f=document.getElementById('game-frame');f.style.display='block';f.src=buildProxy(currentGameUrl,'corslol');setOvStatus('ok','▶ Retrying via cors.lol');document.getElementById('cant-load').style.display='none';}
+function retryAllOrigins(){const f=document.getElementById('game-frame');f.style.display='block';f.src=buildProxy(currentGameUrl,'allorigins');setOvStatus('ok','▶ Retrying via allorigins');document.getElementById('cant-load').style.display='none';}
+function retryDirect(){const f=document.getElementById('game-frame');f.style.display='block';f.src=currentGameUrl;document.getElementById('ov-status').style.display='none';document.getElementById('cant-load').style.display='none';}
+function tryFrameProxy(engine){const f=document.getElementById('game-frame');f.style.display='block';document.getElementById('proxy-content-host').style.display='none';f.src=buildProxy(currentGameUrl,engine);setOvStatus('ok','▶ Retrying via '+engine);document.getElementById('cant-load').style.display='none';}
 function fullscreenEl(id){const e=document.getElementById(id);if(e){if(!document.fullscreenElement)e.requestFullscreen().catch(()=>{});else document.exitFullscreen();}}
 
 // ══ WEB BROWSER ══
@@ -2318,85 +2428,137 @@ function clearSearch(){document.getElementById('global-search-input').value='';d
 
 // ══ WINDOS / V86 EMULATOR ══
 let windosLibLoading=null, windosLoaded=false, windosEmulator=null;
+
+// v86 CDN sources — jsDelivr mirrors the GitHub repo reliably
+const V86_CDN='https://cdn.jsdelivr.net/gh/copy/v86@master/build/';
+const V86_BIOS='https://cdn.jsdelivr.net/gh/copy/v86@master/bios/';
+// Disk images are large binaries only hosted at copy.sh
+const V86_IMGS='https://copy.sh/v86/images/';
+
 const WINDOS_PRESETS={
   freedos:{
     label:'FreeDOS',
-    config:{ fda:{ url:'https://copy.sh/v86/images/freedos722.img', async:true } }
+    info:'~1.5 MB — boots quickly',
+    config:{ fda:{ url:V86_IMGS+'freedos722.img', async:true } }
   },
   win95:{
     label:'Windows 95',
-    config:{ hda:{ url:'https://copy.sh/v86/images/windows95.img', async:true }, memory_size:32*1024*1024, vga_memory_size:2*1024*1024 }
+    info:'~200 MB — streams in chunks, may take a few minutes',
+    config:{ hda:{ url:V86_IMGS+'windows95.img', async:true, size:242049024 }, memory_size:32*1024*1024, vga_memory_size:2*1024*1024 }
   },
   kolibri:{
-    label:'Linux (Kolibri)',
-    config:{ cdrom:{ url:'https://copy.sh/v86/images/kolibrios.iso', async:true } }
+    label:'KolibriOS (Linux-like)',
+    info:'~4 MB — tiny OS, boots fast',
+    config:{ cdrom:{ url:V86_IMGS+'kolibrios.iso', async:true } }
   }
 };
+
 function setWinDOSStatus(msg,isError){
   const st=document.getElementById('windos-status');
   const er=document.getElementById('windos-error');
-  if(st){st.textContent=msg;st.style.color=isError?'var(--red)':(msg==='Running'?'var(--green)':'var(--muted)');}
+  if(st){st.textContent=msg;st.style.color=isError?'var(--red)':(msg.startsWith('Running')?'var(--green)':'var(--muted)');}
   if(er){er.style.display=isError?'block':'none';er.textContent=isError?msg:'';}
 }
+
+function loadScriptWithFallback(urls){
+  return new Promise((resolve,reject)=>{
+    let idx=0;
+    function tryNext(){
+      if(idx>=urls.length){reject(new Error('All CDN sources failed for libv86.js'));return;}
+      const sc=document.createElement('script');
+      sc.src=urls[idx++];
+      sc.onload=()=>resolve(sc.src);
+      sc.onerror=()=>{document.head.removeChild(sc);tryNext();};
+      document.head.appendChild(sc);
+    }
+    tryNext();
+  });
+}
+
 function loadWinDOSLib(){
   if(window.V86||window.V86Starter)return Promise.resolve();
   if(windosLibLoading)return windosLibLoading;
-  setWinDOSStatus('Loading...',false);
-  windosLibLoading=new Promise((resolve,reject)=>{
-    try{
-      const sc=document.createElement('script');
-      sc.src='https://copy.sh/v86/libv86.js';
-      sc.onload=()=>resolve();
-      sc.onerror=()=>reject(new Error('Could not load libv86.js. Check your connection or try again.'));
-      document.head.appendChild(sc);
-    }catch(e){reject(e);}
+  setWinDOSStatus('Loading emulator…',false);
+  windosLibLoading=loadScriptWithFallback([
+    V86_CDN+'libv86.js',
+    'https://rawcdn.githack.com/copy/v86/master/build/libv86.js',
+    'https://copy.sh/v86/libv86.js'
+  ]).then(src=>{
+    console.log('[WinDOS] libv86.js loaded from',src);
+    if(!window.V86&&!window.V86Starter)throw new Error('libv86.js loaded but V86 constructor not found.');
   });
   return windosLibLoading;
 }
+
 function initWinDOS(){
-  if(windosLoaded)return;
-  windosLoaded=true;
-  loadWinDOSLib().then(()=>setWinDOSStatus('Ready',false)).catch(e=>setWinDOSStatus('WinDOS failed to load: '+e.message,true));
+  if(windosLoaded)return;windosLoaded=true;
+  loadWinDOSLib()
+    .then(()=>setWinDOSStatus('Ready — pick an OS above',false))
+    .catch(e=>setWinDOSStatus('Failed to load emulator: '+e.message,true));
 }
+
 function destroyWinDOS(){
-  try{if(windosEmulator&&typeof windosEmulator.destroy==='function')windosEmulator.destroy();}
-  catch(e){console.warn('v86 destroy failed:',e);}
+  try{if(windosEmulator&&typeof windosEmulator.destroy==='function')windosEmulator.destroy();}catch(e){}
   windosEmulator=null;
   const old=document.getElementById('v86-screen');
   if(old){const c=old.cloneNode(false);old.parentNode.replaceChild(c,old);}
 }
+
 async function launchWinDOS(key){
   const preset=WINDOS_PRESETS[key];
   if(!preset)return;
   try{
-    setWinDOSStatus('Loading...',false);
+    setWinDOSStatus('Loading emulator…',false);
     await loadWinDOSLib();
     destroyWinDOS();
     const canvas=document.getElementById('v86-screen');
     const holder=document.getElementById('v86-holder');
-    if(!canvas)throw new Error('Missing v86-screen canvas.');
+    if(!canvas)throw new Error('Missing #v86-screen canvas element.');
+    setWinDOSStatus('Starting '+preset.label+' ('+preset.info+')…',false);
     const baseConfig=Object.assign({
-      wasm_path:'https://copy.sh/v86/build/v86.wasm',
-      bios:{url:'https://copy.sh/v86/bios/seabios.bin'},
-      vga_bios:{url:'https://copy.sh/v86/bios/vgabios.bin'},
+      wasm_path:V86_CDN+'v86.wasm',
+      bios:{url:V86_BIOS+'seabios.bin'},
+      vga_bios:{url:V86_BIOS+'vgabios.bin'},
       canvas:canvas,
       screen_container:holder,
-      autostart:true
+      autostart:true,
+      disable_mouse:false,
+      acpi:true
     },preset.config);
     const Ctor=window.V86||window.V86Starter;
-    if(!Ctor)throw new Error('v86 did not expose V86 or V86Starter.');
+    if(!Ctor)throw new Error('V86 constructor not available.');
     windosEmulator=new Ctor(baseConfig);
-    if(windosEmulator&&typeof windosEmulator.add_listener==='function'){
-      windosEmulator.add_listener('emulator-ready',()=>setWinDOSStatus('Running',false));
-      windosEmulator.add_listener('download-error',()=>setWinDOSStatus('Could not load '+preset.label+' image. Try again or check if the image URL is blocked.',true));
+    let started=false;
+    if(typeof windosEmulator.add_listener==='function'){
+      windosEmulator.add_listener('emulator-ready',()=>{
+        started=true;setWinDOSStatus('Running ▶ '+preset.label,false);
+      });
+      windosEmulator.add_listener('download-error',e=>{
+        setWinDOSStatus('Image download failed for '+preset.label+'. The copy.sh server may be busy — try again in a moment.',true);
+      });
     }
-    setTimeout(()=>{if(windosEmulator&&document.getElementById('windos-status').textContent==='Loading...')setWinDOSStatus('Running',false);},5000);
+    // Fallback: mark running after 8s even if event doesn't fire
+    setTimeout(()=>{if(!started&&windosEmulator)setWinDOSStatus('Running ▶ '+preset.label,false);},8000);
   }catch(e){
-    setWinDOSStatus('Could not start '+preset.label+': '+(e&&e.message?e.message:e),true);
+    windosLibLoading=null; // allow retry
+    setWinDOSStatus('Could not start '+preset.label+': '+(e&&e.message?e.message:String(e)),true);
   }
 }
-function windosFullscreen(){try{if(windosEmulator&&typeof windosEmulator.screen_make_fullscreen==='function')windosEmulator.screen_make_fullscreen();else fullscreenEl('v86-holder');}catch(e){setWinDOSStatus('Fullscreen failed: '+e.message,true);}}
-function windosReset(){try{if(windosEmulator&&typeof windosEmulator.restart==='function'){setWinDOSStatus('Loading...',false);windosEmulator.restart();setTimeout(()=>setWinDOSStatus('Running',false),1200);}else setWinDOSStatus('Start an OS first, then reset.',true);}catch(e){setWinDOSStatus('Reset failed: '+e.message,true);}}
+
+function windosFullscreen(){
+  try{
+    if(windosEmulator&&typeof windosEmulator.screen_make_fullscreen==='function')windosEmulator.screen_make_fullscreen();
+    else fullscreenEl('v86-holder');
+  }catch(e){setWinDOSStatus('Fullscreen failed: '+e.message,true);}
+}
+function windosReset(){
+  try{
+    if(windosEmulator&&typeof windosEmulator.restart==='function'){
+      setWinDOSStatus('Rebooting…',false);windosEmulator.restart();
+      setTimeout(()=>setWinDOSStatus('Running',false),2000);
+    }else setWinDOSStatus('Launch an OS first, then reset.',true);
+  }catch(e){setWinDOSStatus('Reset failed: '+e.message,true);}
+}
 
 
 function toggleSidebar(){
