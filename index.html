@@ -576,10 +576,10 @@ body.sidebar-expanded #sb-alpha .sb-btn{font-size:10px;}
 <!-- ══════════ AI TAB — WORKING ══════════ -->
 <div class="tab-panel" id="tab-ai">
   <div class="page-title">🤖 AI Chat</div>
-  <div class="page-sub">Powered by WebSocket AI — no key needed ✓</div>
+  <div class="page-sub">Powered by your Render WebSocket AI ✓</div>
   <div id="ai-chat-wrap">
     <div id="ai-notice">
-      Free AI powered by the GN Math server. Don't abuse it — it's shared by everyone. Issues? Join <a href="https://discord.gg/gn-math" target="_blank">discord</a>.
+      AI connected to your Render server: <strong>ai-websocket-server.onrender.com</strong>.
     </div>
     <div id="ai-status">Connecting...</div>
     <div id="ai-messages"></div>
@@ -807,8 +807,9 @@ body.sidebar-expanded #sb-alpha .sb-btn{font-size:10px;}
 <!-- ══════════ AI WEBSOCKET CHAT ══════════ -->
 <script>
 (function(){
-  const WS_PARTS = ['wss://gn', '-math-ws.', 'glitch.me'];
-  const WS_URL = WS_PARTS.join('');
+  // Your Render backend URL. HTTPS becomes WSS for WebSocket connections.
+  const WS_URL = 'wss://ai-websocket-server.onrender.com';
+
   const chatEl   = document.getElementById('ai-messages');
   const statusEl = document.getElementById('ai-status');
   const inputEl  = document.getElementById('ai-text-input');
@@ -816,55 +817,124 @@ body.sidebar-expanded #sb-alpha .sb-btn{font-size:10px;}
   let ws=null, botBubble=null, botText='', streaming=false, wsHistory=[];
 
   function connect(){
-    statusEl.textContent='Connecting...'; statusEl.className='';
+    statusEl.textContent='Connecting to your AI server...';
+    statusEl.className='';
+    inputEl.disabled=true;
+    sendBtn.disabled=true;
+
     ws=new WebSocket(WS_URL);
+
     ws.onopen=()=>{
-      statusEl.textContent='Connected ✓'; statusEl.className='connected';
-      inputEl.disabled=false; sendBtn.disabled=false; inputEl.focus();
+      statusEl.textContent='Connected to your AI ✓';
+      statusEl.className='connected';
+      inputEl.disabled=false;
+      sendBtn.disabled=false;
+      inputEl.focus();
     };
+
     ws.onmessage=(event)=>{
-      let data; try{data=JSON.parse(event.data);}catch{return;}
+      let data;
+      try{ data=JSON.parse(event.data); }
+      catch{
+        if(!botBubble){ botBubble=addBubble('','bot'); botText=''; }
+        botText+=String(event.data||'');
+        renderMarkdown(botBubble,botText);
+        scrollDown();
+        return;
+      }
+
       switch(data.type){
-        case 'start': botText=''; botBubble=addBubble('','bot'); streaming=true; break;
-        case 'chunk':
-          if(botBubble&&data.text){renderMarkdown(botBubble,botText+=data.text);scrollDown();}
+        case 'start':
+          botText='';
+          botBubble=addBubble('','bot');
+          streaming=true;
           break;
-        case 'end':
-          if(botBubble) renderMarkdown(botBubble,data.text||botText);
-          wsHistory.push({role:'assistant',content:data.text||botText});
-          botBubble=null; streaming=false; inputEl.disabled=false; sendBtn.disabled=false;
-          inputEl.focus(); scrollDown(); break;
+
+        // Supports both server styles:
+        // Your Node/Groq server: {type:'token', token:'...'} / {type:'done', response:'...'}
+        // Old GN server:        {type:'chunk', text:'...'} / {type:'end', text:'...'}
+        case 'token':
+        case 'chunk': {
+          const piece=data.token ?? data.text ?? '';
+          if(!botBubble) botBubble=addBubble('','bot');
+          if(piece){
+            botText+=piece;
+            renderMarkdown(botBubble,botText);
+            scrollDown();
+          }
+          break;
+        }
+
+        case 'done':
+        case 'end': {
+          const finalText=data.response ?? data.text ?? botText;
+          if(botBubble) renderMarkdown(botBubble,finalText);
+          wsHistory.push({role:'assistant',content:finalText});
+          botBubble=null;
+          botText='';
+          streaming=false;
+          inputEl.disabled=false;
+          sendBtn.disabled=false;
+          inputEl.focus();
+          scrollDown();
+          break;
+        }
+
         case 'error':
-          addBubble('⚠ '+(data.message||'Error'),'bot');
-          streaming=false; inputEl.disabled=false; sendBtn.disabled=false; break;
+          addBubble('⚠ '+(data.error||data.message||'AI server error'),'bot');
+          botBubble=null;
+          botText='';
+          streaming=false;
+          inputEl.disabled=false;
+          sendBtn.disabled=false;
+          break;
       }
     };
+
     ws.onclose=()=>{
-      statusEl.textContent='Disconnected — reconnecting...'; statusEl.className='error';
-      inputEl.disabled=true; sendBtn.disabled=true; setTimeout(connect,3000);
+      statusEl.textContent='Disconnected — reconnecting...';
+      statusEl.className='error';
+      inputEl.disabled=true;
+      sendBtn.disabled=true;
+      setTimeout(connect,3000);
     };
-    ws.onerror=()=>{statusEl.textContent='Connection error'; statusEl.className='error';};
+
+    ws.onerror=()=>{
+      statusEl.textContent='Connection error — check Render logs if it stays broken';
+      statusEl.className='error';
+    };
   }
 
   function send(){
     const q=inputEl.value.trim();
     if(!q||!ws||ws.readyState!==WebSocket.OPEN||streaming) return;
-    addBubble(q,'user'); wsHistory.push({role:'user',content:q});
-    ws.send(JSON.stringify({question:q,history:wsHistory.slice(-10)}));
-    inputEl.value=''; inputEl.disabled=true; sendBtn.disabled=true;
+
+    addBubble(q,'user');
+    wsHistory.push({role:'user',content:q});
+
+    ws.send(JSON.stringify({
+      question:q,
+      history:wsHistory.slice(-10)
+    }));
+
+    inputEl.value='';
+    inputEl.disabled=true;
+    sendBtn.disabled=true;
   }
 
   function addBubble(text,role){
     const div=document.createElement('div');
     div.className='ai-bubble '+role;
     if(text) div.textContent=text;
-    chatEl.appendChild(div); scrollDown(); return div;
+    chatEl.appendChild(div);
+    scrollDown();
+    return div;
   }
 
-  function scrollDown(){chatEl.scrollTop=chatEl.scrollHeight;}
+  function scrollDown(){ chatEl.scrollTop=chatEl.scrollHeight; }
 
   function renderMarkdown(el,text){
-    let html=text
+    let html=String(text||'')
       .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
       .replace(/```(\w*)\n([\s\S]*?)```/g,(_,lang,code)=>'<pre><code>'+code+'</code></pre>')
       .replace(/`([^`]+)`/g,'<code>$1</code>')
@@ -877,8 +947,10 @@ body.sidebar-expanded #sb-alpha .sb-btn{font-size:10px;}
   sendBtn.addEventListener('click',send);
   inputEl.addEventListener('keydown',e=>{
     if(e.key!=='Enter'||e.shiftKey) return;
-    e.preventDefault(); send();
+    e.preventDefault();
+    send();
   });
+
   connect();
 })();
 </script>
